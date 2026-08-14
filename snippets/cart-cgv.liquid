@@ -1,0 +1,68 @@
+{% comment %}
+  Consentement aux CGV, obligatoire avant tout passage en caisse.
+
+  Rendu à deux endroits — le tiroir panier et la page /cart — qui ont chacun leur propre
+  formulaire et leur propre bouton de paiement. D'où le paramétrage des identifiants : deux
+  blocs peuvent coexister dans la même page sans collision d'id.
+
+  La case n'est JAMAIS pré-cochée : un consentement pré-coché n'est pas un consentement.
+
+  Le blocage du paiement est dans assets/cart-cgv.js, piloté par les attributs `data-cgv-*`
+  posés ici plutôt que par des identifiants en dur, pour rester valable aux deux endroits.
+
+  Les styles (.cart-cgv*) vivent dans le <style> de snippets/cart-drawer.liquid, lequel est
+  rendu à la racine du <body> sur toutes les pages : ils s'appliquent donc aussi ici.
+
+  Accepts:
+  - id_prefix: {String} préfixe des identifiants, unique dans la page (requis)
+  - form_id: {String} id du formulaire auquel les champs se rattachent (requis)
+
+  Usage:
+  {% render 'cart-cgv', id_prefix: 'Cart', form_id: 'cart' %}
+{% endcomment %}
+
+<div class="cart-cgv" data-cart-cgv data-cgv-form="{{ form_id }}">
+  {%- comment -%}
+    Le lien vers les CGV reste dans le label volontairement : d'après la spec HTML un label
+    n'est pas activé par un clic sur un descendant interactif, donc ouvrir les conditions ne
+    coche pas la case. Tout le reste du label est la zone de touche.
+  {%- endcomment -%}
+  <label class="cart-cgv__control" for="{{ id_prefix }}-CGV">
+    <input
+      type="checkbox"
+      id="{{ id_prefix }}-CGV"
+      class="cart-cgv__input"
+      name="attributes[CGV acceptées]"
+      value="Oui"
+      form="{{ form_id }}"
+      required
+      aria-describedby="{{ id_prefix }}-CGV-Error"
+      data-cgv-checkbox
+    >
+    <span class="cart-cgv__text">
+      {{ 'sections.cart.cgv_agree' | t }}
+      <a
+        href="{{ 'sections.cart.cgv_link_url' | t }}"
+        target="_blank"
+        rel="noopener"
+        class="cart-cgv__link"
+      >
+        {{- 'sections.cart.cgv_link_text' | t -}}
+      </a>
+    </span>
+  </label>
+  <input
+    type="hidden"
+    id="{{ id_prefix }}-CGV-Timestamp"
+    name="attributes[CGV - Date d'acceptation]"
+    value=""
+    form="{{ form_id }}"
+    data-cgv-timestamp
+  >
+  <p id="{{ id_prefix }}-CGV-Error" class="cart-cgv__error" role="alert" hidden data-cgv-error>
+    <span class="cart-cgv__error-icon" aria-hidden="true">
+      {{- 'icon-error.svg' | inline_asset_content -}}
+    </span>
+    {{ 'sections.cart.cgv_error' | t }}
+  </p>
+</div>

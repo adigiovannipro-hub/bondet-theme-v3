@@ -546,49 +546,7 @@
               {%- endif -%}
             </div>
             {%- if cart != empty -%}
-              <div class="cart-cgv" data-cart-cgv>
-                {%- comment -%}
-                  The CGV link stays inside the label on purpose: per the HTML spec a label is not
-                  activated by clicks on interactive descendants, so opening the terms does not
-                  toggle the checkbox. The whole label is the touch target.
-                {%- endcomment -%}
-                <label class="cart-cgv__control" for="CartDrawer-CGV">
-                  <input
-                    type="checkbox"
-                    id="CartDrawer-CGV"
-                    class="cart-cgv__input"
-                    name="attributes[CGV acceptées]"
-                    value="Oui"
-                    form="CartDrawer-Form"
-                    required
-                    aria-describedby="CartDrawer-CGV-Error"
-                  >
-                  <span class="cart-cgv__text">
-                    {{ 'sections.cart.cgv_agree' | t }}
-                    <a
-                      href="{{ 'sections.cart.cgv_link_url' | t }}"
-                      target="_blank"
-                      rel="noopener"
-                      class="cart-cgv__link"
-                    >
-                      {{- 'sections.cart.cgv_link_text' | t -}}
-                    </a>
-                  </span>
-                </label>
-                <input
-                  type="hidden"
-                  id="CartDrawer-CGV-Timestamp"
-                  name="attributes[CGV - Date d'acceptation]"
-                  value=""
-                  form="CartDrawer-Form"
-                >
-                <p id="CartDrawer-CGV-Error" class="cart-cgv__error" role="alert" hidden>
-                  <span class="cart-cgv__error-icon" aria-hidden="true">
-                    {{- 'icon-error.svg' | inline_asset_content -}}
-                  </span>
-                  {{ 'sections.cart.cgv_error' | t }}
-                </p>
-              </div>
+              {% render 'cart-cgv', id_prefix: 'CartDrawer', form_id: 'CartDrawer-Form' %}
             {%- endif -%}
 
             <div class="cart__ctas w-fit mx-auto mt-8 xl:mr-0" {{ block.shopify_attributes }}>
@@ -630,66 +588,6 @@
     </div>
   </div>
 <script>
-  // CGV gate. The checkout button used to be `disabled` until the box was ticked, which gave the
-  // customer no feedback at all on tap — it read as a broken button. The button now stays tappable
-  // and the submit is blocked with an explicit message instead.
-  //
-  // Everything is delegated from `document` because the drawer contents are replaced wholesale on
-  // every cart update, which would drop listeners bound to the elements themselves.
-  (function () {
-    var CGV_ID = 'CartDrawer-CGV';
-
-    function getParts() {
-      var checkbox = document.getElementById(CGV_ID);
-      if (!checkbox) return null;
-
-      return {
-        checkbox: checkbox,
-        wrapper: checkbox.closest('[data-cart-cgv]'),
-        error: document.getElementById('CartDrawer-CGV-Error'),
-        timestamp: document.getElementById('CartDrawer-CGV-Timestamp'),
-      };
-    }
-
-    function setError(parts, visible) {
-      if (parts.error) parts.error.hidden = !visible;
-      if (parts.wrapper) parts.wrapper.classList.toggle('cart-cgv--error', visible);
-      parts.checkbox.setAttribute('aria-invalid', visible ? 'true' : 'false');
-    }
-
-    document.addEventListener('change', function (event) {
-      if (!event.target || event.target.id !== CGV_ID) return;
-
-      var parts = getParts();
-      if (!parts) return;
-
-      if (parts.checkbox.checked) setError(parts, false);
-      if (parts.timestamp) {
-        parts.timestamp.value = parts.checkbox.checked ? new Date().toLocaleString('fr-FR') : '';
-      }
-    });
-
-    document.addEventListener(
-      'submit',
-      function (event) {
-        var form = event.target;
-        if (!form || form.id !== 'CartDrawer-Form') return;
-
-        var parts = getParts();
-        if (!parts || parts.checkbox.checked) return;
-
-        event.preventDefault();
-        setError(parts, true);
-
-        if (parts.wrapper && parts.wrapper.scrollIntoView) {
-          parts.wrapper.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        }
-        parts.checkbox.focus({ preventScroll: true });
-      },
-      true
-    );
-  })();
-
   document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function() {
       if (typeof CartItems !== 'undefined') {
