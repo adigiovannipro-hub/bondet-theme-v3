@@ -31,9 +31,24 @@
     });
   }
 
+  // Le fond des méga-menus est animé par GSAP, qui écrit `opacity` en style inline. Si la
+  // séquence de fermeture ne va pas au bout, ou si la page est restaurée depuis le cache avec le
+  // style encore posé, ce fond brun reste à 0.8 — en `z-index: -1`, donc DERRIÈRE le contenu :
+  // le texte reste parfaitement lisible et seuls les fonds de section sont ternis, ce qui rend
+  // le voile difficile à rattacher à sa cause.
+  function resetMegaMenuBackdrops() {
+    document.querySelectorAll('.mega-menu__bg').forEach(function (backdrop) {
+      var open = backdrop.closest('details');
+      if (open && open.open) return;
+
+      backdrop.style.opacity = '0';
+    });
+  }
+
   function reset() {
     closeCartDrawer();
     closeStaleDisclosures();
+    resetMegaMenuBackdrops();
   }
 
   // `persisted` est vrai uniquement pour une restauration depuis le cache ; on remet à zéro dans
@@ -43,6 +58,21 @@
   // Fermer le tiroir doit aussi emporter les panneaux restés ouverts derrière lui.
   document.addEventListener('click', function (event) {
     if (!event.target.closest) return;
-    if (event.target.closest('.drawer__close, #CartDrawer-Overlay')) closeStaleDisclosures();
+    if (event.target.closest('.drawer__close, #CartDrawer-Overlay')) {
+      closeStaleDisclosures();
+      resetMegaMenuBackdrops();
+    }
   });
+
+  // Un <details> qui se referme doit emporter son fond, sans attendre la fin de l'animation.
+  document.addEventListener(
+    'toggle',
+    function (event) {
+      if (event.target.tagName !== 'DETAILS' || event.target.open) return;
+
+      var backdrop = event.target.querySelector('.mega-menu__bg');
+      if (backdrop) backdrop.style.opacity = '0';
+    },
+    true
+  );
 })();
