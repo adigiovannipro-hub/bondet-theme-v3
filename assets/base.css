@@ -3341,3 +3341,19 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
+
+/* Cart drawer: closed state.
+   The drawer root (<cart-drawer class="drawer">) is always position:fixed and covers the
+   whole viewport, so it must be fully neutralised when it is not open — otherwise its
+   overlay stays above the page content while scrolling. `visibility` alone is not enough:
+   it is inheritable and any descendant setting `visibility: visible` would re-expose the
+   panel, so pointer events and painting are cut off at the root as well. */
+.drawer:not(.active),
+cart-drawer:not(.active) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+cart-drawer:not(.active) .drawer__inner {
+  pointer-events: none;
+}
