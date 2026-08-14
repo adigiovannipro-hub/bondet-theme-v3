@@ -3681,3 +3681,13 @@ cart-drawer:not(.active) .drawer__inner {
     text-align: center;
   }
 }
+
+/* GSAP ScrollTrigger debug markers.
+   The compiled bundle creates the product page's desktop scroll snapping with
+   `markers: true` (main-DZZKGBsq.js, initSnapDesktop), which paints green/red
+   "scroller-start / scroller-end" debug labels over the page above 1200px.
+   The fix belongs in the Vite source, which is not versioned here, so the
+   markers are hidden instead. */
+[class*='gsap-marker'] {
+  display: none !important;
+}
