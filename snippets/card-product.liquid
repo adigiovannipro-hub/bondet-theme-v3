@@ -220,6 +220,56 @@
               {% assign montures_count = montures | split: '|' | uniq | compact | size %}
               {{ montures_count }} Coloris
             </div>
+
+            {%- comment -%}
+              Nuanciers des coloris de monture.
+
+              La boutique utilise les swatches natifs Shopify : la première option
+              (« Couleur de la monture ») est liée à des métaobjets, chaque valeur porte donc un
+              `swatch` exploitable. On réutilise le snippet 'swatch' du thème plutôt que de
+              redessiner les pastilles.
+
+              Chaque pastille pointe vers la variante correspondante. Quand le produit a une
+              deuxième option (couleur des verres, sur les solaires), on garde celle de la carte
+              courante pour ne pas renvoyer le visiteur vers un autre verre que celui affiché.
+            {%- endcomment -%}
+            {%- assign color_option = card_product.options_with_values | first -%}
+            {%- if color_option.values.size > 1 -%}
+              {%- assign swatch_count = color_option.values | map: 'swatch' | compact | size -%}
+              {%- if swatch_count > 0 -%}
+                <ul class="card__swatches" aria-label="{{ montures_count }} coloris disponibles">
+                  {%- for value in color_option.values limit: 4 -%}
+                    {%- capture value_name %}{{ value }}{% endcapture -%}
+                    {%- assign target_variant = null -%}
+                    {%- for v in card_product.variants -%}
+                      {%- if v.option1 == value_name -%}
+                        {%- unless target_variant -%}
+                          {%- assign target_variant = v -%}
+                        {%- endunless -%}
+                        {%- if card_variant.option2 != blank and v.option2 == card_variant.option2 -%}
+                          {%- assign target_variant = v -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    <li>
+                      <a
+                        href="{{ target_variant.url | default: card_product.url }}"
+                        class="card__swatch-link{% if value_name == card_variant.option1 %} is-current{% endif %}"
+                        title="{{ value_name }}"
+                      >
+                        <span class="visually-hidden">{{ card_product.title | escape }} — {{ value_name }}</span>
+                        {% render 'swatch', swatch: value.swatch %}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                  {%- if color_option.values.size > 4 -%}
+                    {%- assign remaining = color_option.values.size | minus: 4 -%}
+                    <li class="card__swatches-more" aria-hidden="true">+{{ remaining }}</li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+            {%- endif -%}
           </div>
         </div>
       </div>

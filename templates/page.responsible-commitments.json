@@ -161,7 +161,7 @@
             "filter_featured": false,
             "filter_custom_tags": "",
             "star_rating": "all",
-            "show_review_media": true,
+            "show_review_media": false,
             "display_order": "media_first",
             "no_image_fallback": "review_text_only",
             "max_reviews": 20,
@@ -171,18 +171,18 @@
             "reviews_shown": 4,
             "show_reviewer_name": true,
             "show_product_name": true,
-            "hide_arrows_mobile": true,
+            "hide_arrows_mobile": false,
             "arrows_position": "sides",
             "max_width": 1100,
             "corner_styling": "soft",
             "header_text_color": "#3F2121",
             "text_color": "#3F2121",
-            "card_color": "#F2E9DB",
+            "card_color": "#FFFFFF",
             "stars_color": "#FF9E1B",
-            "arrows_color": "#3F2121",
+            "arrows_color": "#271C1C",
             "transition_speed": 5,
             "header_text": "Laissons nos client parler pour nous",
-            "show_average_rating": false,
+            "show_average_rating": true,
             "rating_display": "default"
           }
         }
@@ -192,11 +192,10 @@
       ],
       "custom_css": [
         "{padding-top: clamp(40px, 8vw, 80px); padding-bottom: clamp(40px, 8vw, 80px);}",
-        "h2 {font: 400 clamp(2rem, 5.5vw, 3rem) / 1.2 var(--font-primary); overflow-wrap: break-word;}",
+        "h2 {font: 400 clamp(2rem, 5.5vw, 3rem) / 1.2 var(--font-primary); white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: break-word; max-width: 100%;}",
         "p {font-size: 14px;}",
         "span {font-size: 80%;}",
-        "span span {font-size: 100%;}",
-        "button {height: 10px; width: 10px; border: 2px;}"
+        "span span {font-size: 100%;}"
       ],
       "settings": {
         "include_margins": true
