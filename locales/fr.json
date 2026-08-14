@@ -331,7 +331,8 @@
       "taxes_at_checkout_shipping_at_checkout_without_policy": "Taxes, réductions et frais d’expédition calculés à l’étape du paiement.",
       "cgv_agree": "J'accepte les",
       "cgv_link_text": "Conditions Générales de Vente",
-      "cgv_link_url": "/pages/conditions-generales-de-vente"
+      "cgv_link_url": "/pages/conditions-generales-de-vente",
+      "cgv_error": "Merci d'accepter les CGV pour continuer"
     },
     "footer": {
       "payment": "Moyens de paiement"
