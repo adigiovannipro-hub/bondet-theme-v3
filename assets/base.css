@@ -3595,9 +3595,23 @@ cart-drawer:not(.active) .drawer__inner {
   height: 1.6rem;
 }
 
-.reassurance-bar__icon .image {
+.reassurance-bar__icon .image,
+.reassurance-bar__icon svg {
   width: 100%;
   height: 100%;
+}
+
+/* Les icônes du thème n'ont pas toutes la même structure de remplissage :
+   icon-truck et icon-return n'ont aucun attribut fill (leurs tracés héritent du
+   <svg>), icon-padlock a fill="none" sur le <svg> et currentColor sur le tracé,
+   icon-tick a un vert #108043 en dur. Les deux règles couvrent les trois cas et
+   alignent tout sur la couleur du texte. */
+.reassurance-bar__icon svg {
+  fill: currentColor;
+}
+
+.reassurance-bar__icon svg [fill]:not([fill='none']) {
+  fill: currentColor;
 }
 
 /* Mobile: one message at a time. All items share the same grid cell so the bar
@@ -3854,5 +3868,57 @@ cart-drawer:not(.active) .drawer__inner {
 @media (prefers-reduced-motion: reduce) {
   .cart-testimonials__item {
     transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Voile brun résiduel des panneaux « disclosure ».
+
+   Le thème sort le panneau de l'écran avec
+   `.disclosure-has-popup:not(.menu-opening) .product-purchase__inner {
+      transform: translate(105vw) }`
+   mais n'applique rien d'équivalent au voile plein écran qui l'accompagne
+   (.product-purchase__options sur la page produit,
+   .collection-filters__content sur les collections). Ce voile reste donc peint
+   tant que le <details> porte l'attribut `open`. Quand cet attribut n'est pas
+   retiré — retour arrière, page restaurée depuis le cache, séquence de
+   fermeture interrompue — le panneau est parti mais le voile survit : la page
+   reste ternie en brun translucide, et comme il est en `pointer-events: none`
+   elle reste cliquable, ce qui rend le symptôme difficile à identifier.
+
+   La visibilité du voile est donc alignée sur celle du panneau : `menu-opening`,
+   et non l'attribut `open`.
+   --------------------------------------------------------------------------- */
+.js .disclosure-has-popup:not(.menu-opening) .product-purchase__options,
+.js .disclosure-has-popup:not(.menu-opening) .collection-filters__content {
+  background-color: transparent;
+}
+
+/* Le voile se dissipe au même rythme que le panneau qui s'en va. */
+.section-main-product .product-purchase__options,
+.collection .collection-filters__content {
+  transition: background-color var(--duration-extra-long) var(--ease-out);
+}
+
+/* ---------------------------------------------------------------------------
+   Tiroir panier : compacter les deux libellés qui passaient sur deux lignes et
+   repoussaient la réassurance hors de l'écran.
+   --------------------------------------------------------------------------- */
+@media screen and (max-width: 767px) {
+  /* « Total estimé » se coupait en deux parce que le flex le laissait rétrécir,
+     ce qui privait de largeur le bloc de droite. */
+  cart-drawer .totals__total {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  cart-drawer .totals__total-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  cart-drawer .cart-totals-text {
+    font-size: 1.05rem;
+    line-height: 1.3;
   }
 }
