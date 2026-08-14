@@ -38,11 +38,13 @@
     gap: 1rem;
   }
 
+  /* Aux proportions du viewBox de icon-card.svg (20 x 14), pour que la carte ne soit ni
+     étirée ni écrasée à côté du libellé. */
   .cart__checkout-icon {
     display: inline-flex;
     flex: 0 0 auto;
-    width: 1.6rem;
-    height: 1.8rem;
+    width: 2rem;
+    height: 1.4rem;
   }
 
   .cart__checkout-icon svg {
@@ -598,11 +600,13 @@
                 form="CartDrawer-Form"
               >
                 {%- comment -%}
-                  Cadenas à gauche du libellé : le thème n'a pas d'icône de carte bancaire, et
-                  sur un bouton de paiement le cadenas est le repère le plus lu.
+                  Carte bancaire à gauche du libellé : elle annonce l'étape suivante — payer —
+                  là où le cadenas parlait de sécurité, ce que dit déjà le bloc de réassurance
+                  juste en dessous. Le thème n'avait pas cette icône, elle a été ajoutée dans
+                  assets/icon-card.svg, dans le même style de tracés pleins que les autres.
                 {%- endcomment -%}
                 <span class="cart__checkout-icon" aria-hidden="true">
-                  {{- 'icon-padlock.svg' | inline_asset_content -}}
+                  {{- 'icon-card.svg' | inline_asset_content -}}
                 </span>
                 <span>{{ 'sections.cart.checkout' | t }}</span>
               </button>

@@ -3685,6 +3685,13 @@ cart-drawer:not(.active) .drawer__inner {
   border-top: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
 }
 
+/* Dans le tiroir panier, le filet du bloc arrivait collé au bouton de paiement alors que le
+   bouton a 2rem d'air au-dessus de lui (.cart__ctas, mt-8). On rend l'espacement symétrique :
+   même 2rem de part et d'autre du bouton. */
+.reassurance-block--cart {
+  margin-top: 2rem;
+}
+
 .reassurance-block__item {
   display: flex;
   flex-direction: column;
