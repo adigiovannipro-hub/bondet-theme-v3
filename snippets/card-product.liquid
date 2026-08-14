@@ -146,12 +146,20 @@
               {%- endif -%}
             </div>
 
-            <div class="absolute left-[1.3rem] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-              {% render 'pager', size: 'small', bg: 'false' %}
-            </div>
-            <div class="absolute right-[1.3rem] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-              {% render 'pager', mode: 'next', size: 'small', bg: 'false' %}
-            </div>
+            {%- comment -%}
+              `index` has been incremented once per extra slide above, so it is the total slide
+              count. Below 2 the arrows would be dead controls, so they are not rendered.
+              Positioning and visibility live in base.css (.card__pager) rather than in utility
+              classes: on touch there is no hover, so the arrows have to stay on screen.
+            {%- endcomment -%}
+            {%- if index > 1 -%}
+              <div class="card__pager card__pager--prev">
+                {% render 'pager', size: 'small', bg: 'false' %}
+              </div>
+              <div class="card__pager card__pager--next">
+                {% render 'pager', mode: 'next', size: 'small', bg: 'false' %}
+              </div>
+            {%- endif -%}
           </div>
         {%- endif -%}
       </div>

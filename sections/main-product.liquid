@@ -77,7 +77,16 @@
       </div>
     </div>
   </div>
-  <div class="product-images bg-primary-beige aspect-square flex u-nsb overflow-auto snap-x snap-mandatory scroll-smooth lg:aspect-video xl:aspect-auto xl:flex-col xl:w-[46.17%]">
+  {%- comment -%}
+    The gallery is a native scroll-snap carousel below 1200px, with its scrollbar hidden by
+    `u-nsb` — nothing indicated that other photos existed. The wrapper carries the desktop width
+    so the arrows can be positioned over the carousel without scrolling away with its content.
+  {%- endcomment -%}
+  <div class="product-images-wrapper relative xl:w-[46.17%]">
+  <div
+    id="ProductImages-{{ section.id }}"
+    class="product-images bg-primary-beige aspect-square flex u-nsb overflow-auto snap-x snap-mandatory scroll-smooth lg:aspect-video xl:aspect-auto xl:flex-col"
+  >
     {% assign variant_images_shooting = product.selected_or_first_available_variant.metafields.custom.images_shooting.value %}
     {% assign variant_images = product.selected_or_first_available_variant.metafields.custom.images.value %}
     {% assign variant_videos = product.selected_or_first_available_variant.metafields.custom.videos.value %}
@@ -206,6 +215,30 @@
         {% endfor %}
       {% endif %}
     {% endif %}
+  </div>
+
+    <button
+      type="button"
+      class="product-images__nav product-images__nav--prev"
+      data-product-images-nav="prev"
+      aria-controls="ProductImages-{{ section.id }}"
+      aria-label="{{ 'general.slider.previous_slide' | t }}"
+    >
+      <span class="pager pager--prev pager--large pager--no-bg" aria-hidden="true">
+        <span class="pager__arrow"></span>
+      </span>
+    </button>
+    <button
+      type="button"
+      class="product-images__nav product-images__nav--next"
+      data-product-images-nav="next"
+      aria-controls="ProductImages-{{ section.id }}"
+      aria-label="{{ 'general.slider.next_slide' | t }}"
+    >
+      <span class="pager pager--next pager--large pager--no-bg" aria-hidden="true">
+        <span class="pager__arrow"></span>
+      </span>
+    </button>
   </div>
   <div class="product-form overflow-visible z-auto py-20 px-8 xl:w-[53.83%] xl:h-screen xl:sticky xl:top-0 xl:self-start xl:grid xl:place-items-center">
     <div class="product-content flex flex-col items-center gap-12 xl:w-[38.51vw]">
@@ -414,6 +447,62 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Arrows for the mobile/tablet photo carousel.
+  //
+  // This script sits outside `.product` on purpose: variant-picker.js replaces that subtree
+  // wholesale on every variant change, so anything bound inside it would be lost. Clicks are
+  // therefore delegated from `document`, and the arrows are revealed only once the carousel is
+  // actually scrollable — a dead arrow is worse than no arrow.
+  (function () {
+    function scroller(button) {
+      var wrapper = button.closest('.product-images-wrapper');
+      return wrapper ? wrapper.querySelector('.product-images') : null;
+    }
+
+    function refresh() {
+      document.querySelectorAll('.product-images-wrapper').forEach(function (wrapper) {
+        var images = wrapper.querySelector('.product-images');
+        if (!images) return;
+
+        var scrollable = images.scrollWidth - images.clientWidth > 1;
+        wrapper.classList.toggle('has-overflow', scrollable);
+        if (!scrollable) return;
+
+        var atStart = images.scrollLeft <= 1;
+        var atEnd = images.scrollLeft >= images.scrollWidth - images.clientWidth - 1;
+        wrapper.querySelectorAll('[data-product-images-nav]').forEach(function (button) {
+          var isPrev = button.dataset.productImagesNav === 'prev';
+          button.disabled = isPrev ? atStart : atEnd;
+        });
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest && event.target.closest('[data-product-images-nav]');
+      if (!button) return;
+
+      var images = scroller(button);
+      if (!images) return;
+
+      var step = images.clientWidth || 1;
+      images.scrollBy({
+        left: button.dataset.productImagesNav === 'prev' ? -step : step,
+        behavior: 'smooth',
+      });
+    });
+
+    document.addEventListener('scroll', function (event) {
+      if (event.target && event.target.classList && event.target.classList.contains('product-images')) refresh();
+    }, true);
+
+    window.addEventListener('resize', refresh);
+    window.addEventListener('variant:change', refresh);
+    document.addEventListener('DOMContentLoaded', refresh);
+    refresh();
+  })();
+</script>
 
 {% schema %}
 {

@@ -3417,3 +3417,125 @@ cart-drawer:not(.active) .drawer__inner {
     padding: 0.3rem 0.9rem;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Slider arrows — product cards.
+   They used to be hover-only (opacity-0 / group-hover:opacity-100), so on a
+   touch screen they never appeared at all and nothing suggested the card held
+   more than one photo. Selectors are written against the bundle's own
+   `.pager.pager--small` / `.pager.pager--no-bg` rules, hence the extra classes.
+   --------------------------------------------------------------------------- */
+.card__pager {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity var(--duration-default) ease;
+}
+
+.card__pager--prev {
+  left: 1.3rem;
+}
+
+.card__pager--next {
+  right: 1.3rem;
+}
+
+.product-card:hover .card__pager,
+.product-card:focus-within .card__pager {
+  opacity: 1;
+}
+
+/* Legible against a photograph: a soft light disc instead of a bare thin chevron. */
+.card__pager .pager.pager--no-bg {
+  background-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0.1rem 0.4rem rgba(var(--rgb-secondary-brown), 0.18);
+}
+
+.card__pager .pager.pager--no-bg:hover {
+  background-color: rgb(255, 255, 255);
+  opacity: 1;
+}
+
+.card__pager .pager.pager--small {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.card__pager .pager.pager--small .pager__arrow {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* No hover on touch: the arrows are the only affordance, so they stay visible.
+   They keep the same 3.2rem size as on desktop — bigger would swallow a card that
+   is only ~15rem wide in the 2-per-row grid. */
+@media (hover: none) {
+  .card__pager {
+    opacity: 1;
+  }
+
+  .card__pager--prev {
+    left: 0.8rem;
+  }
+
+  .card__pager--next {
+    right: 0.8rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Slider arrows — product page gallery.
+   Below 1200px .product-images is a horizontal scroll-snap carousel whose
+   scrollbar is hidden (u-nsb), so without these there is no sign that other
+   photos exist. Above 1200px the gallery stacks vertically and they are hidden.
+   --------------------------------------------------------------------------- */
+.product-images__nav {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.product-images-wrapper.has-overflow .product-images__nav {
+  display: block;
+}
+
+.product-images__nav--prev {
+  left: 1.2rem;
+}
+
+.product-images__nav--next {
+  right: 1.2rem;
+}
+
+.product-images__nav[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.product-images__nav .pager.pager--no-bg {
+  background-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0.1rem 0.6rem rgba(var(--rgb-secondary-brown), 0.2);
+}
+
+.product-images__nav:hover .pager.pager--no-bg {
+  background-color: rgb(255, 255, 255);
+}
+
+.product-images__nav:focus-visible .pager.pager--no-bg {
+  outline: 0.2rem solid rgb(var(--rgb-secondary-brown));
+  outline-offset: 0.2rem;
+}
+
+@media screen and (min-width: 1200px) {
+  .product-images-wrapper.has-overflow .product-images__nav {
+    display: none;
+  }
+}
