@@ -3539,3 +3539,79 @@ cart-drawer:not(.active) .drawer__inner {
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Reassurance bar (top of the header section).
+   Deliberately compact: it sits inside the fixed header, so every pixel here is
+   taken from the visible viewport on mobile.
+   --------------------------------------------------------------------------- */
+.reassurance-bar {
+  display: block;
+  background-color: rgb(var(--rgb-primary-beige));
+  color: rgb(var(--rgb-secondary-brown));
+  padding: 0 var(--wrapper-padding);
+  overflow: hidden;
+}
+
+.reassurance-bar__list {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 3.2rem;
+}
+
+.reassurance-bar__item {
+  font: 400 1.1rem / 1.2 var(--font-primary);
+  letter-spacing: 0.04em;
+  text-align: center;
+  align-self: center;
+}
+
+/* Mobile: one message at a time. All items share the same grid cell so the bar
+   keeps a constant height and never reflows the header as messages alternate. */
+@media screen and (max-width: 767px) {
+  .reassurance-bar__item {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-default) ease;
+  }
+
+  .reassurance-bar__item.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* From 768px there is room for every message on one line — no motion needed. */
+@media screen and (min-width: 768px) {
+  .reassurance-bar__list {
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3.2rem;
+  }
+
+  .reassurance-bar__item {
+    position: relative;
+  }
+
+  .reassurance-bar__item + .reassurance-bar__item::before {
+    content: '';
+    position: absolute;
+    left: -1.6rem;
+    top: 50%;
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background-color: rgba(var(--rgb-secondary-brown), 0.45);
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reassurance-bar__item {
+    transition: none;
+  }
+}
