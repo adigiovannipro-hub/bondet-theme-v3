@@ -50,6 +50,32 @@
       padding-top: 0.5rem;
     }
   }
+
+  /* --- Filets de sécurité contre les états de navigation bloqués --- */
+
+  /* Sur les pages produit, le JS du thème éteint le header (opacity: 0 +
+     pointer-events: none en style inline via GSAP) pour le remplacer par
+     .product-fixed — lequel est en `hidden md:block`, donc ABSENT sur mobile.
+     Et comme la navigation se fait en AJAX, cet état inline survit aux
+     changements de page : header invisible ou inerte sur mobile. Seul
+     !important bat un style inline. Desktop (≥768px) inchangé. */
+  @media screen and (max-width: 767px) {
+    .section-header {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+  }
+
+  /* Aucun voile plein écran ne survit à son panneau refermé. */
+  .js details:not([open]) .product-purchase__options,
+  .js details:not([open]) .collection-filters__content {
+    background-color: transparent !important;
+  }
+
+  /* Le fond du tiroir panier ne peint jamais quand il est fermé. */
+  .drawer:not(.active) {
+    background-color: transparent !important;
+  }
 </style>
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
@@ -93,10 +119,20 @@
                 image_class: 'object-contain w-full h-full'
               %}
             </span>
-          {%- elsif block.settings.icon != 'none' -%}
+          {%- elsif block.settings.icon != blank and block.settings.icon != 'none' -%}
             <span class="reassurance-bar__icon" aria-hidden="true">
-              {%- assign icon_file = 'icon-' | append: block.settings.icon | append: '.svg' -%}
-              {{ icon_file | inline_asset_content }}
+              {%- case block.settings.icon -%}
+                {%- when 'padlock' -%}{{ 'icon-padlock.svg' | inline_asset_content }}
+                {%- when 'truck' -%}{{ 'icon-truck.svg' | inline_asset_content }}
+                {%- when 'return' -%}{{ 'icon-return.svg' | inline_asset_content }}
+                {%- when 'plane' -%}{{ 'icon-plane.svg' | inline_asset_content }}
+                {%- when 'stopwatch' -%}{{ 'icon-stopwatch.svg' | inline_asset_content }}
+                {%- when 'leaf' -%}{{ 'icon-leaf.svg' | inline_asset_content }}
+                {%- when 'recycle' -%}{{ 'icon-recycle.svg' | inline_asset_content }}
+                {%- when 'map' -%}{{ 'icon-map.svg' | inline_asset_content }}
+                {%- when 'star' -%}{{ 'icon-star.svg' | inline_asset_content }}
+                {%- when 'tick' -%}{{ 'icon-tick.svg' | inline_asset_content }}
+              {%- endcase -%}
             </span>
           {%- endif -%}
           <span class="reassurance-bar__text">{{ block.settings.text | escape }}</span>
