@@ -143,7 +143,12 @@
     >
       <div class="drawer__header">
         <p class="drawer__heading font-menu">{{ 'sections.cart.title' | t }}</p>
-        <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()">
+        <button
+          class="drawer__close"
+          type="button"
+          aria-label="{{ 'accessibility.close' | t }}"
+          onclick="this.closest('cart-drawer').close()"
+        >
           <span class="svg-wrapper !w-6 !h-6">{{- 'icon-close.svg' | inline_asset_content -}}</span>
         </button>
       </div>
