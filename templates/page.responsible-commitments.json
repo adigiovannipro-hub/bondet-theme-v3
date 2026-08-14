@@ -165,12 +165,12 @@
             "display_order": "media_first",
             "no_image_fallback": "review_text_only",
             "max_reviews": 20,
-            "review_length": "medium",
-            "text_size": "medium",
+            "review_length": "small",
+            "text_size": "small",
             "image_ratio": "1",
             "reviews_shown": 4,
             "show_reviewer_name": true,
-            "show_product_name": true,
+            "show_product_name": false,
             "hide_arrows_mobile": false,
             "arrows_position": "sides",
             "max_width": 1100,
@@ -192,7 +192,7 @@
       ],
       "custom_css": [
         "{padding-top: clamp(40px, 8vw, 80px); padding-bottom: clamp(40px, 8vw, 80px);}",
-        "h2 {font: 400 clamp(2rem, 5.5vw, 3rem) / 1.2 var(--font-primary); white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: break-word; max-width: 100%;}",
+        "h2 {font: 400 clamp(1.8rem, 4.5vw, 2.6rem) / 1.25 var(--font-primary); white-space: normal; overflow: visible; text-overflow: clip; height: auto; max-height: none; -webkit-line-clamp: unset; display: block; overflow-wrap: break-word; max-width: 100%; margin-bottom: 1.6rem;}",
         "p {font-size: 14px;}",
         "span {font-size: 80%;}",
         "span span {font-size: 100%;}"
@@ -205,12 +205,12 @@
   "order": [
     "main",
     "content_image_rBwLza",
+    "1785490430f3690ce2",
     "right_content_image_3CQ8bA",
     "flexible_media_HRtYPK",
     "images_content_W4h7Jt",
     "separator_content_BpLhM9",
     "bondet_collections_VcLjn7",
-    "flexible_media_EXQwMe",
-    "1785490430f3690ce2"
+    "flexible_media_EXQwMe"
   ]
 }

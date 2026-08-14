@@ -10,6 +10,7 @@
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'cart-testimonials.js' | asset_url }}" defer="defer"></script>
 
 {%- comment -%}
   Safety net for the closed state (the authoritative rules live in base.css).
@@ -152,6 +153,11 @@
           <span class="svg-wrapper !w-6 !h-6">{{- 'icon-close.svg' | inline_asset_content -}}</span>
         </button>
       </div>
+      {%- comment -%}
+        Bandeau de réassurance par la preuve sociale, juste sous le titre du tiroir : c'est le
+        moment où l'acheteur hésite le plus.
+      {%- endcomment -%}
+      {% render 'cart-testimonials' %}
       {%- if cart == empty -%}
         <div class="drawer__inner-empty">
           <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
