@@ -89,6 +89,20 @@
     color: rgb(var(--rgb-secondary-brown));
   }
 
+  /* Sur mobile la phrase passait sur deux lignes : on réduit le texte seulement,
+     la case garde ses 2.4rem. */
+  @media screen and (max-width: 767px) {
+    .cart-cgv__control {
+      padding: 1.2rem;
+      gap: 1rem;
+    }
+
+    .cart-cgv__text {
+      font-size: 1.2rem;
+      line-height: 1.35;
+    }
+  }
+
   .cart-cgv__link {
     text-decoration: underline;
     text-underline-offset: 0.2rem;

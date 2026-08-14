@@ -213,6 +213,54 @@
         "step": 1,
         "unit": "★",
         "default": 5
+      },
+      {
+        "type": "header",
+        "content": "Témoignage 4"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_testimonial_4_text",
+        "label": "Témoignage"
+      },
+      {
+        "type": "text",
+        "id": "cart_testimonial_4_author",
+        "label": "Prénom et initiale"
+      },
+      {
+        "type": "range",
+        "id": "cart_testimonial_4_rating",
+        "label": "Note",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "★",
+        "default": 5
+      },
+      {
+        "type": "header",
+        "content": "Témoignage 5"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_testimonial_5_text",
+        "label": "Témoignage"
+      },
+      {
+        "type": "text",
+        "id": "cart_testimonial_5_author",
+        "label": "Prénom et initiale"
+      },
+      {
+        "type": "range",
+        "id": "cart_testimonial_5_rating",
+        "label": "Note",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "★",
+        "default": 5
       }
     ]
   }
