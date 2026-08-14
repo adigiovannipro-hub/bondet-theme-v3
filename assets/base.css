@@ -3796,13 +3796,15 @@ cart-drawer:not(.active) .drawer__inner {
 }
 
 /* ---------------------------------------------------------------------------
-   Cart drawer testimonials.
-   A single grid cell holds every item so the strip keeps a constant height and
-   the drawer contents below never jump as testimonials alternate.
+   Cart drawer testimonials — une seule rangée.
+   Empilées (étoiles / phrase / prénom) elles prenaient 111px de haut, ce qui
+   repoussait la réassurance hors de l'écran. Tout tient sur une ligne, la phrase
+   étant tronquée si besoin ; une grille à cellule unique garde une hauteur
+   constante pour que le contenu du panier ne saute pas au changement.
    --------------------------------------------------------------------------- */
 .cart-testimonials {
   display: block;
-  padding: 1.6rem var(--wrapper-padding);
+  padding: 1rem var(--wrapper-padding);
   background-color: rgba(var(--rgb-primary-beige), 0.55);
   border-bottom: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.15);
 }
@@ -3817,9 +3819,10 @@ cart-drawer:not(.active) .drawer__inner {
 .cart-testimonials__item {
   grid-area: 1 / 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.6rem;
+  min-width: 0;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--duration-default) ease;
@@ -3832,13 +3835,14 @@ cart-drawer:not(.active) .drawer__inner {
 
 .cart-testimonials__stars {
   display: flex;
-  gap: 0.2rem;
+  flex: 0 0 auto;
+  gap: 0.15rem;
 }
 
 .cart-testimonials__star {
   display: flex;
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1.1rem;
+  height: 1.1rem;
   color: #ff9e1b;
 }
 
@@ -3852,17 +3856,23 @@ cart-drawer:not(.active) .drawer__inner {
   fill: currentColor;
 }
 
+/* min-width: 0 pour que le flex autorise vraiment la troncature. */
 .cart-testimonials__text {
   margin: 0;
-  font: 400 1.3rem / 1.4 var(--font-secondary);
-  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 1.15rem / 1.4 var(--font-secondary);
   color: rgb(var(--rgb-secondary-brown));
 }
 
 .cart-testimonials__author {
   margin: 0;
-  font: 400 1.1rem / 1.2 var(--font-primary);
+  flex: 0 0 auto;
+  font: 400 1rem / 1.2 var(--font-primary);
   color: rgba(var(--rgb-secondary-brown), 0.7);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3870,6 +3880,7 @@ cart-drawer:not(.active) .drawer__inner {
     transition: none;
   }
 }
+
 
 /* ---------------------------------------------------------------------------
    Voile brun résiduel des panneaux « disclosure ».
@@ -3918,7 +3929,15 @@ cart-drawer:not(.active) .drawer__inner {
   }
 
   cart-drawer .cart-totals-text {
-    font-size: 1.05rem;
+    font-size: 1.2rem;
+    line-height: 1.45;
+  }
+
+  cart-drawer .totals {
+    align-items: baseline;
+  }
+
+  cart-drawer .totals__total-value {
     line-height: 1.3;
   }
 }
