@@ -128,5 +128,92 @@
         "label": "Colonne 4 - Titre"
       }
     ]
+  },
+  {
+    "name": "Panier - Témoignages",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Affichés en bandeau défilant sous le titre du tiroir panier. Laissez le témoignage vide pour masquer une entrée. Pensez à les remplacer par des avis réellement publiés sur votre boutique."
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_testimonials_enabled",
+        "label": "Afficher les témoignages dans le panier",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Témoignage 1"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_testimonial_1_text",
+        "label": "Témoignage"
+      },
+      {
+        "type": "text",
+        "id": "cart_testimonial_1_author",
+        "label": "Prénom et initiale"
+      },
+      {
+        "type": "range",
+        "id": "cart_testimonial_1_rating",
+        "label": "Note",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "★",
+        "default": 5
+      },
+      {
+        "type": "header",
+        "content": "Témoignage 2"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_testimonial_2_text",
+        "label": "Témoignage"
+      },
+      {
+        "type": "text",
+        "id": "cart_testimonial_2_author",
+        "label": "Prénom et initiale"
+      },
+      {
+        "type": "range",
+        "id": "cart_testimonial_2_rating",
+        "label": "Note",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "★",
+        "default": 5
+      },
+      {
+        "type": "header",
+        "content": "Témoignage 3"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_testimonial_3_text",
+        "label": "Témoignage"
+      },
+      {
+        "type": "text",
+        "id": "cart_testimonial_3_author",
+        "label": "Prénom et initiale"
+      },
+      {
+        "type": "range",
+        "id": "cart_testimonial_3_rating",
+        "label": "Note",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "★",
+        "default": 5
+      }
+    ]
   }
 ]

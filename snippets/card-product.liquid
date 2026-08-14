@@ -41,59 +41,48 @@
       <div
         class="card__inner aspect-[0.91/1] xl:aspect-[0.95/1] relative overflow-hidden cursor-grab"
       >
-        {%- assign badges = '' -%}
+        {%- comment -%}
+          Un seul badge, par ordre de priorité décroissante : deux pastilles empilées
+          couvraient la photo sur une vignette demi-largeur. L'ordre place d'abord les
+          informations bloquantes pour l'achat (épuisé, promo), puis « Nouveauté » avant
+          « Meilleures ventes ».
+        {%- endcomment -%}
+        {%- assign badge = '' -%}
 
         {%- if card_variant -%}
           {%- if card_variant.available == false -%}
-            {%- assign badges = badges | append: 'sold_out|' -%}
+            {%- assign badge = 'sold_out' -%}
+          {%- elsif card_variant.compare_at_price > card_variant.price -%}
+            {%- assign badge = 'on_sale' -%}
+          {%- elsif card_variant.metafields.custom.new_product == true -%}
+            {%- assign badge = 'new' -%}
+          {%- elsif card_variant.metafields.custom.best_seller == true -%}
+            {%- assign badge = 'best_seller' -%}
+          {%- elsif card_variant.metafields.custom.success_product == true -%}
+            {%- assign badge = 'success' -%}
+          {%- elsif card_variant.metafields.custom.soon_product == true -%}
+            {%- assign badge = 'soon' -%}
           {%- endif -%}
-
-          {%- if card_variant.compare_at_price > card_variant.price -%}
-            {%- assign badges = badges | append: 'on_sale|' -%}
-          {%- endif -%}
-
-          {%- if card_variant.metafields.custom.new_product == true -%}
-            {%- assign badges = badges | append: 'new|' -%}
-          {%- endif -%}
-
-          {%- if card_variant.metafields.custom.success_product == true -%}
-            {%- assign badges = badges | append: 'success|' -%}
-          {%- endif -%}
-
-          {%- if card_variant.metafields.custom.soon_product == true -%}
-            {%- assign badges = badges | append: 'soon|' -%}
-          {%- endif -%}
-
-          {%- if card_variant.metafields.custom.best_seller == true -%}
-            {%- assign badges = badges | append: 'best_seller|' -%}
-          {%- endif -%}
-
         {%- endif -%}
 
-        {%- assign badges_array = badges | split: '|' -%}
-
-        {%- if badges_array.size > 0 -%}
+        {%- if badge != '' -%}
           <div class="card__badge absolute z-10 top-6 left-6 flex flex-wrap gap-2">
-            {%- for badge in badges_array -%}
-              {%- if badge != '' -%}
-                <div class="py-2 px-[1.6rem] bg-primary-beige rounded-[10rem] font-menu text-secondary-brown w-fit">
-                  {%- case badge -%}
-                    {%- when 'sold_out' -%}
-                      {{ 'products.product.sold_out' | t }}
-                    {%- when 'on_sale' -%}
-                      {{ 'products.product.on_sale' | t }}
-                    {%- when 'new' -%}
-                      {{ 'products.product.new' | t }}
-                    {%- when 'success' -%}
-                      {{ 'products.product.success' | t }}
-                    {%- when 'soon' -%}
-                      {{ 'products.product.soon' | t }}
-                    {%- when 'best_seller' -%}
-                      {{ 'products.product.best_seller' | t }}
-                  {%- endcase -%}
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
+            <div class="py-2 px-[1.6rem] bg-primary-beige rounded-[10rem] font-menu text-secondary-brown w-fit">
+              {%- case badge -%}
+                {%- when 'sold_out' -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- when 'on_sale' -%}
+                  {{ 'products.product.on_sale' | t }}
+                {%- when 'new' -%}
+                  {{ 'products.product.new' | t }}
+                {%- when 'success' -%}
+                  {{ 'products.product.success' | t }}
+                {%- when 'soon' -%}
+                  {{ 'products.product.soon' | t }}
+                {%- when 'best_seller' -%}
+                  {{ 'products.product.best_seller' | t }}
+              {%- endcase -%}
+            </div>
           </div>
         {%- endif -%}
         {%- if featured_media -%}
@@ -239,7 +228,7 @@
               {%- if swatch_count > 0 -%}
                 <ul class="card__swatches" aria-label="{{ montures_count }} coloris disponibles">
                   {%- for value in color_option.values limit: 4 -%}
-                    {%- capture value_name %}{{ value }}{% endcapture -%}
+                    {%- capture value_name %}{{ value.name | default: value }}{% endcapture -%}
                     {%- assign target_variant = null -%}
                     {%- for v in card_product.variants -%}
                       {%- if v.option1 == value_name -%}
@@ -252,11 +241,16 @@
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
+                    {%- assign swatch_media = target_variant.featured_media | default: card_product.featured_media -%}
                     <li>
                       <a
                         href="{{ target_variant.url | default: card_product.url }}"
                         class="card__swatch-link{% if value_name == card_variant.option1 %} is-current{% endif %}"
                         title="{{ value_name }}"
+                        data-card-swatch
+                        {% if swatch_media %}
+                          data-swatch-image="{{ swatch_media | image_url: width: 800 }}"
+                        {% endif %}
                       >
                         <span class="visually-hidden">{{ card_product.title | escape }} — {{ value_name }}</span>
                         {% render 'swatch', swatch: value.swatch %}

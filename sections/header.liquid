@@ -79,7 +79,27 @@
           class="reassurance-bar__item{% if forloop.first %} is-active{% endif %}"
           {{ block.shopify_attributes }}
         >
-          {{ block.settings.text | escape }}
+          {%- comment -%}
+            Icône du thème par défaut (SVG inline, pas de requête, prend la couleur du texte) ;
+            l'image téléversée prend le dessus quand elle est renseignée, pour un logo maison
+            comme la marque « fabriqué en France ».
+          {%- endcomment -%}
+          {%- if block.settings.icon_image != blank -%}
+            <span class="reassurance-bar__icon" aria-hidden="true">
+              {% render 'image',
+                image: block.settings.icon_image,
+                alt: '',
+                sizes: '20px',
+                image_class: 'object-contain w-full h-full'
+              %}
+            </span>
+          {%- elsif block.settings.icon != 'none' -%}
+            <span class="reassurance-bar__icon" aria-hidden="true">
+              {%- assign icon_file = 'icon-' | append: block.settings.icon | append: '.svg' -%}
+              {{ icon_file | inline_asset_content }}
+            </span>
+          {%- endif -%}
+          <span class="reassurance-bar__text">{{ block.settings.text | escape }}</span>
         </li>
       {%- endfor -%}
     </ul>
@@ -95,9 +115,15 @@
     endif
   -%}
 
+  {%- comment -%}
+    Le tiroir panier n'est plus rendu ici mais en fin de <body> dans layout/theme.liquid :
+    .section-header est en `position: fixed` et reçoit `transform: translateY(-100%)` au
+    défilement. Un transform fait de .section-header le bloc conteneur des descendants en
+    `position: fixed` ET un contexte d'empilement plafonné à son z-index (50) — le tiroir
+    était donc redimensionné, déplacé et recouvert par le contenu de la page.
+  {%- endcomment -%}
   <header class="header">
     {% render 'header-drawer' %}
-    {%- render 'cart-drawer' -%}
 
     <a
       href="{{ routes.root_url }}"
@@ -341,6 +367,31 @@
           "id": "text",
           "label": "Message",
           "default": "Fabrication française certifiée"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "Aucune" },
+            { "value": "padlock", "label": "Cadenas (paiement sécurisé)" },
+            { "value": "truck", "label": "Camion (livraison)" },
+            { "value": "return", "label": "Retour (échanges)" },
+            { "value": "plane", "label": "Avion (expédition)" },
+            { "value": "stopwatch", "label": "Chronomètre (rapidité)" },
+            { "value": "leaf", "label": "Feuille (matériaux)" },
+            { "value": "recycle", "label": "Recyclage" },
+            { "value": "map", "label": "Carte (revendeurs)" },
+            { "value": "star", "label": "Étoile (avis)" },
+            { "value": "tick", "label": "Coche (certifié)" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icône personnalisée",
+          "info": "Facultative, prend le dessus sur l'icône ci-dessus. Un SVG monochrome fonctionne mieux à cette taille."
         }
       ]
     },

@@ -1,0 +1,51 @@
+{% comment %}
+  Renders the rotating testimonial strip shown under the cart drawer heading.
+
+  Reads the `cart_testimonial_1..3_*` theme settings rather than the reviews app: Judge.me
+  exposes its reviews through its own app blocks, which cannot be placed inside a snippet, and
+  its review text is not reachable from Liquid.
+
+  Usage:
+  {% render 'cart-testimonials' %}
+{% endcomment %}
+
+{%- liquid
+  assign has_testimonial = false
+  for i in (1..3)
+    assign text_key = 'cart_testimonial_' | append: i | append: '_text'
+    if settings[text_key] != blank
+      assign has_testimonial = true
+    endif
+  endfor
+-%}
+
+{%- if settings.cart_testimonials_enabled and has_testimonial -%}
+  <cart-testimonials class="cart-testimonials" data-rotate-speed="5">
+    <ul class="cart-testimonials__list">
+      {%- assign shown = 0 -%}
+      {%- for i in (1..3) -%}
+        {%- assign text_key = 'cart_testimonial_' | append: i | append: '_text' -%}
+        {%- assign author_key = 'cart_testimonial_' | append: i | append: '_author' -%}
+        {%- assign rating_key = 'cart_testimonial_' | append: i | append: '_rating' -%}
+        {%- assign testimonial = settings[text_key] -%}
+        {%- if testimonial != blank -%}
+          {%- assign shown = shown | plus: 1 -%}
+          {%- assign rating = settings[rating_key] | default: 5 -%}
+          <li class="cart-testimonials__item{% if shown == 1 %} is-active{% endif %}">
+            <span class="cart-testimonials__stars" aria-label="{{ rating }}/5">
+              {%- for star in (1..5) -%}
+                <span class="cart-testimonials__star{% if star > rating %} is-empty{% endif %}" aria-hidden="true">
+                  {{- 'icon-star.svg' | inline_asset_content -}}
+                </span>
+              {%- endfor -%}
+            </span>
+            <p class="cart-testimonials__text">{{ testimonial | escape }}</p>
+            {%- if settings[author_key] != blank -%}
+              <p class="cart-testimonials__author">{{ settings[author_key] | escape }}</p>
+            {%- endif -%}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </cart-testimonials>
+{%- endif -%}
