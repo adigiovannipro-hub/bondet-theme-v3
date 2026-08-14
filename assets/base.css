@@ -3443,83 +3443,62 @@ cart-drawer:not(.active) .drawer__inner {
     max-width: 100%;
   }
 
-  /* Arrows sit on a ~12rem photo here: keep them readable but discreet. */
-  .collection-products .card__pager .pager.pager--small {
-    width: 2.4rem;
-    height: 2.4rem;
-  }
-
-  .collection-products .card__pager .pager.pager--small .pager__arrow {
-    width: 1.5rem;
-    height: 1.5rem;
+  /* La photo ne fait qu'environ 12rem de large ici : on resserre les pastilles. */
+  .collection-products .card__dots {
+    bottom: 0.6rem;
+    gap: 0.4rem;
+    padding: 0.35rem 0.55rem;
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Slider arrows — product cards.
-   They used to be hover-only (opacity-0 / group-hover:opacity-100), so on a
-   touch screen they never appeared at all and nothing suggested the card held
-   more than one photo. Selectors are written against the bundle's own
-   `.pager.pager--small` / `.pager.pager--no-bg` rules, hence the extra classes.
+   Pastilles de défilement — vignettes produit.
+
+   Elles remplacent les flèches, qui mangeaient le centre de la photo alors que
+   celle-ci ne fait qu'environ 12rem de large dans la grille à 2 par ligne. Les
+   pastilles signalent le même geste en occupant vingt fois moins de place.
+
+   Posées en absolu au bas de la photo, à l'intérieur de .card__media, plutôt
+   que dans le flux sous la carte : la vignette est à hauteur fixe partout
+   (h-[41.7rem], xl:h-[47rem]) sauf dans la grille de collection mobile, où
+   elle passe en `height: auto` juste au-dessus. Une rangée de pastilles dans
+   le flux aurait donc poussé le titre et le prix hors de la carte dans tous
+   les autres emplacements. En absolu, le comportement est le même partout et
+   n'ajoute aucune hauteur.
+
+   `pointer-events: none` est délibéré : le thème navigue vers le produit au
+   clic n'importe où sur la carte, sauf sur `.pager`. Des pastilles cliquables
+   auraient donc soit ouvert le produit, soit désynchronisé l'index interne du
+   slider, qui n'est pas exposé hors du bundle. Elles indiquent, le glissement
+   sur la photo fait défiler.
    --------------------------------------------------------------------------- */
-.card__pager {
+.card__dots {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  opacity: 0;
-  transition: opacity var(--duration-default) ease;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  /* Sur une photographie claire comme sombre, un disque laiteux garde les
+     pastilles lisibles sans jurer avec les tons crème du thème. */
+  background-color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
 }
 
-.card__pager--prev {
-  left: 1.3rem;
+.card__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: rgba(var(--rgb-secondary-brown), 0.28);
+  transition: background-color var(--duration-default) ease;
 }
 
-.card__pager--next {
-  right: 1.3rem;
-}
-
-.product-card:hover .card__pager,
-.product-card:focus-within .card__pager {
-  opacity: 1;
-}
-
-/* Legible against a photograph: a soft light disc instead of a bare thin chevron. */
-.card__pager .pager.pager--no-bg {
-  background-color: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 0.1rem 0.4rem rgba(var(--rgb-secondary-brown), 0.18);
-}
-
-.card__pager .pager.pager--no-bg:hover {
-  background-color: rgb(255, 255, 255);
-  opacity: 1;
-}
-
-.card__pager .pager.pager--small {
-  width: 2.6rem;
-  height: 2.6rem;
-}
-
-.card__pager .pager.pager--small .pager__arrow {
-  width: 1.6rem;
-  height: 1.6rem;
-}
-
-/* No hover on touch: the arrows are the only affordance, so they stay visible.
-   They keep the same 3.2rem size as on desktop — bigger would swallow a card that
-   is only ~15rem wide in the 2-per-row grid. */
-@media (hover: none) {
-  .card__pager {
-    opacity: 1;
-  }
-
-  .card__pager--prev {
-    left: 0.8rem;
-  }
-
-  .card__pager--next {
-    right: 0.8rem;
-  }
+.card__dot.is-current {
+  background-color: rgb(var(--rgb-secondary-brown));
 }
 
 /* ---------------------------------------------------------------------------
