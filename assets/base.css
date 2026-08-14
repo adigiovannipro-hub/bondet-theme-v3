@@ -2330,13 +2330,36 @@ input[type='checkbox'] {
   transition: top 0.15s ease-out;
 }
 
+/* Ces deux règles étaient censées être neutralisées avec celle du dessus, mais le marqueur de
+   fin de commentaire avait été posé juste après `z-index: 3` : le commentaire se refermait
+   trop tôt, tout ce qui suivait restait donc actif, et un marqueur de fermeture orphelin
+   traînait en fin de bloc.
+
+   Conséquence : Shopify pose `shopify-section-group-header-group` sur CHAQUE section du
+   header-group, y compris .section-header. Le header se retrouvait donc à `z-index: 4` au
+   lieu du `z-50` de son markup — base.css étant chargé après le bundle, à spécificité égale
+   c'est lui qui gagnait. Tout élément de page au z-index supérieur passait alors au-dessus
+   du header : le calque de contenu du hero (`relative z-10`, plein écran en `h-screen`)
+   interceptait chaque appui sur le burger, le logo et le panier en page d'accueil, et les
+   pastilles « Nouveauté » (z-10) se peignaient par-dessus le menu ouvert en collection.
+
 .shopify-section-group-header-group {
   z-index: 4;
 }
 
 .section-header ~ .shopify-section-group-header-group {
   z-index: initial;
-} */
+}
+*/
+
+/* Le header doit rester au-dessus du contenu de page. Son markup porte déjà `z-50`, mais
+   base.css est chargé après le bundle : à spécificité égale, une règle posée ici l'emporte.
+   On réaffirme donc la valeur voulue au même niveau de cascade pour qu'elle ne puisse plus
+   être écrasée par accident. Les voiles qui doivent, eux, recouvrir le header (tiroir panier
+   1000, filtres et options produit 100/101) restent bien au-dessus. */
+.section-header {
+  z-index: 50;
+}
 
 /* Search */
 menu-drawer + .header__search {
