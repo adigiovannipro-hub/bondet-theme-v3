@@ -1,0 +1,220 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - card_product: {Object} Product Liquid object (optional)
+  - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+  - image_shape: {String} Image mask to apply to the product image card. Values are "arch", "blob", "chevronleft", "chevronright", "diamond", "parallelogram", and "round". (optional)
+  - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional)
+  - show_vendor: {Boolean} Show the product vendor. Default: false
+  - show_rating: {Boolean} Show the product rating. Default: false
+  - extend_height: {Boolean} Card height extends to available container space. Default: true (optional)
+  - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - skip_styles: {Boolean} Don't include component styles. Useful when rendering multiple product cards in a loop. Default: false (optional)
+  - quick_add: {Boolean} Show the quick add button.
+  - section_id: {String} The ID of the section that contains this card.
+  - horizontal_class: {Boolean} Add a card--horizontal class if set to true. Default: false (optional)
+  - horizontal_quick_add: {Boolean} Changes the quick add button styles when set to true. Default: false (optional)
+  - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+
+  Usage:
+  {% render 'card-product', show_vendor: section.settings.show_vendor %}
+{% endcomment %}
+
+{%- if card_product and card_product != empty -%}
+  {%- liquid
+    assign featured_media = card_product.featured_media
+
+    if card_variant and card_variant.featured_media
+      assign featured_media = card_variant.featured_media
+    endif
+  -%}
+
+  <div class="product-card card-wrapper product-card-wrapper cursor-pointer">
+    <div
+      class="card bg-white py-[2.3rem] px-[1.7rem]"
+    >
+      <div
+        class="card__inner aspect-[0.91/1] xl:aspect-[0.95/1] relative overflow-hidden cursor-grab"
+      >
+
+        {%- assign show_badge = false -%}
+
+        {%- if card_variant and card_variant.available == false -%}
+          {%- assign show_badge = true -%}
+        {%- elsif card_variant and card_variant.compare_at_price > card_variant.price -%}
+          {%- assign show_badge = true -%}
+        {%- elsif card_variant and card_variant.metafields.custom.new_product == true -%}
+          {%- assign show_badge = true -%}
+        {%- endif -%}
+
+        {%- if show_badge -%}
+          <div class="card__badge absolute z-10 top-6 left-6 py-2 px-[1.6rem] bg-primary-beige rounded-[10rem]">
+            {%- if card_variant and card_variant.available == false -%}
+              <div class="font-menu text-secondary-brown">
+                {{ 'products.product.sold_out' | t }}
+              </div>
+
+            {%- elsif card_variant and card_variant.compare_at_price > card_variant.price -%}
+              <div class="font-menu text-secondary-brown">
+                {{ 'products.product.on_sale' | t }}
+              </div>
+
+            {%- elsif card_variant and card_variant.metafields.custom.new_product == true -%}
+              <div class="font-menu text-secondary-brown">
+                {{ 'products.product.new' | t }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if featured_media -%}
+          <div class="card__media w-full h-full relative group overflow-hidden">
+            <div class="slider relative w-full h-full">
+              {%- liquid
+                assign main_media = card_product.featured_media
+
+                if card_variant and card_variant.featured_media
+                  assign main_media = card_variant.featured_media
+                endif
+              -%}
+
+              {%- if main_media -%}
+                <div
+                  class="slide absolute inset-0 transition-opacity duration-300 opacity-100"
+                  data-index="0"
+                >
+                  {% render 'image',
+                    image: main_media,
+                    alt: main_media.alt,
+                    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                    image_class: 'object-cover w-full h-full pointer-events-none'
+                  %}
+                </div>
+              {%- endif -%}
+
+              {%- assign index = 1 -%}
+              {%- for media in card_product.media limit: 5 -%}
+                {%- if media.id != main_media.id -%}
+                  <div
+                    class="slide absolute inset-0 transition-opacity ease-smooth duration-500 opacity-0"
+                    data-index="{{ index }}"
+                  >
+                    {% render 'image',
+                      image: media,
+                      alt: media.alt,
+                      sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                      image_class: 'object-cover w-full h-full pointer-events-none'
+                    %}
+                  </div>
+                  {%- assign index = index | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+            <div class="absolute left-[1.3rem] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+              {% render 'pager', size: 'small' %}
+            </div>
+            <div class="absolute right-[1.3rem] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+              {% render 'pager', mode: 'next', size: 'small' %}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="card__content">
+        <div class="card__information mt-6">
+          <h3
+            class="card__heading font-name-product-mobile xl:font-name-product-s"
+            {% if card_product.featured_media or settings.card_style == 'card' %}
+              id="title-{{ section_id }}-{{ card_product.id }}"
+            {% endif %}
+          >
+            <a
+              href="{{ card_product.url }}?variant={{ card_variant.id }}"
+              id="CardLink-{{ section_id }}-{{ card_product.id }}"
+              class="card__link flex flex-wrap justify-between"
+              aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"
+            >
+              <div class="flex gap-4 items-center">
+                {%- assign in_cart = false -%}
+                {%- for item in cart.items -%}
+                  {%- if card_variant and item.variant_id == card_variant.id -%}
+                    {%- assign in_cart = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- if in_cart -%}
+                  <span class="flex w-[1.6rem] h-[1.6rem]">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+                {%- endif -%}
+                <span>{{ card_product.title | escape }}</span>
+              </div>
+
+              {% render 'price',
+                product: card_product,
+                use_variant: true,
+                show_compare_at_price: true,
+                target_variant: card_variant
+              %}
+            </a>
+          </h3>
+          <div class="card-information">
+            <div class="font-text-mentions text-[#756565] mt-4">{{ card_product.variants | size }} Coloris</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- else -%}
+  {%- liquid
+    assign ratio = 1
+    assign placeholder = true
+    if media_aspect_ratio == 'portrait'
+      assign ratio = 0.8
+    endif
+  -%}
+  <div class="product-card card-wrapper product-card-wrapper underline-links-hover">
+    <div
+      class="
+        card card--{{ settings.card_style }}
+        {% if extend_height %} card--extend-height{% endif %}
+        {% if image_shape and image_shape != 'default' %} card--shape{% endif %}
+        {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
+      "
+      style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+    >
+      <div
+        class="card__inner{% if settings.card_style == 'standard' %} color-{{ settings.card_color_scheme }} gradient{% endif %} ratio"
+      >
+        <div
+          class="card__media {% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}"
+        >
+          <div
+            class="media media--transparent"
+          >
+            {%- if placeholder_image -%}
+              {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- else -%}
+              {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="card__content">
+        <div class="card__information">
+          <h3 class="card__heading card__heading--placeholder{% if settings.card_style == 'standard' %} h5{% endif %}">
+            <a role="link" aria-disabled="true" class="full-unstyled-link">
+              {{ 'onboarding.product_title' | t }}
+            </a>
+          </h3>
+          <div class="card-information">
+            {%- if show_vendor -%}
+              <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+              <div class="caption-with-letter-spacing light">{{ 'products.product.vendor' | t }}</div>
+            {%- endif -%}
+            {% render 'price', placeholder: placeholder, show_compare_at_price: true %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

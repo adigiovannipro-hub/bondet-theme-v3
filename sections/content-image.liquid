@@ -1,0 +1,148 @@
+<div class="pt-28 pb-24 overflow-x-clip">
+  <div class="u-container">
+    <div class="w-fit mx-auto">
+      {% render 'separator', is_big: true %}
+    </div>
+    {% if section.settings.tag != blank or section.settings.accroche != blank %}
+      <div class="u-grid">
+        <div class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
+          <div class="flex flex-col items-center gap-y-14 py-24">
+            {% if section.settings.tag != blank %}
+              <p class="font-suptitle uppercase">{{ section.settings.tag }}</p>
+            {% endif %}
+            {% if section.settings.accroche != blank %}
+              <p class="font-text-l-mobile lg:font-text-l text-center">{{ section.settings.accroche | newline_to_br }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="u-grid mt-[7.8rem] mb-16 md:relative">
+      <div class="col-span-12 md:col-start-7 md:col-span-6 xl:col-start-4 xl:col-span-4">
+        {% if section.settings.description != blank %}
+          <p class="font-text-s">{{ section.settings.description | newline_to_br }}</p>
+        {% endif %}
+      </div>
+      {% if section.settings.image_secondary %}
+        <div data-scroll class="u-glasses-reveal hidden w-full pointer-events-none md:block md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:w-[34.4rem] md:h-[34.4rem] xl:left-auto xl:-right-60">
+          {% render 'image',
+            image: section.settings.image_secondary,
+            alt: section.settings.image_secondary.alt,
+            image_class: 'object-contain h-full w-full'
+          %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="u-grid">
+      <div class="col-span-12 md:col-span-6 xl:col-span-3">
+        <div class="flex flex-col gap-y-10 mb-16">
+          {% if section.settings.title %}
+            <div class="font-title-l">
+              {% render 'title', data: section.settings %}
+            </div>
+          {% endif %}
+          {% if section.settings.text != blank %}
+            <p class="font-text-s">{{ section.settings.text | newline_to_br }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-span-12 md:col-span-6 xl:col-span-5 xl:col-start-4">
+        {% if section.settings.image_primary %}
+          <div class="h-[43.2rem]">
+            {% render 'image',
+              image: section.settings.image_primary,
+              alt: section.settings.image_primary.alt,
+              sizes: '(max-width: 990px) 100vw, 50vw',
+              image_class: 'object-cover h-full w-full'
+            %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Content Image",
+  "tag": "section",
+  "class": "section section-content-image",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tag et accroche"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag"
+    },
+    {
+      "type": "textarea",
+      "id": "accroche",
+      "label": "Accroche"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Texte"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_primary",
+      "label": "Image (principale)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_secondary",
+      "label": "Image (secondaire)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contenu et image",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,9 @@
+{%- liquid
+  assign mode = mode | default: 'prev'
+  assign size = size | default: 'large'
+  assign bg = bg | default: true
+-%}
+
+<div class="pager pager--{{ mode }} pager--{{ size }} pager--{% if bg == false or bg == 'false' %}no-bg{% else %}bg{% endif %}">
+  <div class="pager__arrow"></div>
+</div>

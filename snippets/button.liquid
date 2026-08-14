@@ -1,0 +1,67 @@
+{% doc %}
+  Button snippet
+  Usage:
+  {% render 'button',
+    title: section.settings.button_text,
+    url: section.settings.button_url,
+    is_link: true,
+    icon: true,
+    icon_type: 'phone',  # or 'email'
+    new_tab: section.settings.button_new_tab,
+    class: 'image-banner__button'
+  %}
+
+  @param {string} title - The text to display on the button
+  @param {string} [url] - The URL to link to (if is_link is true)
+  @param {boolean} [new_tab] - Whether to open the link in a new tab (default: false)
+  @param {boolean} [is_link] - Whether the button should be a link (default: false)
+  @param {boolean} [icon] - Whether the button should display an icon (default: false)
+  @param {string} [icon_type] - The type of icon to display (e.g., 'phone', 'email') (default: 'phone')
+  @param {string} [class] - Additional CSS classes for styling (optional)
+{% enddoc %}
+
+{% liquid
+  assign is_link = is_link | default: false
+  assign icon = icon | default: false
+  assign icon_type = icon_type | default: 'phone'
+%}
+
+{% if is_link %}
+  <a
+    class="button {{ class }}"
+    href="{{ url }}"
+    {% if new_tab %}
+      target="_blank" rel="noopener"
+    {% endif %}
+  >
+    {% if icon %}
+      <span class="grid place-items-center w-6 h-6">
+        {% case icon_type %}
+          {% when 'phone' %}
+            {{- 'icon-phone.svg' | inline_asset_content -}}
+          {% when 'email' %}
+            {{- 'icon-email.svg' | inline_asset_content -}}
+          {% else %}
+            {{- 'icon-phone.svg' | inline_asset_content -}}
+        {% endcase %}
+      </span>
+    {% endif %}
+    <span>{{ title }}</span>
+  </a>
+{% else %}
+  <div class="button {{ class }}">
+    {% if icon %}
+      <span class="grid place-items-center w-6 h-6">
+        {% case icon_type %}
+          {% when 'phone' %}
+            {{- 'icon-phone.svg' | inline_asset_content -}}
+          {% when 'email' %}
+            {{- 'icon-email.svg' | inline_asset_content -}}
+          {% else %}
+            {{- 'icon-phone.svg' | inline_asset_content -}}
+        {% endcase %}
+      </span>
+    {% endif %}
+    <span>{{ title }}</span>
+  </div>
+{% endif %}

@@ -1,0 +1,118 @@
+<div class="relative h-screen flex items-center justify-center text-center text-white overflow-clip">
+  {% if section.settings.banner_image %}
+    <div class="image image-wrapper absolute top-0 left-0 w-full h-full xl:top-[10rem] xl:left-1/2 xl:w-[53.5vw] xl:rotate-[6deg]">
+      {% render 'image',
+        image: section.settings.banner_image,
+        alt: section.settings.banner_alt,
+        image_class: 'object-cover h-full'
+      %}
+      <div class="absolute inset-0 bg-black opacity-15"></div>
+    </div>
+  {% endif %}
+  <div class="u-container h-full w-full">
+    <div class="relative z-10 h-full w-full">
+      {% if section.settings.banner_suptitle %}
+        <p class="suptitle absolute top-[20rem] right-0 max-w-[21rem] text-right xl:right-[25.9vw]">
+          {{ section.settings.banner_suptitle }}
+        </p>
+      {% endif %}
+      <div class="content absolute left-0 bottom-[9rem] text-left flex flex-col gap-[2rem] xl:left-[25.9vw]">
+        {% if section.settings.title %}
+          <div class="max-w-[33rem]">
+            {% render 'title', data: section.settings, class: 'font-title-xl-mobile lg:font-title-xl' %}
+          </div>
+        {% endif %}
+        {% if section.settings.text %}
+          <p class="max-w-[48rem]">{{ section.settings.text }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if section.settings.ofg_image %}
+    <div class="ofg">
+      {% render 'image',
+        image: section.settings.ofg_image,
+        alt: section.settings.ofg_image.alt,
+        image_class: 'object-cover h-full'
+      %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Image Banner",
+  "tag": "section",
+  "class": "section section-image-banner h-screen",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image principale"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Image principale"
+    },
+    {
+      "type": "text",
+      "id": "banner_alt",
+      "label": "Texte alternatif de l'image",
+      "default": "bondet"
+    },
+    {
+      "type": "header",
+      "content": "Sur-titre"
+    },
+    {
+      "type": "text",
+      "id": "banner_suptitle",
+      "label": "Sur-titre"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Texte"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "image_picker",
+      "id": "ofg_image",
+      "label": "Origine France Garantie - Image"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Image Banner",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

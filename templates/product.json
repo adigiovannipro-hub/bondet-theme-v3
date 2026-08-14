@@ -1,0 +1,214 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "optician_link": "shopify://pages/trouver-un-opticien",
+        "optician_link_text": "Trouver un opticien"
+      }
+    },
+    "accordion_K7BAhJ": {
+      "type": "accordion",
+      "name": "Accordéon",
+      "settings": {
+        "desc_title": "Description",
+        "details_title": "Détails",
+        "mesures_title": "Mesures",
+        "mesures_image": "shopify://shop_images/croquis-mesures_a1591873-5e5f-4446-ad00-dae565222071.webp",
+        "materials_title": "Matériau bio-sourcé",
+        "materials_first_title": "<p>Un matériau plus</p><p>responsable, à base</p><p>d'huile de ricin</p>",
+        "materials_first_text": "<p>L'intégralité de notre collection est fabriquée avec un matériau composée d'huile de ricin, pour des lunettes légères comme une plume et résistantes</p>",
+        "materials_first_image": "shopify://shop_images/sanstitre-91.jpg",
+        "materials_second_title": "<p>Savoir-faire</p><p>centenaire et</p><p>innovation technique</p>",
+        "materials_second_text": "<p>Chez Bondet, nous mettons à votre disposition près de 100 ans de savoir-faire, des matériaux innovants et plus responsables pour vous proposer des lunettes légères, robustes et confortables.</p>",
+        "materials_second_image": "shopify://shop_images/lunette-droite.png",
+        "materials_label_button": "tous nos engagements",
+        "materials_url_button": "shopify://pages/engagements-responsables",
+        "fabrication_title": "Fabrication française",
+        "fabrication_first_image": "shopify://shop_images/Sous-titre_130867d9-ffe7-4c94-a3f5-3d27dcdb8757.png",
+        "fabrication_first_title": "<p>Certification \"Origine France Garantie\"</p>",
+        "fabrication_first_text": "<p>Chez Bondet, chaque paire de lunettes est fièrement certifiée \"ORIGINE France GARANTIE\", la seule labellisation officielle qui atteste de l’origine française d’un produit. Cette distinction repose sur un audit complet et rigoureux, contrôlé par des organismes indépendants comme Bureau Veritas ou Afnor, garantissant une traçabilité totale. De la conception au conditionnement, toutes les étapes de fabrication se déroulent en France, reflétant notre engagement pour un savoir-faire français d’exception et offrant aux consommateurs des lunettes fiables, durables et 100% locales.</p>",
+        "fabrication_label_button": "en savoir + sur la fabrication",
+        "fabrication_url_button": "shopify://pages/fabrication-francaise",
+        "fabrication_second_title": "<p>Des lunettes</p><p>qui ont du sens</p>",
+        "fabrication_second_text": "<p>Notre démarche va bien au-delà de l’origine : depuis 2020, Bondet a placé l’écoresponsabilité au cœur de sa production. <br/><br/>Avec 98 % de nos activités concentrées à Oyonnax, et la matière bio-sourcée à base d’huile de ricin fabriquée dans le nord de la France, nos lunettes sont à la fois robustes, légères et confortables, tout en minimisant notre empreinte carbone. <br/><br/>Chez Bondet, chaque lunette est bien plus qu’un accessoire : c’est le fruit d’un savoir-faire familial français, d’une innovation durable, et d’un engagement sincère pour la planète.</p>",
+        "sunglasses_title": "Verres solaires",
+        "sunglasses_image": "shopify://shop_images/COLORIS_VERRES_SOLAIRES_FINAL.png",
+        "sunglasses_content_title": "Les différentes teintes de verres",
+        "sunglasses_content_text": "<p>Choisissez parmi 8 verres solaires, colorés, ou polarisés ! </p><p>Les lunettes solaires Bondet sont disponibles avec plusieurs teintes de verres, chacune offrant un style et un confort visuel différent tout en assurant une protection UV optimale.</p><ul><li><strong>Gris</strong> : réduit la luminosité, avec une vision neutre des couleurs, pour une bonne protection et un style intemporel. (catégorie 3)</li><li><strong>Vert</strong> : équilibre les couleurs et réduit l’éblouissement, il allie style et confort visuel. (catégorie 3) </li><li><strong>Orange </strong>: ultra tendance, réchauffe la perception et permet un confort visuel agréable. (catégorie 1)</li><li><strong>Brun dégradé</strong> : élégant et confortable, apporte une luminosité douce. (catégorie 2)</li><li><strong>Bleu dégradé</strong> : moderne et lumineux, parfait pour un style affirmé. (catégorie 2)</li><li><strong>Polarisants Gris, Vert, Brun</strong> : les 3 grands classique pour vous apporter un confort visuel unique et une protection optimale. (catégorie 3)</li></ul><p>Les lunettes solaires de catégorie 3, 2 et 1 ne conviennent pas à la conduite automobile au crépuscule ou de nuit.<br/>Catégorie 0 : Affaiblissement très limité de l’éblouissement solaire<br/>Catégorie 1 : Affaiblissement limité de l’éblouissement solaire<br/>Catégorie 2 : Bonne protection contre l’éblouissement solaire<br/>Catégorie 3 : Protection élevée contre l’éblouissement solaire<br/>Catégorie 4 : Protection très élevée contre les rayonnements solaires extrêmes comme en mer, en espaces enneigés, en haute montagne ou dans le désert. Non adapté pour la conduite automobile et les usagers de la route.</p><p>Les verre polarisants offrent un confort de vue unique, ils ont pour particularité de neutraliser les reflets gênants et le phénomène d’éblouissement, rendent les formes et les couleurs plus nettes, et renforcent les contrastes et les reliefs.  Les verres polarisés sont bien adaptés aux yeux sensibles et préconisés pour les activités de mer et de montagne.</p>",
+        "delivery_title": "Livraison",
+        "delivery_content_title": "Chez Bondet, être à votre écoute fait partie de notre ADN. Si vos lunettes ne sont pas parfaites, pas de panique : consultez notre politique de retours et profitez d’un accompagnement simple, rapide et chaleureux, car vous faîtes maintenant partie de la famille.",
+        "delivery_button_url": "shopify://pages/livraison-et-retours",
+        "delivery_button_label": "livraison & retours"
+      }
+    },
+    "178429057831cde581": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_featured_carousel_3RVfic": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "maxwidth": 1120
+          }
+        },
+        "judge_me_reviews_review_widget_XGUUnr": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_featured_carousel_3RVfic",
+        "judge_me_reviews_review_widget_XGUUnr"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "product_content_n9w7Y4": {
+      "type": "product-content",
+      "name": "Savoir-faire",
+      "settings": {
+        "image_top_right": "shopify://shop_images/lunette-face.png",
+        "suptitle": "savoir-faire",
+        "title": "Production locale, traçabilité certifiée, matériaux innovants à base d’huile de ricin : Bondet incarne une nouvelle génération de lunettes françaises responsables.",
+        "content_title": "<p>Fabriquer</p><p>autrement,</p><p>S’engager</p><p>vraiment.</p>",
+        "content_text": "La certification \"Origine France Garantie\" atteste que toutes les étapes clés de la fabrication de nos lunettes sont réalisées en France, sous contrôle d’organismes indépendants. Une transparence rare dans l’univers de la lunetterie.",
+        "button_text": "histoire & savoir faire",
+        "button_url": "shopify://pages/histoire-et-savoir-faire",
+        "image_small": "shopify://shop_images/sanstitre-552_3.jpg",
+        "image_large": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8_1d61a6dd-8ccf-40a5-8e1a-ff173a6d7e1b.jpg"
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_dqBGyN": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/france.svg",
+            "title": "+ 800 revendeurs"
+          }
+        },
+        "column_6wQmjT": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/livraison.svg",
+            "title": "livraison rapide"
+          }
+        },
+        "column-0": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/made-in-france.svg",
+            "title": "Fabrication française certifiée"
+          }
+        },
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/bio-energy.svg",
+            "title": "matériaux bio-sourcés"
+          }
+        }
+      },
+      "block_order": [
+        "column_dqBGyN",
+        "column_6wQmjT",
+        "column-0",
+        "column-1"
+      ],
+      "settings": {
+        "padding_top": 8,
+        "padding_bottom": 15,
+        "border_top": true,
+        "border_bottom": true
+      }
+    },
+    "1785489970ac38b262": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_aXpcHY": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "all",
+            "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "medium",
+            "image_ratio": "1",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "header_text_color": "#3F2121",
+            "text_color": "#3F2121",
+            "card_color": "#F3F1EA",
+            "stars_color": "",
+            "arrows_color": "#000000",
+            "transition_speed": 5,
+            "header_text": "Laissons nos clients parler pour nous",
+            "show_average_rating": false,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_aXpcHY"
+      ],
+      "custom_css": [
+        "{padding-top: 80px; padding-bottom: 80px; background-color: #f2e9db; margin-bottom: 80px;}",
+        "h2 {font: 400 3rem / 1 var(--font-primary);}",
+        "p {font-size: 14px;}",
+        "span {font-size: 80%;}",
+        "button {height: 10px; width: 10px; border: 2px;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "Découvrir aussi",
+        "products_to_show": 10
+      }
+    }
+  },
+  "order": [
+    "main",
+    "accordion_K7BAhJ",
+    "178429057831cde581",
+    "product_content_n9w7Y4",
+    "multicolumn",
+    "1785489970ac38b262",
+    "related-products"
+  ]
+}

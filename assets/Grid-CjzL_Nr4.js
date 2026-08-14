@@ -1,0 +1,1 @@
+class e{constructor(){this.getElems(),this.addEvents()}getElems(){this.grid=document.querySelector(".debug-grid")}addEvents(){document.addEventListener("keydown",s=>{console.log(s.key),this.grid&&this.grid.classList.toggle("g",!this.grid.classList.contains("g")&&s.key==="g")})}}export{e as default};

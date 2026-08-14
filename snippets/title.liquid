@@ -1,0 +1,25 @@
+{% comment %}
+  Title snippet with default values. Can be used in sections like:
+  {% render 'title', data: section.settings.title_block %}
+{% endcomment %}
+
+{% assign suptitle = data.suptitle | default: '' %}
+{% assign title = data.title | default: '' %}
+{% assign hn = data.hn | default: 2 %}
+{% assign extra_class = class | default: data.class | default: '' %}
+
+{% assign heading_level = hn %}
+{% if heading_level > 3 %}
+  {% assign heading_level = 3 %}
+{% elsif heading_level < 1 %}
+  {% assign heading_level = 1 %}
+{% endif %}
+{% assign tag = 'h' | append: heading_level %}
+
+{% if suptitle != blank %}
+  <div class="font-suptitle uppercase">{{ suptitle }}</div>
+{% endif %}
+
+{% if title != blank %}
+  <{{ tag }} {% if extra_class != blank %}class="{{ extra_class }}"{% endif %}>{{ title | newline_to_br  }}</{{ tag }}>
+{% endif %}

@@ -1,0 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "image": "shopify://shop_images/page-404.webp",
+        "suptitle": "404",
+        "title": "Nos montures sont 100 % françaises.\nCette page, en revanche, semble avoir pris la fuite...",
+        "show_button": true,
+        "button_label": "page d’accueil du site",
+        "button_link": ""
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

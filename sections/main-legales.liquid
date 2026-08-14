@@ -1,0 +1,129 @@
+<div class="relative">
+  {% if section.settings.cover_image != blank %}
+    <div class="absolute top-0 left-0 w-full h-[50rem]">
+      {% render 'image',
+        image: section.settings.cover_image,
+        alt: section.settings.cover_image.alt,
+        image_class: 'object-cover w-full h-full'
+      %}
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+    </div>
+  {% endif %}
+  <div class="u-container">
+    <div class="u-grid">
+      <div class="col-span-12 bg-white relative mt-[17.2rem] py-32 lg:col-span-10 lg:col-start-2">
+        <div class="grid grid-cols-12 gap-x-gutter lg:grid-cols-10">
+          <div class="col-span-10 col-start-2 lg:col-span-8 lg:col-start-2">
+            <div class="flex flex-col gap-y-20">
+              <h1 class="font-title-xl-mobile lg:font-title-xl text-center max-w-[48rem] mx-auto">
+                {{ page.title | escape }}
+              </h1>
+              {% render 'separator', is_big: true %}
+              <div class="u-richtext">
+                {{ page.content | strip_newlines }}
+              </div>
+              {% if section.blocks.size > 0 and section.blocks[0].type == 'faq' %}
+                <div class="faq flex flex-col gap-y-8">
+                  {% for block in section.blocks %}
+                    {% assign faq = block.settings %}
+                    <details name="faq{{ forloop.index }}">
+                      <summary class="group py-12 px-8 cursor-pointer flex items-center justify-between gap-x-8">
+                        <div class="title flex items-center transition-opacity duration-700 group-hover:opacity-60">
+                          {{ faq.question }}
+                        </div>
+                        <div class="icon w-[1.6rem] h-[1.6rem]">{{ 'down-chevron.svg' | inline_asset_content }}</div>
+                      </summary>
+                      <div class="answer u-richtext">
+                        {{ faq.answer }}
+                      </div>
+                    </details>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% if section.blocks.size > 0 and section.blocks[0].type == 'button' %}
+                <div class="flex flex-wrap justify-center gap-10 md:gap-20">
+                  {% for block in section.blocks %}
+                    {% if block.type == 'button' %}
+                      {% assign button = block.settings %}
+                      <div class="text-center mt-8">
+                        {% render 'button',
+                          title: button.button_label,
+                          url: button.button_link,
+                          is_link: true,
+                          new_tab: false,
+                          class: 'transparent reverse full-dark'
+                        %}
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page légales",
+  "tag": "section",
+  "class": "section section-main-legales",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image de couverture"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Titre de la question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Réponse"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Bouton",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Texte du bouton"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Lien du bouton"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page légales",
+      "category": "Légales"
+    }
+  ]
+}
+{% endschema %}

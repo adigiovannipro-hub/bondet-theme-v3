@@ -1,0 +1,176 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "contact-form",
+      "blocks": {
+        "textfield_9H3LW6": {
+          "type": "textfield",
+          "settings": {
+            "title": "Nom",
+            "placeholder": "Nom",
+            "required": false,
+            "width": "full"
+          }
+        },
+        "textfield_biaAfa": {
+          "type": "textfield",
+          "settings": {
+            "title": "Prénom",
+            "placeholder": "Prénom",
+            "required": false,
+            "width": "full"
+          }
+        },
+        "email_6U9wPC": {
+          "type": "email",
+          "settings": {
+            "title": "Email",
+            "placeholder": "Email",
+            "width": "full"
+          }
+        },
+        "dropdown_rW8zgP": {
+          "type": "dropdown",
+          "settings": {
+            "title": "Sujet",
+            "required": true,
+            "width": "full",
+            "option_list": "Demande d’informations produits,Service après-vente,Demande de conseils,Commande et livraison,Partenariats ou demandes professionnelles,Réclamations ou retours,Autres"
+          }
+        },
+        "textarea_yJyxPb": {
+          "type": "textarea",
+          "settings": {
+            "title": "Message",
+            "placeholder": "Message",
+            "required": false,
+            "width": "full"
+          }
+        }
+      },
+      "block_order": [
+        "textfield_9H3LW6",
+        "textfield_biaAfa",
+        "email_6U9wPC",
+        "dropdown_rW8zgP",
+        "textarea_yJyxPb"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/sanstitre-331.jpg",
+        "title": "Contactez-nous",
+        "text": "Posez nous vos questions, demandez un retour, un partenariat ! remplissez ce formulaire et notre équipe vous accompagnera",
+        "button": "Envoyer",
+        "logo": "shopify://shop_images/bondet-logo-normal.svg",
+        "text_address": "3 Impasse des Lilas 01100 GEOVREISSET",
+        "link_address": "https://share.google/2ebjz1SPceOC7MjFU",
+        "text_phone": "04 74 77 24 52",
+        "link_phone": "tel:+33474772452",
+        "show_social": true
+      }
+    },
+    "multicolumn_YCCeYT": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_iUJDEL": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/france.svg",
+            "title": "+ 150 revendeurs"
+          }
+        },
+        "column_CYRCcT": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/livraison.svg",
+            "title": "livraison rapide"
+          }
+        },
+        "column_w9mGYL": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/made-in-france.svg",
+            "title": "Fabrication française"
+          }
+        },
+        "column_DhwPNC": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/bio-energy.svg",
+            "title": "matériaux bio-sourcés"
+          }
+        }
+      },
+      "block_order": [
+        "column_iUJDEL",
+        "column_CYRCcT",
+        "column_w9mGYL",
+        "column_DhwPNC"
+      ],
+      "name": "Multicolonne",
+      "settings": {
+        "padding_top": 7,
+        "padding_bottom": 8,
+        "border_top": true,
+        "border_bottom": true
+      }
+    },
+    "title_buttons_rQezY8": {
+      "type": "title-buttons",
+      "blocks": {
+        "buttons_P3rrT7": {
+          "type": "buttons",
+          "settings": {
+            "title": "Fabrication française",
+            "url": "shopify://pages/fabrication-francaise",
+            "image": "shopify://shop_images/e3542726-a19c-4499-b161-54fc2409e136_d10a3004-0726-4966-85c1-0975c135a442.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_fL9teM": {
+          "type": "buttons",
+          "settings": {
+            "title": "Engagements responsables",
+            "url": "shopify://pages/engagements-responsables",
+            "image": "shopify://shop_images/sanstitre-552_2.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_ByywJU": {
+          "type": "buttons",
+          "settings": {
+            "title": "Histoire & savoir-faire",
+            "url": "shopify://pages/histoire-et-savoir-faire",
+            "image": "shopify://shop_images/656acca1-3432-4800-8e01-e989fe2bf1f0_0a2f5f95-5f3b-41ac-8295-a2d038eadae4.jpg",
+            "label": "voir"
+          }
+        }
+      },
+      "block_order": [
+        "buttons_P3rrT7",
+        "buttons_fL9teM",
+        "buttons_ByywJU"
+      ],
+      "name": "Titre et boutons",
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 9,
+        "title": "Mieux connaître Bondet",
+        "hn": "2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "multicolumn_YCCeYT",
+    "title_buttons_rQezY8"
+  ]
+}

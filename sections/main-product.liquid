@@ -1,0 +1,450 @@
+<script src="{{ 'variant-picker.js' | asset_url }}" defer="defer"></script>
+
+{% assign type = product.type %}
+{% assign genre = product.metafields.custom.genre %}
+{% assign collections = product.metafields.custom.collections %}
+
+{% if type == 'Solaire' %}
+  {% assign is_solar = true %}
+{% else %}
+  {% assign is_solar = false %}
+{% endif %}
+
+{% if type == 'Optique' %}
+  {% assign is_optical = true %}
+{% else %}
+  {% assign is_optical = false %}
+{% endif %}
+
+<div class="product pt-[var(--header-height)] xl:flex xl:pt-0">
+  <div class="product-fixed hidden md:block fixed top-0 pointer-events-none opacity-0 left-0 w-full max-h-40 bg-white z-50 pl-[1.8rem] pr-[2.8rem] py-[1.4rem]">
+    <div class="flex justify-between">
+      <div class="flex items-center gap-x-[1.8rem]">
+        <div class="aspect-square h-28">
+          {%- if product.has_only_default_variant -%}
+            {% render 'image',
+              image: product.featured_image,
+              alt: product.featured_image.alt,
+              sizes: '(max-width: 1200px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full pointer-events-none',
+              lazyload: 'eager'
+            %}
+
+          {%- else -%}
+            {% render 'image',
+              image: product.selected_or_first_available_variant.featured_image,
+              alt: product.selected_or_first_available_variant.featured_image.alt,
+              sizes: '(max-width: 1200px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full pointer-events-none',
+              lazyload: 'eager'
+            %}
+          {%- endif -%}
+        </div>
+        <div class="">
+          <div class="font-name-product-s">
+            {{ product.title }}
+          </div>
+          <div class="mt-4">
+            {% for option in product.options_with_values %}
+              {% if forloop.index0 == 0 or forloop.index0 == 1 %}
+                <span class="font-text-s-medium text-[#756565]">
+                  {{ product.selected_or_first_available_variant.options[forloop.index0] -}}
+                  {%- unless forloop.last %} / {% endunless %}
+                </span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-8">
+        {% if is_solar %}
+          {% render 'price',
+            product: product,
+            use_variant: true,
+            show_compare_at_price: true,
+            target_variant: product.selected_or_first_available_variant
+          %}
+          {% render 'atc-button', product: product %}
+        {% else %}
+          {% render 'button',
+            url: section.settings.optician_link,
+            title: section.settings.optician_link_text,
+            is_link: true,
+            class: 'button full-dark full-dark--transparent'
+          %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="product-images bg-primary-beige aspect-square flex u-nsb overflow-auto snap-x snap-mandatory scroll-smooth lg:aspect-video xl:aspect-auto xl:flex-col xl:w-[46.17%]">
+    {% assign variant_images_shooting = product.selected_or_first_available_variant.metafields.custom.images_shooting.value %}
+    {% assign variant_images = product.selected_or_first_available_variant.metafields.custom.images.value %}
+    {% assign variant_videos = product.selected_or_first_available_variant.metafields.custom.videos.value %}
+
+    {% if variant_images_shooting != blank %}
+      {% for image in variant_images_shooting %}
+        <div class="min-w-full snap-start xl:h-screen">
+          {% render 'image',
+            image: image,
+            alt: image.alt,
+            sizes: '(max-width: 1200px) 100vw, 50vw',
+            image_class: 'object-cover w-full h-full pointer-events-none',
+            lazyload: 'eager'
+          %}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if is_solar %}
+      {%- if product.has_only_default_variant -%}
+        <div class="min-w-full snap-start xl:h-screen">
+          {% render 'image',
+            image: product.featured_image,
+            alt: product.featured_image.alt,
+            sizes: '(max-width: 1200px) 100vw, 50vw',
+            image_class: 'object-cover w-full h-full pointer-events-none',
+            lazyload: 'eager'
+          %}
+        </div>
+      {%- else -%}
+        <div class="min-w-full snap-start xl:h-screen">
+          {% render 'image',
+            image: product.selected_or_first_available_variant.featured_image,
+            alt: product.selected_or_first_available_variant.featured_image.alt,
+            sizes: '(max-width: 1200px) 100vw, 50vw',
+            image_class: 'object-cover w-full h-full pointer-events-none',
+            lazyload: 'eager'
+          %}
+        </div>
+      {%- endif -%}
+
+      {% if variant_images != blank %}
+        {% for image in variant_images %}
+          <div class="min-w-full snap-start xl:h-screen">
+            {% render 'image',
+              image: image,
+              alt: image.alt,
+              sizes: '(max-width: 1200px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full pointer-events-none',
+              lazyload: 'eager'
+            %}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if variant_videos != blank %}
+        {% for video in variant_videos %}
+          <div class="min-w-full snap-start xl:h-screen relative">
+            <div class="absolute inset-0">
+              {{
+                video
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'object-cover w-full h-full'
+              }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+    {% elsif is_optical %}
+      {% if variant_images != blank %}
+        {% for image in variant_images %}
+          <div class="min-w-full snap-start xl:h-screen">
+            {% render 'image',
+              image: image,
+              alt: image.alt,
+              sizes: '(max-width: 1200px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full pointer-events-none',
+              lazyload: 'eager'
+            %}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {%- if product.has_only_default_variant -%}
+        <div class="min-w-full snap-start xl:h-screen">
+          {% render 'image',
+            image: product.featured_image,
+            alt: product.featured_image.alt,
+            sizes: '(max-width: 1200px) 100vw, 50vw',
+            image_class: 'object-cover w-full h-full pointer-events-none',
+            lazyload: 'eager'
+          %}
+        </div>
+      {%- else -%}
+        <div class="min-w-full snap-start xl:h-screen">
+          {% render 'image',
+            image: product.selected_or_first_available_variant.featured_image,
+            alt: product.selected_or_first_available_variant.featured_image.alt,
+            sizes: '(max-width: 1200px) 100vw, 50vw',
+            image_class: 'object-cover w-full h-full pointer-events-none',
+            lazyload: 'eager'
+          %}
+        </div>
+      {%- endif -%}
+
+      {% if variant_videos != blank %}
+        {% for video in variant_videos %}
+          <div class="min-w-full snap-start xl:h-screen relative">
+            <div class="absolute inset-0">
+              {{
+                video
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'object-cover w-full h-full'
+              }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  </div>
+  <div class="product-form overflow-visible z-auto py-20 px-8 xl:w-[53.83%] xl:h-screen xl:sticky xl:top-0 xl:self-start xl:grid xl:place-items-center">
+    <div class="product-content flex flex-col items-center gap-12 xl:w-[38.51vw]">
+      <div class="product-tags flex gap-[0.6rem] items-center">
+        <span class="font-menu py-[0.5rem] px-[1.6rem] rounded-[10rem] bg-primary-beige lowercase">
+          {{- product.type -}}
+        </span>
+        {% if genre != blank %}
+          <span class="font-menu py-[0.5rem] px-[1.6rem] rounded-[10rem] bg-primary-beige lowercase">
+            {{ genre.value }}
+          </span>
+        {% endif %}
+        {%- if is_optical -%}
+          {% if collections != blank %}
+            <span class="font-menu py-[0.5rem] px-[1.6rem] rounded-[10rem] bg-primary-beige lowercase">
+              {{ collections.value }}
+            </span>
+          {% endif %}
+        {%- endif -%}
+      </div>
+      <div class="product-title text-center">
+        <h1 class="font-name-product-xl">
+          {{ product.title }}
+        </h1>
+        <div class="font-text-s mt-[0.8rem]">{{ product.description }}</div>
+      </div>
+
+      <variant-picker data-section-id="{{ section.id }}" class="w-full">
+        {% for option in product.options_with_values %}
+          <menu-drawer>
+            <details class="disclosure-has-popup w-full" data-index="product-form-details-{{ forloop.index }}">
+              <summary class="flex justify-between items-center px-4 py-8 {% if forloop.index == 1 %}border-t{% endif %}  border-b border-secondary-brown/30">
+                <div class="font-btn-m uppercase text-secondary-brown">
+                  {{ option.name }}
+                </div>
+                <div class="font-text-s flex items-center gap-8">
+                  <div class="flex gap-x-4 items-center">
+                    {% assign selected_option = product.selected_or_first_available_variant.options[forloop.index0] %}
+
+                    {% if selected_option != 'Default Title' %}
+                      <span>
+                        {{ selected_option }}
+                      </span>
+                    {% endif %}
+                    {%- if forloop.index0 == 0 or forloop.index0 == 1 -%}
+                      {% assign selected_color = option.values | where: 'name', selected_option | first %}
+
+                      {% if selected_color.swatch.color %}
+                        <span
+                          class="w-8 h-8 rounded-full"
+                          style="background-color: {{ selected_color.swatch.color }};"
+                        ></span>
+                      {% elsif selected_color.swatch.image %}
+                        <img
+                          src="/cdn/shop/{{ selected_color.swatch.image }}"
+                          alt="{{ selected_option }}"
+                          class="w-8 h-8 rounded-full object-cover"
+                          width="20"
+                          height="20"
+                        >
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                  <div class="icon w-[1.6rem] h-[1.6rem]">{{ 'down-chevron.svg' | inline_asset_content }}</div>
+                </div>
+                <span class="product-purchase__close-icon">
+                  {{- 'icon-close.svg' | inline_asset_content -}}
+                </span>
+              </summary>
+              <div class="product-purchase__options">
+                <div data-lenis-prevent class="product-purchase__inner u-nsb">
+                  <div class="product-purchase__header">
+                    <h2 class="product-purchase__heading font-menu">
+                      {{ option.name }}
+                    </h2>
+                  </div>
+                  <div class="product-purchase__main">
+                    <fieldset class="product-form__option">
+                      <div class="product-form__option-values {% if forloop.index0 == 0 or forloop.index0 == 1 %}product-form__option-values--color{% endif %}">
+                        {% for value in option.values %}
+                          <div class="product-form__option-value product-form__option-value--card {% unless value.variant.available %}out-of-stock{% endunless %}{% if option.selected_value == value.name %}active{% endif %}">
+                            <div>
+                              <div class="aspect-square mix-blend-darken">
+                                {% render 'image',
+                                  image: value.variant.featured_image,
+                                  alt: value.variant.featured_image.alt,
+                                  sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                                  image_class: 'object-cover w-full h-full pointer-events-none'
+                                %}
+                              </div>
+
+                              <div class="flex flex-col items-center gap-4 py-8">
+                                <div class="flex items-center justify-center gap-8 whitespace-nowrap">
+                                  <span class="font-text-mentions">{{ value.name }}</span>
+                                  {% if is_solar %}
+                                    <span class="font-text-s-medium">
+                                      {{- value.variant.price | money_without_trailing_zeros -}}
+                                    </span>
+                                  {% endif %}
+                                </div>
+                                <input
+                                  value="{{ value.variant.id }}"
+                                  type="radio"
+                                  id="{{ value.name }}"
+                                  name="{{ option.name }}"
+                                  {% if option.selected_value contains value.name %}
+                                    checked
+                                  {% endif %}
+                                >
+                              </div>
+                            </div>
+                            <label
+                              onclick="this.closest('details').querySelector('summary').click()"
+                              for="{{ value.name }}"
+                            ></label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </menu-drawer>
+        {% endfor %}
+      </variant-picker>
+
+      {%- if is_solar -%}
+        {% render 'price',
+          product: product,
+          use_variant: true,
+          show_compare_at_price: true,
+          target_variant: product.selected_or_first_available_variant
+        %}
+
+        {% render 'atc-button', product: product %}
+
+        {%- if settings.cart_totals_text != blank -%}
+          <div class="cart-totals-text rte mt-4 text-center font-suptitle">{{ settings.cart_totals_text }}</div>
+        {%- endif -%}
+
+        <div class="hidden absolute bottom-16 xl:flex gap-4 mt-16 xl:gap-20">
+          <a
+            href="#description"
+            class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer anchor-link font-text-mentions text-secondary-brown py-4"
+          >
+            {{- 'down-chevron.svg' | inline_asset_content -}}
+          </a>
+          {% if product.metafields.custom.details != blank %}
+            <a
+              href="#details"
+              class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer anchor-link font-text-mentions text-secondary-brown py-4"
+            >
+              {{- 'down-chevron.svg' | inline_asset_content -}}
+            </a>
+          {% endif %}
+          {% if product.metafields.custom.mesures != blank %}
+            <a
+              href="#mesures"
+              class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer anchor-link font-text-mentions text-secondary-brown py-4"
+            >
+              {{- 'down-chevron.svg' | inline_asset_content -}}
+            </a>
+          {% endif %}
+          <a
+            href="#livraison"
+            class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer anchor-link font-text-mentions text-secondary-brown py-4"
+          >
+            {{- 'down-chevron.svg' | inline_asset_content -}}
+          </a>
+        </div>
+
+      {%- else -%}
+        {% render 'button',
+          url: section.settings.optician_link,
+          title: section.settings.optician_link_text,
+          is_link: true,
+          class: 'button full-dark full-dark--transparent'
+        %}
+
+        <div class="hidden absolute bottom-16 xl:flex gap-4 mt-16 xl:gap-20">
+          <a
+            href="#description"
+            class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer font-text-mentions text-secondary-brown py-4"
+          >
+            {{- 'down-chevron.svg' | inline_asset_content -}}
+          </a>
+          {% if product.metafields.custom.details != blank %}
+            <a
+              href="#details"
+              class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer font-text-mentions text-secondary-brown py-4"
+            >
+              {{- 'down-chevron.svg' | inline_asset_content -}}
+            </a>
+          {% endif %}
+          {% if product.metafields.custom.mesures != blank %}
+            <a
+              href="#mesures"
+              class="u-hover-opacity border-b border-secondary-brown flex items-center gap-4 cursor-pointer font-text-mentions text-secondary-brown py-4"
+            >
+              {{- 'down-chevron.svg' | inline_asset_content -}}
+            </a>
+          {% endif %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Informations produits",
+  "class": "section section-main-product",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bouton : trouver un opticien"
+    },
+    {
+      "type": "url",
+      "id": "optician_link",
+      "label": "URL du lien"
+    },
+    {
+      "type": "text",
+      "id": "optician_link_text",
+      "label": "Texte du lien",
+      "default": "Trouver un opticien"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière de produit",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

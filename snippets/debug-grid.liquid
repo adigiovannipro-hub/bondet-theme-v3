@@ -1,0 +1,11 @@
+{% if settings.debug_mode %}
+  <div class="debug-grid">
+    <div class="u-container h-full">
+      <div class="u-grid h-full">
+        {% for i in (1..12) %}
+          <div class="bg-red-500/10"></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}

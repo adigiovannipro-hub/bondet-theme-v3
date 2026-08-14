@@ -1,0 +1,94 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "1784292899e38e3fdf": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_featured_carousel_knEPBr": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {
+            "maxwidth": 1080
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_featured_carousel_knEPBr"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "column_cr9yJU": {
+          "type": "column",
+          "settings": {
+            "menu": "footer-menu-first-col"
+          }
+        },
+        "column_A8LLEX": {
+          "type": "column",
+          "settings": {
+            "menu": "footer-menu-second-col"
+          }
+        },
+        "column_XjeWaE": {
+          "type": "column",
+          "settings": {
+            "menu": "footer-menu-third-col"
+          }
+        },
+        "button_kfXijX": {
+          "type": "button",
+          "settings": {
+            "text_button": "Espace opticien",
+            "link_button": ""
+          }
+        },
+        "button_UqMTxY": {
+          "type": "button",
+          "settings": {
+            "text_button": "Devenir opticien partenaire",
+            "link_button": "shopify://pages/devenir-opticien-partenaire"
+          }
+        }
+      },
+      "block_order": [
+        "column_cr9yJU",
+        "column_A8LLEX",
+        "column_XjeWaE",
+        "button_kfXijX",
+        "button_UqMTxY"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/bondet-logo-normal.svg",
+        "text": "Lunetier français depuis 1929",
+        "text_address": "3 Impasse des Lilas 01100 GEOVREISSET",
+        "link_address": "https://share.google/2ebjz1SPceOC7MjFU",
+        "text_phone": "04 74 77 24 52",
+        "link_phone": "tel:+33474772452",
+        "text_email": "Ecrivez-nous",
+        "link_email": "mailto:commande@bondet.com",
+        "show_social": true,
+        "legal_menu": "footer-legales"
+      }
+    }
+  },
+  "order": [
+    "1784292899e38e3fdf",
+    "footer"
+  ]
+}

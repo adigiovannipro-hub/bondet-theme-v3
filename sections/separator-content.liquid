@@ -1,0 +1,94 @@
+<div class="u-container">
+  {% if section.settings.show %}
+    {% if section.settings.show %}
+      <div class="w-fit mx-auto py-36">
+        {% render 'separator', no_line: section.settings.show_top_line, no_bottom_line: section.settings.show_bottom_line %}
+      </div>
+    {% endif %}
+  {% endif %}
+  {% if section.settings.tag != blank or section.settings.accroche != blank %}
+    <div class="u-grid">
+      <div class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
+        <div class="flex flex-col items-center gap-y-14 py-24">
+          {% if section.settings.tag != blank %}
+            <p class="font-suptitle uppercase">{{ section.settings.tag }}</p>
+          {% endif %}
+          {% if section.settings.accroche != blank %}
+            <p class="font-text-l-mobile lg:font-text-l text-center">{{ section.settings.accroche | newline_to_br }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Separator Content",
+  "class": "section section-separator-content",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show",
+      "label": "Afficher le séparateur",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Lignes du séparateur"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_line",
+      "label": "Cacher les lignes",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_line",
+      "label": "Cacher la ligne du bas",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Tag et accroche"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag"
+    },
+    {
+      "type": "textarea",
+      "id": "accroche",
+      "label": "Accroche"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Séparateur avec contenu",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%
+              render 'separator',
+              no_line: section.settings.show_top_line == false,
+              no_bottom_line: section.settings.show_bottom_line == false
+            %}
+  to: "{% render 'separator', no_line: section.settings.show_top_line, no_bottom_line:
+    section.settings.show_bottom_line %}"
+  position: 142..258
+{% endcomment %}

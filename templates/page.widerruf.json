@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "simple_banner_tbybTh": {
+      "type": "simple-banner",
+      "name": "Bannière simple",
+      "settings": {
+        "title": "Demande de rétractation",
+        "hn": "1",
+        "text": "Vous souhaitez exercer votre droit de rétractation ? Complétez le formulaire ci-dessous pour nous informer de votre décision. Dès réception de votre demande, nous vous adresserons une confirmation par e-mail et vous indiquerons les prochaines étapes pour le retour de votre commande.",
+        "image": "shopify://shop_images/alma_b910b431-0eb5-431b-84d8-fa8b42d7a2d1.jpg",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "1781770844c8fb3609": {
+      "type": "apps",
+      "blocks": {
+        "eu_widerruf_button_form_inline_MGDAA8": {
+          "type": "shopify://apps/eu-widerruf-button/blocks/form-inline/019b2ca9-9838-7858-9694-3a8051afa76e",
+          "settings": {
+            "show_heading": false,
+            "heading": "",
+            "description": "-",
+            "iframe_height": 500,
+            "primary_color": "#3F2121",
+            "background_color": "#ffffff",
+            "text_color": "#3F2121",
+            "border_radius": "8px",
+            "max_width": "700px",
+            "show_order_lookup": true,
+            "require_order_number": true,
+            "hide_order_notes": false,
+            "require_items": false,
+            "confirm_step": true,
+            "hide_outside_eu": false
+          }
+        }
+      },
+      "block_order": [
+        "eu_widerruf_button_form_inline_MGDAA8"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "simple_banner_tbybTh",
+    "1781770844c8fb3609"
+  ]
+}

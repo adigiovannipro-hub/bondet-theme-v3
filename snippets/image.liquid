@@ -1,0 +1,44 @@
+{% doc %}
+  Renders a responsive image wrapped in a <picture> with optional link.
+
+  @param {image} image - The image to be rendered
+  @param {string} [url] - Optional destination URL
+  @param {string} [wrapper_class] - Optional class for the wrapper
+  @param {string} [image_class] - Optional class for the image
+  @param {string} [sizes] - Optional sizes attribute for the image
+  @param {string} [alt] - Alt text
+  @param {boolean} [lazyload] - Whether to lazyload the image
+{% enddoc %}
+
+{% if image != blank %}
+  {% liquid
+    assign alt = alt | default: image.alt | default: 'Image'
+    assign lazyload = lazyload | default: 'lazy'
+
+    if url
+      assign wrapper = 'a'
+    else
+      assign wrapper = 'div'
+    endif
+
+    assign widths = '320,480,640,768,1024,1280,1536,1920'
+    assign sizes = sizes | default: '100vw'
+  %}
+
+  <{{ wrapper }}
+    class="image block relative w-full h-full {{ wrapper_class }}"
+    {% if url %}
+      href="{{ url }}"
+    {% endif %}
+  >
+    {{
+      image
+      | image_url: width: 2560
+      | image_tag: widths: widths, sizes: sizes, alt: alt, loading: lazyload, class: image_class
+    }}
+  </{{ wrapper }}>
+{% else %}
+  <div class="image block relative w-full h-full">
+    <div class="bg-secondary-brown/10 w-full h-full"></div>
+  </div>
+{% endif %}

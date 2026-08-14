@@ -1,0 +1,214 @@
+<div class="iconic-models mb-40 lg:mt-28 lg:mb-52 lg:relative lg:overflow-clip">
+  <div class="hidden lg:block lg:absolute lg:w-1/2 lg:max-w-1/2 lg:aspect-[3/4] lg:bottom-0 lg:left-0 lg:top-24">
+    {% render 'image',
+      image: section.settings.image,
+      alt: section.settings.image.alt,
+      image_class: 'object-cover h-full w-full'
+    %}
+  </div>
+  <div class="u-container">
+    <div class="u-grid">
+      <div class="col-span-12 pl-16 lg:col-span-4 lg:col-start-8 lg:pl-0">
+        <div class="iconic-models__tag font-suptitle uppercase mb-14">{{ section.settings.tagline }}</div>
+        <div class="iconic-models__slider-choice mb-14 flex flex-col items-start">
+          {% for block in section.blocks %}
+            <button
+              class="iconic-models__slider-choice-btn{% if forloop.first %} iconic-models__slider-choice-btn--active{% endif %} relative"
+              data-genre="{{ block.settings.genre }}"
+            >
+              <span class="absolute right-[calc(100%_+_2rem)] bottom-4">
+                {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+              </span>
+              <span class="font-title-xl-mobile">{{ block.settings.title }}</span>
+            </button>
+          {% endfor %}
+        </div>
+        <p class="iconic-models__text font-text-m max-w-[28rem]">{{ section.settings.text }}</p>
+      </div>
+      <div class="col-span-12">
+        <div class=" gap-x-4 items-center hidden lg:flex lg:items-center lg:gap-x-4 lg:justify-end lg:mt-12 lg:mb-6">
+          {% render 'pager' %}
+          {% render 'pager', mode: 'next' %}
+        </div>
+      </div>
+      <div class="col-span-12">
+        <div class="iconic-models__slider mt-12 mb-14 lg:overflow-clip lg:mt-0">
+          <ul
+            role="list"
+            class="iconic-models__slider-container iconic-models__slider-container--femme iconic-models__slider-container--active flex gap-gutter"
+          >
+            {% for block in section.blocks %}
+              {% if block.settings.genre == 'femme' %}
+                {% for product in block.settings.products %}
+                  <li class="iconic-models__slider-slide--femme w-[calc(100vw_-_4rem)] min-w-[calc(100vw_-_4rem)] max-w-full md:w-[calc(50vw_-_4rem)] md:min-w-[calc(50vw_-_4rem)] lg:w-[calc(33.333%_-_1.333rem)] lg:min-w-[calc(33.333%_-_1.333rem)]">
+                    {% render 'card-product',
+                      card_product: product,
+                      card_variant: product.variants.first,
+                      variant_color: product.variants.first.options[0],
+                      section_id: section.id
+                    %}
+                  </li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <ul
+            role="list"
+            class="iconic-models__slider-container iconic-models__slider-container--homme flex gap-gutter"
+          >
+            {% for block in section.blocks %}
+              {% if block.settings.genre == 'homme' %}
+                {% for product in block.settings.products %}
+                  <li class="iconic-models__slider-slide--homme w-[calc(100vw_-_4rem)] min-w-[calc(100vw_-_4rem)] max-w-full md:w-[calc(50vw_-_4rem)] md:min-w-[calc(50vw_-_4rem)] lg:w-[calc(33.333%_-_1.333rem)] lg:min-w-[calc(33.333%_-_1.333rem)]">
+                    {% render 'card-product',
+                      card_product: product,
+                      card_variant: product.variants.first,
+                      variant_color: product.variants.first.options[0],
+                      section_id: section.id
+                    %}
+                  </li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <ul
+            role="list"
+            class="iconic-models__slider-container iconic-models__slider-container--mixte flex gap-gutter"
+          >
+            {% for block in section.blocks %}
+              {% if block.settings.genre == 'mixte' %}
+                {% for product in block.settings.products %}
+                  <li class="iconic-models__slider-slide--mixte w-[calc(100vw_-_4rem)] min-w-[calc(100vw_-_4rem)] max-w-full md:w-[calc(50vw_-_4rem)] md:min-w-[calc(50vw_-_4rem)] lg:w-[calc(33.333%_-_1.333rem)] lg:min-w-[calc(33.333%_-_1.333rem)]">
+                    {% render 'card-product',
+                      card_product: product,
+                      card_variant: product.variants.first,
+                      variant_color: product.variants.first.options[0],
+                      section_id: section.id
+                    %}
+                  </li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="col-span-12">
+        <div class="iconic-models__btn flex justify-center lg:justify-end lg:mb-20">
+          {% render 'button',
+            title: section.settings.button_text,
+            url: section.settings.button_link,
+            is_link: true,
+            class: 'orange'
+          %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Modèles iconiques",
+  "class": "section section-iconic-models",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Slogan",
+      "default": "nos modèles iconiques"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "Des lunettes pensées pour durer, pour vivre, pour vous accompagner"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image de fond"
+    },
+    {
+      "type": "header",
+      "content": "Bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte du bouton",
+      "default": "tout voir"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "genre",
+      "name": "Groupe de produits",
+      "settings": [
+        {
+          "type": "select",
+          "id": "genre",
+          "label": "Genre",
+          "options": [
+            { "value": "femme", "label": "Femme" },
+            { "value": "homme", "label": "Homme" },
+            { "value": "mixte", "label": "Mixte" }
+          ],
+          "default": "mixte"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Libellé du genre",
+          "default": "Mixte"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Produits"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Modèles iconiques",
+      "category": "Produit",
+      "blocks": [
+        {
+          "type": "genre",
+          "settings": {
+            "genre": "femme"
+          }
+        },
+        {
+          "type": "genre",
+          "settings": {
+            "genre": "homme"
+          }
+        },
+        {
+          "type": "genre",
+          "settings": {
+            "genre": "mixte"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

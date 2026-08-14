@@ -1,0 +1,146 @@
+<div
+  id="partners-map-container"
+  class="w-full relative h-dvh isolate overflow-clip pt-[10rem] md:pt-[17rem] xl:pt-[13.6rem]"
+>
+  <script type="application/json" id="partners-data">
+    {{ page.metafields.custom.partenaires.value | json }}
+  </script>
+  <div id="map" class="absolute inset-0 w-full h-full opacity-0 invisible md:visible md:opacity-100"></div>
+  <div
+    id="map-placeholder"
+    class="absolute inset-0 w-full h-full md:hidden"
+    style="background-image: url('{{ 'bg-pattern-CXHzrc20.webp' | asset_url }}'); background-size: cover; background-position: center;"
+  ></div>
+  <div
+    class="partners-map__panel h-[calc(100vh-10rem)] md:h-[calc(100vh-17rem)] xl:h-[calc(100vh-13.6rem)] relative z-1 bg-white flex flex-col border border-b-0 border-secondary-brown/30"
+  >
+    <div class="partners-map__panel-header relative z-1 flex flex-col border-b border-secondary-brown/30 px-20 py-16 gap-y-12">
+      {% render 'separator', no_bottom_line: true %}
+      <h1>{{ section.settings.page_title }}</h1>
+    </div>
+    <div class="bg-white z-2 min-h-[8.6rem] h-[8.6rem] border-b border-secondary-brown/30 flex items-center justify-between relative text-secondary-brown px-8">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder=""
+        class="w-full bg-transparent border-none font-btn-m outline-none placeholder-secondary-brown"
+        autocomplete="off"
+      >
+      <div class="w-[1.8rem] h-[1.8rem]">{{- 'icon-search-map.svg' | inline_asset_content -}}</div>
+      <div
+        data-lenis-prevent
+        id="suggestions"
+        class="absolute left-0 overflow-y-auto overflow-x-visible right-0 bg-white border border-secondary-brown/30 border-t-0 hidden top-[8rem] max-h-[calc(100vh-10rem)] md:max-h-[calc(100vh-17rem)] xl:max-h-[calc(100vh-13.6rem)]"
+      ></div>
+    </div>
+    <div data-lenis-prevent id="storesList" class="relative bg-white z-2 overflow-y-auto overflow-x-visible flex-1">
+      {% assign partners = page.metafields.custom.partenaires.value %}
+      {% for p in partners %}
+        <div
+          class="store-item relative flex items-start border-b border-secondary-brown/30 cursor-pointer gap-x-12 px-20 py-16 h-[13.8rem]"
+          data-address="{{ p.address | escape }}"
+        >
+          <div class="min-w-[2.4rem] h-[2.4rem]">{{- 'icon-partner.svg' | inline_asset_content -}}</div>
+          <div class="flex flex-col gap-y-4">
+            <p class="font-text-m-medium text-secondary-brown">{{ p.name }}</p>
+            <a
+              href="https://www.google.com/maps/search/{{ p.name | append: ' ' | append: p.address | url_encode }}"
+              target="_blank"
+              rel="noopener"
+              class="font-text-m-s u-hover-opacity"
+              onclick="event.stopPropagation()"
+            >
+              {{ p.address }}
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .leaflet-pane,
+  .leaflet-top,
+  .leaflet-bottom {
+    z-index: 1;
+  }
+
+  .leaflet-top {
+    display: none;
+  }
+
+  @media screen and (width >= 768px) {
+    .leaflet-top {
+      display: block;
+      top: 10rem;
+      left: var(--wrapper-padding);
+    }
+  }
+
+  .pac-container {
+    font: 400 1.2rem / 0.9 var(--font-primary);
+    border: 1px solid rgba(var(--rgb-secondary-brown), 0.3);
+    border-top: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ffffff;
+    margin-top: 0;
+  }
+
+  .pac-item {
+    font: 400 1.2rem / 0.9 var(--font-primary);
+    color: var(--color-secondary-brown);
+    padding: 1.4rem 2rem;
+    border-top: 1px solid rgba(var(--rgb-secondary-brown), 0.15);
+    cursor: pointer;
+  }
+
+  .pac-item:hover,
+  .pac-item-selected {
+    background-color: rgba(var(--rgb-secondary-brown), 0.05);
+  }
+
+  .pac-item-query {
+    font: 400 1.2rem / 0.9 var(--font-primary);
+    color: var(--color-secondary-brown);
+  }
+
+  .pac-matched {
+    font-weight: 600;
+  }
+
+  .pac-icon,
+  .pac-logo:after {
+    display: none;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Partners Map",
+  "class": "section section-partners-map",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Titre de la page"
+    },
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Titre de la page",
+      "default": "Les opticiens partenaires près de chez vous"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partenaires",
+      "category": "Map"
+    }
+  ]
+}
+{% endschema %}

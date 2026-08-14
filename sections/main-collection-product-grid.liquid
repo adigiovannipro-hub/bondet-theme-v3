@@ -1,0 +1,812 @@
+<script src="{{ 'facets-collection.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign color_filter = 'filter.v.m.custom.tonalites'
+  assign collection_filter = 'filter.p.m.custom.collections'
+  assign genre_filter = 'filter.p.m.custom.genre'
+-%}
+
+<div class="collection u-container">
+  {%- paginate collection.products by collection.all_products_count -%}
+    <div class="collection-inner u-grid ">
+      <div class="col-span-12 mb-7">
+        {% assign selected_colors = '' %}
+
+        {% if collection.filters != empty %}
+          {% for filter in collection.filters %}
+            {% if filter.param_name == color_filter %}
+              {% for value in filter.active_values %}
+                {% assign color = value.label | handle %}
+                {% assign selected_colors = selected_colors | append: color | append: ',' %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% assign selected_colors = selected_colors | split: ',' | uniq | compact %}
+
+        {% assign total_variants = 0 %}
+
+        {% for product in collection.products %}
+          {% assign option_index = 0 %}
+
+          {% for variant in product.variants %}
+            {% assign show_variant = false %}
+
+            {% if option_index != null %}
+              {% assign variant_tonalites = variant.metafields.custom.tonalites | downcase %}
+              {% assign match = false %}
+
+              {% for selected in selected_colors %}
+                {% if variant_tonalites contains selected %}
+                  {% assign match = true %}
+                {% endif %}
+              {% endfor %}
+
+              {% if selected_colors.size == 0 or match %}
+                {% assign show_variant = true %}
+              {% endif %}
+            {% endif %}
+
+            {% if collection.handle contains 'solaire' %}
+              {% if variant.option2 != product.variants[0].option2 %}
+                {% assign show_variant = false %}
+              {% endif %}
+            {% endif %}
+
+            {% if show_variant %}
+              {% assign total_variants = total_variants | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+
+        <menu-drawer class="collection-menu-drawer">
+          <facets-collection data-section-id="{{ section.id }}">
+            <div class="collection-filters__active-values hidden xl:flex flex-wrap gap-4 mb-7">
+              {% if collection.filters != empty %}
+                {% for filter in collection.filters %}
+                  {% if filter.param_name == collection_filter %}
+                    {% for value in filter.active_values %}
+                      <div>
+                        <label
+                          for="{{ filter.label | handle }}-{{ value.label | handle }}-active"
+                          class="collection-filters__active-filter-swatch-label collection-filters__active-filter-swatch font-menu py-[0.5rem] px-[1.6rem] rounded-[10rem] bg-primary-beige cursor-pointer"
+                        >
+                          <input
+                            class="facets__checkbox u-sr-only"
+                            data-remove-url="{{ value.url_to_remove }}"
+                            type="checkbox"
+                            name="{{ filter.label | handle }}"
+                            value="{{ value.value | handle }}"
+                            id="{{ filter.label | handle }}-{{ value.label | handle }}-active"
+                            {% if value.active %}
+                              checked
+                            {% endif %}
+                          >
+                          Collection {{ value.label }} X
+                        </label>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="collection-filters__wrapper">
+              <div class="hidden xl:block">
+                <ul class="collection-filters__genre flex items-center gap-x-4">
+                  {% if collection.filters != empty %}
+                    {%- for filter in collection.filters -%}
+                      {% unless filter.param_name == color_filter
+                        or filter.param_name == collection_filter
+                        or filter.param_name == genre_filter
+                      %}
+                        {% continue %}
+                      {% endunless %}
+
+                      {% if filter.param_name == genre_filter %}
+                        {%- for value in filter.values -%}
+                          <li class="facets__item {% if value.count == 0 %}opacity-30 pointer-events-none{% endif %}">
+                            <label
+                              for="{{ filter.label | handle }}-{{ value.label | handle }}-desktop"
+                              class="facet-button {% if value.active %}active{% endif %}"
+                            >
+                              {% assign add_url = value.url_to_add %}
+
+                              {% if filter.param_name == genre_filter %}
+                                {% assign genre_value = value.label | downcase %}
+
+                                {% if genre_value == 'femme' or genre_value == 'homme' %}
+                                  {% unless add_url contains 'filter.p.m.custom.genre=Mixte' %}
+                                    {% assign add_url = add_url | append: '&filter.p.m.custom.genre=Mixte' %}
+                                  {% endunless %}
+                                {% endif %}
+                              {% endif %}
+
+                              <input
+                                type="checkbox"
+                                class="facets__checkbox u-sr-only"
+                                id="{{ filter.label | handle }}-{{ value.label | handle }}-desktop"
+                                name="{{ filter.label | handle }}"
+                                value="{{ value.value | handle }}"
+                                data-add-url="{{ add_url }}"
+                                data-remove-url="{{ value.url_to_remove }}"
+                                {% if value.active %}
+                                  checked
+                                {% endif %}
+                              >
+                              <span>
+                                {% if collection.handle contains 'solaire' %}
+                                  {{ section.settings.gender_filter_label_solar }}
+                                {% elsif collection.handle contains 'optique' %}
+                                  {{ section.settings.gender_filter_label_optical }}
+                                {% endif %}
+                                {{ value.label | downcase }}
+                              </span>
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      {% endif %}
+                    {%- endfor -%}
+                  {%- endif -%}
+                </ul>
+              </div>
+              {% assign has_active_filters = false %}
+
+              {% if collection.filters != empty %}
+                {% for filter in collection.filters %}
+                  {% if filter.active_values.size > 0 %}
+                    {% assign has_active_filters = true %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              <details class="collections-details collection-filters disclosure-has-popup">
+                <summary class="collection-filters__heading flex items-center gap-x-2">
+                  <span class="collection-filters__open facet-button__main {% if has_active_filters %}active{% endif %}">
+                    <span class="collection-filters__open-label">
+                      {{ 'products.facets.filter_button' | t }}
+                      {% if has_active_filters %}
+                        ({{ total_variants }})
+                      {% endif %}
+                    </span>
+                    <span>{{- 'icon-filters.svg' | inline_asset_content -}}</span>
+                  </span>
+
+                  <span class="collection-filters__close">
+                    {{- 'icon-close.svg' | inline_asset_content -}}
+                  </span>
+                </summary>
+
+                <div class="collection-filters__content facets">
+                  <div class="collection-filters__inner">
+                    <div class="facets__header">
+                      <h2 class="facets__heading font-menu">
+                        {{ 'products.facets.filter_button' | t }}
+                      </h2>
+                    </div>
+
+                    <div class="facets__main facets__main--mobile">
+                      {% if collection.filters != empty %}
+                        {%- for filter in collection.filters -%}
+                          {% unless filter.param_name == color_filter
+                            or filter.param_name == collection_filter
+                            or filter.param_name == genre_filter
+                          %}
+                            {% continue %}
+                          {% endunless %}
+
+                          <details
+                            class="collections-details facets__details"
+                            data-index="facets-details-{{ forloop.index }}"
+                          >
+                            <summary class="facets__summary flex items-center justify-between">
+                              <span>{{ filter.label }}</span>
+                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                            </summary>
+
+                            <div class="facets__submenu facets__submenu--mobile">
+                              <button
+                                class="facets__close-button flex items-center justify-between"
+                                aria-expanded="true"
+                                type="button"
+                              >
+                                {{- 'icon-arrow.svg' | inline_asset_content -}}
+                                <span>{{ filter.label | escape }}</span>
+                                {%- if filter.operator == 'AND' -%}
+                                  <span class="facets__and-helptext">
+                                    {{ 'products.facets.filter_and_operator_subtitle' | t }}
+                                  </span>
+                                {%- endif -%}
+                              </button>
+
+                              <ul data-lenis-prevent class="facets__list u-nsb">
+                                {% if filter.param_name == color_filter
+                                  or filter.param_name == collection_filter
+                                  or filter.param_name == genre_filter
+                                %}
+                                  {%- for value in filter.values -%}
+                                    {% assign add_url = value.url_to_add %}
+
+                                    {% if filter.param_name == genre_filter %}
+                                      {% assign genre_value = value.label | downcase %}
+
+                                      {% if genre_value == 'femme' or genre_value == 'homme' %}
+                                        {% unless add_url contains 'filter.p.m.custom.genre=Mixte' %}
+                                          {% assign add_url = add_url | append: '&filter.p.m.custom.genre=Mixte' %}
+                                        {% endunless %}
+                                      {% endif %}
+                                    {% endif %}
+
+                                    <li class="facets__item {% if value.count == 0 %}opacity-30 pointer-events-none{% endif %}">
+                                      <label
+                                        for="{{ filter.label | handle }}-{{ value.label | handle }}-mobile"
+                                        class="facets__label {% if value.active %}active{% endif %}"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          class="facets__checkbox"
+                                          id="{{ filter.label | handle }}-{{ value.label | handle }}-mobile"
+                                          name="{{ filter.label | handle }}"
+                                          value="{{ value.value | handle }}"
+                                          data-add-url="{{ add_url }}"
+                                          data-remove-url="{{ value.url_to_remove }}"
+                                          {% if value.active %}
+                                            checked
+                                          {% endif %}
+                                        >
+                                        <span class="font-text-s"> {{ value.label }} </span>
+                                      </label>
+                                    </li>
+                                  {%- endfor -%}
+                                {% endif %}
+                              </ul>
+                            </div>
+                          </details>
+                        {%- endfor -%}
+                      {% endif %}
+                    </div>
+
+                    <div class="facets__main facets__main--desktop">
+                      {% if collection.filters != empty %}
+                        {%- for filter in collection.filters -%}
+                          {% unless filter.param_name == color_filter
+                            or filter.param_name == collection_filter
+                            or filter.param_name == genre_filter
+                          %}
+                            {% continue %}
+                          {% endunless %}
+
+                          <div
+                            class="facets__details collections-details"
+                            data-index="facets-details-{{ forloop.index }}"
+                          >
+                            {% if filter.param_name == color_filter or filter.param_name == collection_filter %}
+                              <div class="facets__summary flex items-center justify-between">
+                                <span>{{ filter.label }}</span>
+                              </div>
+
+                              <div class="facets__submenu facets__submenu--desktop">
+                                <ul data-lenis-prevent class="facets__list u-nsb">
+                                  {%- for value in filter.values -%}
+                                    <li class="facets__item {% if value.count == 0 %}opacity-30 pointer-events-none{% endif %}">
+                                      <label
+                                        for="{{ filter.label | handle }}-{{ value.label | handle }}-desktop"
+                                        class="facets__label {% if value.active %}active{% endif %}"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          class="facets__checkbox"
+                                          id="{{ filter.label | handle }}-{{ value.label | handle }}-desktop"
+                                          name="{{ filter.label | handle }}"
+                                          value="{{ value.value | handle }}"
+                                          data-add-url="{{ value.url_to_add }}"
+                                          data-remove-url="{{ value.url_to_remove }}"
+                                          {% if value.active %}
+                                            checked
+                                          {% endif %}
+                                        >
+                                        <span class="font-text-s"> {{ value.label }} </span>
+                                      </label>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            {% endif %}
+                          </div>
+                        {%- endfor -%}
+                      {%- endif -%}
+                    </div>
+
+                    <div class="facets__footer">
+                      <button
+                        type="button"
+                        class="button full-dark full-dark--transparent"
+                        onclick="this.closest('.collection-filters__wrapper').querySelector('summary').click()"
+                      >
+                        <span>{{ 'products.facets.apply' | t }} ({{ total_variants }})</span>
+                      </button>
+                      <filter-remove class="facets__clear-wrapper">
+                        <a
+                          href="{{ collection.url }}"
+                          class="button transparent reverse border-dark"
+                        >
+                          <span>{{- 'products.facets.clear_all' | t -}}</span>
+                        </a>
+                      </filter-remove>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </facets-collection>
+        </menu-drawer>
+      </div>
+
+      <div class="col-span-12">
+        {%- if total_variants == 0 -%}
+          <div class="collection-empty">
+            <div class="title-wrapper center">
+              <h2 class="font-title-l">
+                {{ 'sections.collection_template.empty' | t -}}
+                <br>
+                {{
+                  'sections.collection_template.use_fewer_filters_html'
+                  | t: link: collection.url, class: 'underlined-link link'
+                }}
+              </h2>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="collection-grid">
+            <ul class="collection-products u-grid gap-gutter">
+              {% assign item_index = 0 %}
+
+              {% assign current_type = '' %}
+
+              {% if collection.handle contains 'solaire' %}
+                {% assign current_type = 'solar' %}
+              {% elsif collection.handle contains 'optique' %}
+                {% assign current_type = 'optical' %}
+              {% endif %}
+
+              {% assign current_genre = 'default' %}
+
+              {% if collection.filters != empty %}
+                {% for filter in collection.filters %}
+                  {% if filter.param_name == genre_filter %}
+                    {% for value in filter.active_values %}
+                      {% assign current_genre = value.label | downcase %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% assign current_collection = 'default' %}
+
+              {% if collection.filters != empty %}
+                {% for filter in collection.filters %}
+                  {% if filter.param_name == collection_filter %}
+                    {% for value in filter.active_values %}
+                      {% assign current_collection = value.label | downcase %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% assign image_1 = null %}
+              {% assign image_2 = null %}
+
+              {% if current_type == 'solar' %}
+                {% case current_genre %}
+                  {% when 'femme' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_solar_female %}
+                    {% assign image_2 = section.settings.highlighted_image_2_solar_female %}
+                  {% when 'homme' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_solar_male %}
+                    {% assign image_2 = section.settings.highlighted_image_2_solar_male %}
+                  {% when 'mixte' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_solar_mixed %}
+                    {% assign image_2 = section.settings.highlighted_image_2_solar_mixed %}
+                  {% when 'enfant' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_solar_junior %}
+                    {% assign image_2 = section.settings.highlighted_image_2_solar_junior %}
+                  {% else %}
+                    {% assign image_1 = section.settings.highlighted_image_1_solar %}
+                    {% assign image_2 = section.settings.highlighted_image_2_solar %}
+                {% endcase %}
+
+              {% elsif current_type == 'optical' %}
+                {% case current_genre %}
+                  {% when 'femme' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_optical_female %}
+                    {% assign image_2 = section.settings.highlighted_image_2_optical_female %}
+                  {% when 'homme' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_optical_male %}
+                    {% assign image_2 = section.settings.highlighted_image_2_optical_male %}
+                  {% when 'mixte' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_optical_mixed %}
+                    {% assign image_2 = section.settings.highlighted_image_2_optical_mixed %}
+                  {% when 'enfant' %}
+                    {% assign image_1 = section.settings.highlighted_image_1_optical_junior %}
+                    {% assign image_2 = section.settings.highlighted_image_2_optical_junior %}
+                  {% else %}
+                    {% assign image_1 = section.settings.highlighted_image_1_optical %}
+                    {% assign image_2 = section.settings.highlighted_image_2_optical %}
+                {% endcase %}
+              {% endif %}
+
+              {% if current_type == 'optical' %}
+                {% case current_collection %}
+                  {% when 'combi' %}
+                    {% if section.settings.highlighted_image_1_optical_combi != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_combi %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_combi != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_combi %}
+                    {% endif %}
+                  {% when 'ecaille' %}
+                    {% if section.settings.highlighted_image_1_optical_ecaille != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_ecaille %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_ecaille != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_ecaille %}
+                    {% endif %}
+                  {% when 'flex' %}
+                    {% if section.settings.highlighted_image_1_optical_flex != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_flex %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_flex != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_flex %}
+                    {% endif %}
+                  {% when 'equo' %}
+                    {% if section.settings.highlighted_image_1_optical_equo != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_equo %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_equo != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_equo %}
+                    {% endif %}
+                  {% when 'neo retro' %}
+                    {% if section.settings.highlighted_image_1_optical_neo_retro != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_neo_retro %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_neo_retro != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_neo_retro %}
+                    {% endif %}
+                  {% when 'junior' %}
+                    {% if section.settings.highlighted_image_1_optical_c_junior != blank %}
+                      {% assign image_1 = section.settings.highlighted_image_1_optical_c_junior %}
+                    {% endif %}
+                    {% if section.settings.highlighted_image_2_optical_c_junior != blank %}
+                      {% assign image_2 = section.settings.highlighted_image_2_optical_c_junior %}
+                    {% endif %}
+                {% endcase %}
+              {% endif %}
+
+              {% assign max_variants = 0 %}
+
+              {% for product in collection.products %}
+                {% if product.variants.size > max_variants %}
+                  {% assign max_variants = product.variants.size %}
+                {% endif %}
+              {% endfor %}
+
+              {% for i in (0..max_variants) %}
+                {% for product in collection.products %}
+                  {% assign option_index = 0 %}
+
+                  {% assign variant = product.variants[i] %}
+                  {% if variant == blank %}
+                    {% continue %}
+                  {% endif %}
+
+                  {% assign show_variant = false %}
+
+                  {% assign variant_tonalites = variant.metafields.custom.tonalites | downcase %}
+                  {% assign match = false %}
+
+                  {% for selected in selected_colors %}
+                    {% if variant_tonalites contains selected %}
+                      {% assign match = true %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if selected_colors.size == 0 or match %}
+                    {% assign show_variant = true %}
+                  {% endif %}
+
+                  {% if collection.handle contains 'solaire' %}
+                    {% if variant.option2 != product.variants[0].option2 %}
+                      {% assign show_variant = false %}
+                    {% endif %}
+                  {% endif %}
+
+                  {% if show_variant %}
+                    {% assign item_index = item_index | plus: 1 %}
+
+                    <li class="product-item col-span-12 md:col-span-6 lg:col-span-4 hidden">
+                      {% render 'card-product',
+                        card_product: product,
+                        card_variant: variant,
+                        variant_color: variant.options[option_index],
+                        section_id: section.id
+                      %}
+                    </li>
+
+                    {% if item_index == 2 and image_1 != blank %}
+                      <li class="collection-push-image col-span-12 md:col-span-6 lg:col-span-4">
+                        <div class="h-[41.7rem] xl:h-[47rem]">
+                          {% render 'image',
+                            image: image_1,
+                            alt: image_1.alt,
+                            sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                            image_class: 'object-cover w-full h-full pointer-events-none'
+                          %}
+                        </div>
+                      </li>
+                    {% endif %}
+
+                    {% if item_index == 5 and image_2 != blank %}
+                      <li class="collection-push-image col-span-12 md:col-span-12 lg:col-span-8">
+                        <div class="h-[41.7rem] xl:h-[47rem]">
+                          {% render 'image',
+                            image: image_2,
+                            alt: image_2.alt,
+                            sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 66vw',
+                            image_class: 'object-cover w-full h-full pointer-events-none'
+                          %}
+                        </div>
+                      </li>
+                    {% endif %}
+                  {% endif %}
+                {%- endfor -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <load-more-product class="mx-auto flex justify-center h-fit">
+      <button
+        class="load-more-button button transparent reverse border-light mt-24"
+      >
+        <span>{{ section.settings.loading_button_label }}</span>
+      </button>
+    </load-more-product>
+
+    <div class="mt-[4.4rem] font-text-s mx-auto max-w-[81.6rem] text-center">
+      {% if collection.handle contains 'solaire' %}
+        {{ section.settings.end_of_collection_content_solar | newline_to_br }}
+      {% elsif collection.handle contains 'optique' %}
+        {{ section.settings.end_of_collection_content_optical | newline_to_br }}
+      {% endif %}
+    </div>
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Grille de produit",
+  "class": "section",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images (Solaire - Genre)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_solar",
+      "label": "Image mise en avant 1 (Défaut)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_solar",
+      "label": "Image mise en avant 2 (Défaut)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_solar_female",
+      "label": "Image mise en avant 1 (Femme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_solar_female",
+      "label": "Image mise en avant 2 (Femme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_solar_male",
+      "label": "Image mise en avant 1 (Homme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_solar_male",
+      "label": "Image mise en avant 2 (Homme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_solar_mixed",
+      "label": "Image mise en avant 1 (Mixte)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_solar_mixed",
+      "label": "Image mise en avant 2 (Mixte)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_solar_junior",
+      "label": "Image mise en avant 1 (Enfant)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_solar_junior",
+      "label": "Image mise en avant 2 (Enfant)"
+    },
+    {
+      "type": "header",
+      "content": "Images (Optique - Genre)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical",
+      "label": "Image mise en avant 1 (Défaut)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical",
+      "label": "Image mise en avant 2 (Défaut)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_female",
+      "label": "Image mise en avant 1 (Femme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_female",
+      "label": "Image mise en avant 2 (Femme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_male",
+      "label": "Image mise en avant 1 (Homme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_male",
+      "label": "Image mise en avant 2 (Homme)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_mixed",
+      "label": "Image mise en avant 1 (Mixte)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_mixed",
+      "label": "Image mise en avant 2 (Mixte)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_junior",
+      "label": "Image mise en avant 1 (Enfant)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_junior",
+      "label": "Image mise en avant 2 (Enfant)"
+    },
+    {
+      "type": "header",
+      "content": "Images (Optique - Collections spécifiques)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_combi",
+      "label": "Image mise en avant 1 (Collection Combi)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_combi",
+      "label": "Image mise en avant 2 (Collection Combi)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_ecaille",
+      "label": "Image mise en avant 1 (Collection Ecaille)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_ecaille",
+      "label": "Image mise en avant 2 (Collection Ecaille)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_flex",
+      "label": "Image mise en avant 1 (Collection Flex)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_flex",
+      "label": "Image mise en avant 2 (Collection Flex)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_equo",
+      "label": "Image mise en avant 1 (Collection Equo)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_equo",
+      "label": "Image mise en avant 2 (Collection Equo)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_neo_retro",
+      "label": "Image mise en avant 1 (Collection Neo Retro)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_neo_retro",
+      "label": "Image mise en avant 2 (Collection Neo Retro)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_1_optical_c_junior",
+      "label": "Image mise en avant 1 (Collection Junior)"
+    },
+    {
+      "type": "image_picker",
+      "id": "highlighted_image_2_optical_c_junior",
+      "label": "Image mise en avant 2 (Collection Junior)"
+    },
+    {
+      "type": "header",
+      "content": "Traduction pour les filtres de genre"
+    },
+    {
+      "type": "text",
+      "id": "gender_filter_label_solar",
+      "label": "Lunettes de soleil"
+    },
+    {
+      "type": "text",
+      "id": "gender_filter_label_optical",
+      "label": "Lunettes de vue"
+    },
+    {
+      "type": "header",
+      "content": "Contenu en fin de collection"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "end_of_collection_content_solar",
+      "label": "Contenu en fin de collection (Solaire)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "end_of_collection_content_optical",
+      "label": "Contenu en fin de collection (Optique)"
+    },
+    {
+      "type": "header",
+      "content": "Label du bouton de chargement"
+    },
+    {
+      "type": "text",
+      "id": "loading_button_label",
+      "label": "Charger + de produits"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grille de produit",
+      "category": "Produit"
+    }
+  ]
+}
+{% endschema %}

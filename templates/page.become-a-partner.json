@@ -1,0 +1,122 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "simple-banner",
+      "settings": {
+        "title": "Devenir opticien partenaire",
+        "hn": "1",
+        "text": "Offrez la fabrication française accessible à vos clients",
+        "image": "shopify://shop_images/sanstitre-472_3.jpg",
+        "button_label": "Faire une demande",
+        "button_link": "https://pro.bondet.com/fr/content/6-ouverture-compte"
+      }
+    },
+    "images_content_khjbcY": {
+      "type": "images-content",
+      "name": "Images Content",
+      "settings": {
+        "separator": true,
+        "tag": "Rejoignez l’aventure Bondet",
+        "accroche": "Chez Bondet, chaque monture raconte une histoire : celle de quatre générations de savoir-faire, d’une manufacture 100 % française et d’un engagement responsable envers la qualité et l’environnement.",
+        "title": "Un partenariat\nbasé sur la\nconfiance",
+        "hn": "2",
+        "text": "Nous savons que chaque opticien est un acteur essentiel du confort visuel de ses clients. C’est pourquoi nous plaçons la relation et la proximité au cœur de notre collaboration. \n\nNous vous accompagnons dans le choix des modèles, la présentation des collections et la mise en avant de l’histoire et du savoir-faire Bondet. Pas de force de vente agressive : un soutien concret, basé sur l’échange et la confiance.",
+        "button_url": "",
+        "button_text": "",
+        "image_small": "shopify://shop_images/1480f817-038f-42ed-8fd6-f3cd6b143917_f57664c7-d069-4d6e-a45b-21b01ba98522.jpg",
+        "image_big": "shopify://shop_images/cc7c2974-5793-473d-b0d5-247695fb4aef_601d217a-3387-4fbd-a4a3-807022372c5c.jpg"
+      }
+    },
+    "left_content_image_PMh4Np": {
+      "type": "left-content-image",
+      "name": "Left Content Image",
+      "settings": {
+        "title": "Des collections\nexclusives et\ncertifiées",
+        "hn": "2",
+        "text": "En tant que partenaire, vous bénéficiez d’un accès exclusif à nos montures bio-sourcées, fabriquées en France et certifiées Origine France Garantie. \n\nChaque pièce est pensée pour combiner confort, robustesse et style, afin que vos clients puissent porter fièrement des lunettes qui reflètent l’excellence et l’innovation française.",
+        "button_label": "Faire une demande",
+        "button_link": "https://pro.bondet.com/fr/content/6-ouverture-compte",
+        "image_primary": "shopify://shop_images/sanstitre-122_2.jpg",
+        "image_secondary": "shopify://shop_images/lunettes-francaises-bondet-dessin-1.png"
+      }
+    },
+    "bondet_collections_NHUHyC": {
+      "type": "bondet-collections",
+      "blocks": {
+        "collection_VwGDEW": {
+          "type": "collection",
+          "settings": {
+            "collection": "solaires"
+          }
+        },
+        "collection_JUTtdp": {
+          "type": "collection",
+          "settings": {
+            "collection": "combi"
+          }
+        },
+        "collection_b7PHnH": {
+          "type": "collection",
+          "settings": {
+            "collection": "neo-retro"
+          }
+        },
+        "collection_z74daJ": {
+          "type": "collection",
+          "settings": {
+            "collection": "flex"
+          }
+        },
+        "collection_myF3fk": {
+          "type": "collection",
+          "settings": {
+            "collection": "equo"
+          }
+        },
+        "collection_9XmyeU": {
+          "type": "collection",
+          "settings": {
+            "collection": "ecaille"
+          }
+        },
+        "collection_UKzimg": {
+          "type": "collection",
+          "settings": {
+            "collection": "junior"
+          }
+        }
+      },
+      "block_order": [
+        "collection_VwGDEW",
+        "collection_JUTtdp",
+        "collection_b7PHnH",
+        "collection_z74daJ",
+        "collection_myF3fk",
+        "collection_9XmyeU",
+        "collection_UKzimg"
+      ],
+      "name": "Bondet Collections",
+      "settings": {
+        "suptitle": "les collections Bondet",
+        "title": "Conçues à Oyonnax, réalisées à partir de matériaux biosourcés, nos montures incarnent une vision de la lunetterie plus locale, durable et exigeante.",
+        "hn": "2",
+        "image": "shopify://shop_images/lunettes-francaises-bondet-dessin-5.png"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "images_content_khjbcY",
+    "left_content_image_PMh4Np",
+    "bondet_collections_NHUHyC"
+  ]
+}

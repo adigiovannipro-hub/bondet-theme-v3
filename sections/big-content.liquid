@@ -1,0 +1,196 @@
+<div class="relative pb-[11.5rem] md:pb-[12.5rem] overflow-clip">
+  <div class="big-content__bg"></div>
+  {% if section.settings.top_image %}
+    <div class="big-content__top-image u-glasses-reveal" data-scroll>
+      <div class="relative w-[1px] bg-secondary-brown/30 h-[3rem]"></div>
+      <div class="mix-blend-multiply absolute inset-0">
+        {% render 'image',
+          image: section.settings.top_image,
+          alt: section.settings.top_image.alt,
+          sizes: '33vw',
+          image_class: 'object-contain'
+        %}
+      </div>
+      <div class="relative w-[1px] bg-secondary-brown/30 h-[3rem]"></div>
+    </div>
+  {% endif %}
+  <div class="u-container relative">
+    <div class="u-grid gap-y-8 md:items-center lg:items-start">
+      {% if section.settings.title %}
+        <div class="ml-auto mb-14 max-w-[24rem] text-right flex flex-col gap-y-[3.5rem] text-secondary-brown col-span-12 lg:col-span-4 lg:mt-40 xl:col-span-3 xl:col-start-2 xl:ml-0 xl:max-w-[26rem]">
+          {% render 'title', data: section.settings, class: 'font-title-xl-mobile lg:font-title-xl' %}
+          {% if section.settings.text %}
+            <p class="font-text-m">
+              {{ section.settings.text }}
+            </p>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if section.settings.main_image %}
+        <div class="big-content__main-image flex flex-col items-center col-span-12 lg:col-span-4 lg:-mb-20">
+          <div class="wrapper">
+            {% render 'image',
+              image: section.settings.main_image,
+              alt: section.settings.main_image.alt,
+              sizes: '(max-width: 990px) 100vw, 33vw',
+              image_class: 'object-cover w-full h-full'
+            %}
+            <div class="ofg"></div>
+          </div>
+          <div data-scroll data-scroll-speed="-0.05" class="logo-big"></div>
+        </div>
+      {% endif %}
+      <div class="flex flex-col items-center gap-4 col-span-12 lg:col-span-4 lg:items-start lg:mt-40 xl:pl-[3.8rem]">
+        {% for block in section.blocks %}
+          {% render 'button',
+            title: block.settings.text,
+            url: block.settings.link,
+            is_link: true,
+            new_tab: false,
+            class: 'beige'
+          %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="w-fit mx-auto mt-[7rem] mb-[6rem]">{% render 'separator' %}</div>
+    <div class="flex flex-col-reverse md:flex-row md:gap-x-8 xl:grid xl:grid-cols-12 xl:gap-x-gutter">
+      {% if section.settings.second_text %}
+        <div class="md:w-1/2 md:flex md:justify-end xl:col-span-3 xl:col-start-5 xl:w-full">
+          <p class="big-content__second-text max-w-[21.5rem] md:max-w-[23.8rem] text-right">{{ section.settings.second_text }}</p>
+        </div>
+      {% endif %}
+      {% if section.settings.second_title %}
+        <div class="md:w-1/2 xl:col-span-4 xl:w-full">
+          <h2 class="ml-auto font-title-xl-mobile max-w-[27.4rem] md:ml-0 md:max-w-[30.4rem] lg:font-title-xl">
+            {{ section.settings.second_title | newline_to_br }}
+          </h2>
+        </div>
+      {% endif %}
+    </div>
+    {% if section.settings.bottom_image %}
+      <div data-scroll class="u-glasses-reveal hidden w-full pointer-events-none md:absolute md:-bottom-24 md:-left-40 md:w-[41.7rem] md:h-[41.7rem] lg:block">
+        {% render 'image',
+          image: section.settings.bottom_image,
+          alt: section.settings.bottom_image.alt,
+          sizes: '40vw',
+          image_class: 'object-cover w-full h-full'
+        %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Grand contenu",
+  "tag": "section",
+  "class": "section section-big-content",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image (top)"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Premier contenu"
+    },
+    {
+      "type": "text",
+      "id": "suptitle",
+      "label": "Sur-titre"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "header",
+      "content": "Image (principale)"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Image (bottom)"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Second contenu"
+    },
+    {
+      "type": "textarea",
+      "id": "second_title",
+      "label": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "second_text",
+      "label": "Texte"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Bouton",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte du bouton"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien du bouton"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Grand contenu",
+      "category": "Contenu",
+      "blocks": [
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,425 @@
+{% if product.metafields.description.longue != blank %}
+  <div class="u-container">
+    <div class="w-fit mx-auto pt-36 pb-32">
+      {% render 'separator' %}
+    </div>
+    <div class="u-grid">
+      <div class="col-span-12">
+        <div id="description" class="font-suptitle uppercase w-fit mx-auto mb-14">{{ section.settings.desc_title }}</div>
+        <h2 class="pb-48 max-w-[81.6rem] xl:max-w-[64vw]  mx-auto text-center font-text-m">
+          {{ product.metafields.description.longue | metafield_tag }}
+        </h2>
+      </div>
+    </div>
+  </div>
+{% endif %}
+<div class="u-container">
+  <div class="u-grid bg-primary-beige">
+    <div class="col-span-10 col-start-2">
+      <div class="accordion flex flex-col py-20">
+        {% if product.metafields.custom.details != blank %}
+          <details name="details" class="border-b border-secondary-brown/30">
+            <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+              <h2 id="details" class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+                {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+                {{ section.settings.details_title }}
+              </h2>
+              <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+            </summary>
+            <div class="content">
+              {{ product.metafields.custom.details | metafield_tag }}
+            </div>
+          </details>
+        {% endif %}
+        {% if product.metafields.custom.mesures != blank %}
+          <details name="measures" class="border-b border-secondary-brown/30">
+            <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+              <h2 id="mesures" class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+                {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+                {{ section.settings.mesures_title }}
+              </h2>
+              <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+            </summary>
+            <div class="content bg-primary-beige">
+              <div class="lg:flex lg:gap-x-24">
+                <div class="mix-blend-multiply mb-8 aspect-[2/1] lg:mb-0 lg:w-[40vw] lg:h-[25.7rem]">
+                  {% render 'image',
+                    image: section.settings.mesures_image,
+                    alt: section.settings.mesures_image.alt,
+                    sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw',
+                    image_class: 'object-cover h-full w-full',
+                    lazyload: 'eager'
+                  %}
+                </div>
+                <div>
+                  {{ product.metafields.custom.mesures | metafield_tag }}
+                </div>
+              </div>
+            </div>
+          </details>
+        {% endif %}
+        {% if product.type == 'Solaire' %}
+          <details name="sunglasses" class="border-b border-secondary-brown/30">
+            <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+              <h2 class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+                {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+                {{ section.settings.sunglasses_title }}
+              </h2>
+              <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+            </summary>
+            <div class="content">
+              <div class="flex flex-col gap-gutter md:flex-row">
+                <div class="aspect-[1.11/1] mb-8 h-[24.8rem] md:mb-0 md:flex-1 lg:h-[35.2rem] xl:h-[43.2rem]">
+                  {% render 'image',
+                    image: section.settings.sunglasses_image,
+                    alt: section.settings.sunglasses_image.alt,
+                    sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 37vw',
+                    image_class: 'object-cover h-full w-full',
+                    lazyload: 'eager'
+                  %}
+                </div>
+                <div class="flex flex-col gap-10 md:flex-1">
+                  <h3>{{ section.settings.sunglasses_content_title }}</h3>
+                  <div class="u-richtext font-text-s">
+                    {{ section.settings.sunglasses_content_text | strip_newlines }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        {% endif %}
+        <details name="materials" class="border-b border-secondary-brown/30">
+          <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+            <h2 class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+              {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+              {{ section.settings.materials_title }}
+            </h2>
+            <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+          </summary>
+          <div class="content bg-primary-beige">
+            <div class="flex gap-gutter flex-col-reverse md:flex-row lg:grid lg:grid-cols-10">
+              <div class="flex flex-col gap-10 md:flex-1 lg:col-span-3">
+                <h3 class="xl:max-w-[22vw]">
+                  {{ section.settings.materials_first_title | newline_to_br }}
+                </h3>
+                <div class="font-text-s xl:max-w-[22vw]">
+                  {{ section.settings.materials_first_text | newline_to_br }}
+                </div>
+              </div>
+              <div class="aspect-[1.11/1] h-[24.8rem] md:flex-1 lg:h-[43.2rem]">
+                {% render 'image',
+                  image: section.settings.materials_first_image,
+                  alt: section.settings.materials_first_image.alt,
+                  sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 37vw',
+                  image_class: 'object-cover h-full w-full',
+                  lazyload: 'eager'
+                %}
+              </div>
+            </div>
+            <div class="mt-10 flex flex-col gap-10 md:flex-row lg:grid lg:grid-cols-10 lg:gap-x-gutter lg:mt-24">
+              <div class="aspect-[1.14/1] mt-8 mt:mt-0 md:flex-1 lg:col-span-4 xl:h-[32.6rem]">
+                {% render 'image',
+                  image: section.settings.materials_second_image,
+                  alt: section.settings.materials_second_image.alt,
+                  sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 30vw, 29vw',
+                  image_class: 'object-cover h-full w-full',
+                  lazyload: 'eager'
+                %}
+              </div>
+              <h3 class="md:flex-1 md:text-right lg:col-span-2">
+                {{ section.settings.materials_second_title | newline_to_br }}
+              </h3>
+              <div class="flex flex-col gap-10 md:flex-1 lg:col-span-3">
+                <div class="font-text-s">
+                  {{ section.settings.materials_second_text | newline_to_br }}
+                </div>
+                {% render 'button',
+                  title: section.settings.materials_label_button,
+                  url: section.settings.materials_url_button,
+                  is_link: true,
+                  new_tab: false,
+                  class: 'beige'
+                %}
+              </div>
+            </div>
+          </div>
+        </details>
+        <details name="fabrication" class="border-b border-secondary-brown/30">
+          <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+            <h2 class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+              {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+              {{ section.settings.fabrication_title }}
+            </h2>
+            <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+          </summary>
+          <div class="content bg-primary-beige">
+            <div class="md:flex md:gap-gutter">
+              <div class="aspect-[1.11/1] mb-8 md:mb-0 md:flex-1 h-[24.8rem] lg:h-[35.2rem] xl:h-[43.2rem]">
+                {% render 'image',
+                  image: section.settings.fabrication_first_image,
+                  alt: section.settings.fabrication_first_image.alt,
+                  sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 37vw',
+                  image_class: 'object-cover h-full w-full',
+                  lazyload: 'eager'
+                %}
+              </div>
+              <div class="flex flex-col gap-10 md:flex-1">
+                <h3 class="xl:max-w-[22vw]">
+                  {{ section.settings.fabrication_first_title | newline_to_br }}
+                </h3>
+                <div class="font-text-s xl:max-w-[22vw]">
+                  {{ section.settings.fabrication_first_text | newline_to_br }}
+                </div>
+                {% render 'button',
+                  title: section.settings.fabrication_label_button,
+                  url: section.settings.fabrication_url_button,
+                  is_link: true,
+                  new_tab: false,
+                  class: 'beige'
+                %}
+              </div>
+            </div>
+            <div class="mt-10 flex flex-col gap-10 md:flex-row lg:grid lg:grid-cols-10 lg:gap-x-gutter lg:mt-24">
+              <h3 class="md:flex-1 md:text-right lg:col-span-3">
+                {{ section.settings.fabrication_second_title | newline_to_br }}
+              </h3>
+              <div class="font-text-s md:flex-1 lg:col-span-3">
+                {{ section.settings.fabrication_second_text | newline_to_br }}
+              </div>
+            </div>
+          </div>
+        </details>
+        {% if product.type == 'Solaire' %}
+          <details name="delivery" class="border-b border-secondary-brown/30">
+            <summary class="group cursor-pointer flex items-center justify-between gap-x-8 font-title-l py-12">
+              <h2 id="livraison" class="flex items-center gap-8 transition-opacity duration-700 group-hover:opacity-60">
+                {{- 'icon-arrow-long.svg' | inline_asset_content -}}
+                {{ section.settings.delivery_title }}
+              </h2>
+              <div class="icon w-[1.6rem] h-[1.6rem]">{{- 'icon-close.svg' | inline_asset_content -}}</div>
+            </summary>
+            <div class="content lg:grid lg:grid-cols-10 lg:gap-x-gutter">
+              <div class="flex flex-col gap-12 justify-center items-center text-center lg:col-span-8 lg:col-start-2">
+                <h3 class="font-text-l-mobile lg:font-text-l">{{ section.settings.delivery_content_title | newline_to_br }}</h3>
+                {% render 'button',
+                  title: section.settings.delivery_button_label,
+                  url: section.settings.delivery_button_url,
+                  is_link: true,
+                  new_tab: false,
+                  class: 'beige'
+                %}
+              </div>
+            </div>
+          </details>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Accordéon",
+  "class": "section section-accordion",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "text",
+      "id": "desc_title",
+      "label": "Titre",
+      "default": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (détails)"
+    },
+    {
+      "type": "text",
+      "id": "details_title",
+      "label": "Titre de l'accordéon",
+      "default": "Détails"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (mesures)"
+    },
+    {
+      "type": "text",
+      "id": "mesures_title",
+      "label": "Titre de l'accordéon",
+      "default": "Mesures"
+    },
+    {
+      "type": "image_picker",
+      "id": "mesures_image",
+      "label": "Image des mesures"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (matériaux bio-sourcés)"
+    },
+    {
+      "type": "text",
+      "id": "materials_title",
+      "label": "Titre de l'accordéon",
+      "default": "Matériaux bio-sourcés"
+    },
+    {
+      "type": "header",
+      "content": "Contenu (matériaux bio-sourcés)"
+    },
+    {
+      "type": "richtext",
+      "id": "materials_first_title",
+      "label": "Titre (premier)"
+    },
+    {
+      "type": "richtext",
+      "id": "materials_first_text",
+      "label": "Texte (premier)"
+    },
+    {
+      "type": "image_picker",
+      "id": "materials_first_image",
+      "label": "Image des matériaux (premier)"
+    },
+    {
+      "type": "richtext",
+      "id": "materials_second_title",
+      "label": "Titre (deuxième)"
+    },
+    {
+      "type": "richtext",
+      "id": "materials_second_text",
+      "label": "Texte (deuxième)"
+    },
+    {
+      "type": "image_picker",
+      "id": "materials_second_image",
+      "label": "Image des matériaux (deuxième)"
+    },
+    {
+      "type": "text",
+      "id": "materials_label_button",
+      "label": "Label du bouton de l'accordéon"
+    },
+    {
+      "type": "url",
+      "id": "materials_url_button",
+      "label": "URL du bouton de l'accordéon"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (fabrication française)"
+    },
+    {
+      "type": "text",
+      "id": "fabrication_title",
+      "label": "Titre de l'accordéon",
+      "default": "Fabrication française"
+    },
+    {
+      "type": "header",
+      "content": "Contenu (fabrication française)"
+    },
+    {
+      "type": "image_picker",
+      "id": "fabrication_first_image",
+      "label": "Image de la fabrication française"
+    },
+    {
+      "type": "richtext",
+      "id": "fabrication_first_title",
+      "label": "Titre (premier)"
+    },
+    {
+      "type": "richtext",
+      "id": "fabrication_first_text",
+      "label": "Texte (premier)"
+    },
+    {
+      "type": "text",
+      "id": "fabrication_label_button",
+      "label": "Label du bouton de l'accordéon"
+    },
+    {
+      "type": "url",
+      "id": "fabrication_url_button",
+      "label": "URL du bouton de l'accordéon"
+    },
+    {
+      "type": "richtext",
+      "id": "fabrication_second_title",
+      "label": "Titre (deuxième)"
+    },
+    {
+      "type": "richtext",
+      "id": "fabrication_second_text",
+      "label": "Texte (deuxième)"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (verres solaires) solaires seulement"
+    },
+    {
+      "type": "text",
+      "id": "sunglasses_title",
+      "label": "Titre de l'accordéon",
+      "default": "Verres solaires"
+    },
+    {
+      "type": "image_picker",
+      "id": "sunglasses_image",
+      "label": "Image de l'accordéon"
+    },
+    {
+      "type": "text",
+      "id": "sunglasses_content_title",
+      "label": "Titre du contenu de l'accordéon"
+    },
+    {
+      "type": "richtext",
+      "id": "sunglasses_content_text",
+      "label": "Texte du contenu de l'accordéon"
+    },
+    {
+      "type": "header",
+      "content": "Accordéon (livraison) solaires seulement"
+    },
+    {
+      "type": "text",
+      "id": "delivery_title",
+      "label": "Titre de l'accordéon",
+      "default": "Livraison et retours"
+    },
+    {
+      "type": "text",
+      "id": "delivery_content_title",
+      "label": "Titre du contenu de l'accordéon"
+    },
+    {
+      "type": "url",
+      "id": "delivery_button_url",
+      "label": "URL du bouton de l'accordéon"
+    },
+    {
+      "type": "text",
+      "id": "delivery_button_label",
+      "label": "Label du bouton de l'accordéon"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordéon",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

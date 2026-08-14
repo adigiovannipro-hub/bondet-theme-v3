@@ -1,0 +1,114 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-legales",
+      "settings": {
+        "cover_image": "shopify://shop_images/sanstitre-331.jpg"
+      }
+    },
+    "multicolumn_qTxGKc": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_akUrJj": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/france.svg",
+            "title": "+ 150 revendeurs"
+          }
+        },
+        "column_Kq8MqV": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/livraison.svg",
+            "title": "Livraison en 72h !"
+          }
+        },
+        "column_AADHRy": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/made-in-france.svg",
+            "title": "Fabrication française"
+          }
+        },
+        "column_QCdcQh": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/bio-energy.svg",
+            "title": "matériaux bio-sourcés"
+          }
+        }
+      },
+      "block_order": [
+        "column_akUrJj",
+        "column_Kq8MqV",
+        "column_AADHRy",
+        "column_QCdcQh"
+      ],
+      "name": "Multicolonne",
+      "settings": {
+        "padding_top": 7,
+        "padding_bottom": 8,
+        "border_top": true,
+        "border_bottom": true
+      }
+    },
+    "title_buttons_VxnqJr": {
+      "type": "title-buttons",
+      "blocks": {
+        "buttons_fHQL3M": {
+          "type": "buttons",
+          "settings": {
+            "title": "Fabrication française",
+            "url": "shopify://pages/fabrication-francaise",
+            "image": "shopify://shop_images/e3542726-a19c-4499-b161-54fc2409e136_d10a3004-0726-4966-85c1-0975c135a442.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_4hHgiw": {
+          "type": "buttons",
+          "settings": {
+            "title": "Engagements responsables",
+            "url": "shopify://pages/engagements-responsables",
+            "image": "shopify://shop_images/sanstitre-552_11733293-2265-4db7-b785-d4bf8fd47d89.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_94JhWb": {
+          "type": "buttons",
+          "settings": {
+            "title": "Histoire & savoir-faire",
+            "url": "shopify://pages/histoire-et-savoir-faire",
+            "image": "shopify://shop_images/656acca1-3432-4800-8e01-e989fe2bf1f0_0a2f5f95-5f3b-41ac-8295-a2d038eadae4.jpg",
+            "label": "voir"
+          }
+        }
+      },
+      "block_order": [
+        "buttons_fHQL3M",
+        "buttons_4hHgiw",
+        "buttons_94JhWb"
+      ],
+      "name": "Titre et boutons",
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 9,
+        "title": "Mieux connaître Bondet",
+        "hn": "2"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "multicolumn_qTxGKc",
+    "title_buttons_VxnqJr"
+  ]
+}

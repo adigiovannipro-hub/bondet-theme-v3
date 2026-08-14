@@ -1,0 +1,73 @@
+<div class="flexible-media__container {% if section.settings.image != blank and section.settings.video == blank %}flexible-media__container--image{% endif %}">
+  <div class="flexible-media__wrapper {% if section.settings.image != blank and section.settings.video == blank %}flexible-media__wrapper--image{% endif %}">
+    {% if section.settings.video != blank or section.settings.video_url != blank %}
+      <div class="flexible-media__item flexible-media__item--video">
+        {%- if section.settings.video != blank -%}
+          {{
+            section.settings.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              playsinline: true,
+              controls: false,
+              class: 'object-cover'
+          }}
+        {%- endif -%}
+      </div>
+    {% elsif section.settings.image != blank and section.settings.video == blank %}
+      <div class="flexible-media__item flexible-media__item--image">
+        {% render 'image',
+          image: section.settings.image,
+          alt: section.settings.image.alt,
+          image_class: 'object-cover w-full h-full'
+        %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Flexible Media",
+  "tag": "section",
+  "class": "section section-flexible-media",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Vidéo hébergée par Shopify"
+    },
+    {
+      "type": "paragraph",
+      "content": "Si une vidéo est ajoutée, l’image ne sera pas utilisée."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Vidéo"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "paragraph",
+      "content": "La vidéo est prioritaire sur l’image. Si une vidéo est ajoutée, l’image ne sera pas utilisée."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Média (vidéo ou image)",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

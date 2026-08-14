@@ -1,0 +1,142 @@
+{%- style -%}
+  .section-title-buttons-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}rem;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .section-title-buttons-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}rem;
+      padding-bottom: {{ section.settings.padding_bottom }}rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="u-container section-title-buttons-{{ section.id }}-padding">
+  <div class="mb-12">
+    {% render 'title', data: section.settings %}
+  </div>
+  {% if section.blocks.size > 0 %}
+    <div class="u-grid gap-y-gutter lg:gap-y-0">
+      {% for block in section.blocks %}
+        {% assign button = block.settings %}
+        <a
+          href="{{ button.url }}"
+          class="group overflow-clip col-span-12 relative h-[40rem] flex items-end lg:col-span-4"
+        >
+          {% if button.image %}
+            <div class="absolute inset-0 group-hover:scale-105 transition-transform duration-1000 ease-smooth">
+              {% render 'image',
+                image: button.image,
+                alt: button.title,
+                sizes: '(max-width: 990px) 100vw, 33vw',
+                image_class: 'object-cover w-full h-full'
+              %}
+              <div class="absolute inset-0 bg-black opacity-20"></div>
+            </div>
+          {% endif %}
+          <div class="flex flex-wrap items-end justify-between gap-y-20 relative text-white pb-16 px-12 w-full">
+            <div class="font-text-l-mobile lg:font-text-l max-w-[18.6rem]">{{ button.title }}</div>
+            {% if button.label %}
+              {% render 'button', title: button.label, is_link: false, class: 'transparent reverse text-white' %}
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Titre et boutons",
+  "class": "section section-title-buttons",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page", "collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Espacement (1rem pour 10px)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "rem",
+      "label": "Espacement en haut",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "rem",
+      "label": "Espacement en bas",
+      "default": 9
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Mieux connaître Bondet",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "buttons",
+      "name": "Boutons",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL du bouton"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image du bouton"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "default": "voir",
+          "label": "Label du bouton"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Titre et boutons",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

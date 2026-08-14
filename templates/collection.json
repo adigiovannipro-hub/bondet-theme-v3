@@ -1,0 +1,151 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "collection_description_solar": "Découvrez les lunettes solaires Bondet, conçues avec le savoir-faire de la fabrication française. Alliant protection, qualité et design contemporain, notre collection pour homme et femme propose des montures élégantes, durables et pensées pour sublimer votre style.",
+        "collection_description_optical": "Découvrez les lunettes optiques Bondet, alliant design contemporain, confort et qualité. Nos collections de lunettes de vue pour homme, femme et junior proposent des montures élégantes, durables et tendances, pour tous les styles. Trouvez la paire idéale et affirmez votre style avec Bondet."
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "highlighted_image_1_solar": "shopify://shop_images/sanstitre-342_2.jpg",
+        "highlighted_image_2_solar": "shopify://shop_images/sanstitre-78_7f2804a5-4a32-4d37-952e-f932400728ca.jpg",
+        "highlighted_image_1_solar_female": "shopify://shop_images/sanstitre-461_2.jpg",
+        "highlighted_image_2_solar_female": "shopify://shop_images/sanstitre-524_2.jpg",
+        "highlighted_image_1_solar_male": "shopify://shop_images/sanstitre-31_3.jpg",
+        "highlighted_image_2_solar_male": "shopify://shop_images/sanstitre-78_7f2804a5-4a32-4d37-952e-f932400728ca.jpg",
+        "highlighted_image_1_solar_mixed": "shopify://shop_images/sanstitre-342_2.jpg",
+        "highlighted_image_2_solar_mixed": "shopify://shop_images/sanstitre-408_831fa85d-5fe1-47ee-80e1-3aa5dfd4e3e5.jpg",
+        "highlighted_image_1_optical": "shopify://shop_images/e48e3d9f-1fcd-4508-867e-d117735b26a8.jpg",
+        "highlighted_image_2_optical": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8.jpg",
+        "highlighted_image_1_optical_female": "shopify://shop_images/ebf82f0b-4362-4b45-a431-9deb83d3206d.jpg",
+        "highlighted_image_2_optical_female": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8.jpg",
+        "highlighted_image_1_optical_male": "shopify://shop_images/319ee390-8e0c-42ff-b572-2a930410dc68.jpg",
+        "highlighted_image_2_optical_male": "shopify://shop_images/e206adc7-3d25-4e13-b15a-a944b4ca7769.jpg",
+        "highlighted_image_1_optical_mixed": "shopify://shop_images/19f88954-7bef-4e11-b1bd-7004d2c2a556.jpg",
+        "highlighted_image_2_optical_mixed": "shopify://shop_images/e206adc7-3d25-4e13-b15a-a944b4ca7769.jpg",
+        "highlighted_image_1_optical_junior": "shopify://shop_images/girl-in-power-pose.jpg",
+        "highlighted_image_2_optical_junior": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8.jpg",
+        "highlighted_image_1_optical_combi": "shopify://shop_images/sanstitre-495.jpg",
+        "highlighted_image_2_optical_combi": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8_1d61a6dd-8ccf-40a5-8e1a-ff173a6d7e1b.jpg",
+        "highlighted_image_1_optical_ecaille": "shopify://shop_images/TOM_fauve_ecaille_NICOLE_ocean_ecaille_3.jpg",
+        "highlighted_image_1_optical_flex": "shopify://shop_images/jackie_prune_tb_nude_flex.jpg",
+        "highlighted_image_1_optical_equo": "shopify://shop_images/optique-liv-noir-ecaille-miel-shooting_b87f1dd4-3ad9-42c0-bd86-21b2c9b36864.jpg",
+        "highlighted_image_1_optical_neo_retro": "shopify://shop_images/ALMA_caramel_beige_neo_retro_4.jpg",
+        "highlighted_image_1_optical_c_junior": "shopify://shop_images/girl-in-power-pose.jpg",
+        "gender_filter_label_solar": "Lunettes de soleil",
+        "gender_filter_label_optical": "Lunettes de vue",
+        "end_of_collection_content_solar": "Les lunettes de soleil allient style et protection pour un confort optimal au quotidien. Découvrez une sélection de solaires à base d’huile de ricin, disponibles en noir, écaille, transparent et autres teintes actuelles. Formes oversize, rondes, carrées, ou rectangulaires, chaque paire de lunettes de soleil s’adapte à votre morphologie.",
+        "end_of_collection_content_optical": "Les lunettes de vue allient style et protection pour un confort optimal au quotidien. Découvrez une sélection d'optiques à base d’huile de ricin, disponibles en noir, écaille, transparent et autres teintes actuelles. Formes oversize, rondes, carrées, ou rectangulaires, chaque paire de lunettes s’adapte à votre morphologie.",
+        "loading_button_label": "charger + de produits"
+      }
+    },
+    "multicolumn_KiEFJP": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_Ep97xb": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/france.svg",
+            "title": "+ 800 revendeurs"
+          }
+        },
+        "column_TJJAnJ": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/livraison.svg",
+            "title": "Livraison en 72h !"
+          }
+        },
+        "column_Pfz83f": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/made-in-france.svg",
+            "title": "Fabrication française certifiée"
+          }
+        },
+        "column_Qt9p9k": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/bio-energy.svg",
+            "title": "matériaux bio-sourcés"
+          }
+        }
+      },
+      "block_order": [
+        "column_Ep97xb",
+        "column_TJJAnJ",
+        "column_Pfz83f",
+        "column_Qt9p9k"
+      ],
+      "name": "Multicolonne",
+      "settings": {
+        "padding_top": 6,
+        "padding_bottom": 8,
+        "border_top": true,
+        "border_bottom": true
+      }
+    },
+    "title_buttons_ipJUHK": {
+      "type": "title-buttons",
+      "blocks": {
+        "buttons_C6cj7G": {
+          "type": "buttons",
+          "settings": {
+            "title": "Fabrication française",
+            "url": "shopify://pages/fabrication-francaise",
+            "image": "shopify://shop_images/e3542726-a19c-4499-b161-54fc2409e136_d10a3004-0726-4966-85c1-0975c135a442.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_czUdRD": {
+          "type": "buttons",
+          "settings": {
+            "title": "Engagements responsables",
+            "url": "shopify://pages/engagements-responsables",
+            "image": "shopify://shop_images/sanstitre-552_2.jpg",
+            "label": "voir"
+          }
+        },
+        "buttons_hAeBfU": {
+          "type": "buttons",
+          "settings": {
+            "title": "Histoire & savoir-faire",
+            "url": "shopify://pages/histoire-et-savoir-faire",
+            "image": "shopify://shop_images/656acca1-3432-4800-8e01-e989fe2bf1f0_0a2f5f95-5f3b-41ac-8295-a2d038eadae4.jpg",
+            "label": "voir"
+          }
+        }
+      },
+      "block_order": [
+        "buttons_C6cj7G",
+        "buttons_czUdRD",
+        "buttons_hAeBfU"
+      ],
+      "name": "Titre et boutons",
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 9,
+        "title": "Mieux connaître Bondet",
+        "hn": "2"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "product-grid",
+    "multicolumn_KiEFJP",
+    "title_buttons_ipJUHK"
+  ]
+}

@@ -1,0 +1,132 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Artvannah",
+    "theme_version": "1.0.0",
+    "theme_author": "Quentin Vannarath",
+    "theme_documentation_url": "https://artvannah.fr",
+    "theme_support_url": "https://artvannah.fr"
+  },
+  {
+    "name": "Logo et favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "textarea",
+        "id": "logo_svg",
+        "label": "Logo SVG (inline)",
+        "info": "Collez le code SVG ici pour remplacer l'image"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "placeholder": "https://www.instagram.com/votre_compte"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "placeholder": "https://www.facebook.com/votre_compte"
+      },
+      {
+        "type": "text",
+        "id": "social_linkedin_link",
+        "label": "LinkedIn",
+        "placeholder": "https://www.linkedin.com/votre_compte"
+      }
+    ]
+  },
+  {
+    "name": "Développeur",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "debug_mode",
+        "label": "Activer le mode debug (grille)",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.cart.name",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "t:settings_schema.cart.settings.cart_type.drawer.label"
+          }
+        ],
+        "default": "drawer",
+        "label": "t:settings_schema.cart.settings.cart_type.label"
+      }
+    ]
+  },
+  {
+    "name": "Panier - Colonnes d'information",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "cart_totals_text",
+        "label": "Texte sous le total"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_column_1_image",
+        "label": "Colonne 1 - Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_column_1_title",
+        "label": "Colonne 1 - Titre"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_column_2_image",
+        "label": "Colonne 2 - Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_column_2_title",
+        "label": "Colonne 2 - Titre"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_column_3_image",
+        "label": "Colonne 3 - Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_column_3_title",
+        "label": "Colonne 3 - Titre"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_column_4_image",
+        "label": "Colonne 4 - Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_column_4_title",
+        "label": "Colonne 4 - Titre"
+      }
+    ]
+  }
+]

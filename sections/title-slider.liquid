@@ -1,0 +1,106 @@
+<div class="u-container py-24">
+  <div class="u-grid">
+    <div class="col-span-12">
+      <div class="flex flex-wrap items-center justify-between gap-14">
+        {% if section.settings.title != blank %}
+          {% render 'title', data: section.settings %}
+        {% endif %}
+        <div class="flex gap-x-4 items-center">
+          {% render 'pager' %}
+          {% render 'pager', mode: 'next' %}
+        </div>
+      </div>
+    </div>
+    {% if section.blocks.size >= 4 %}
+      <div class="col-span-12 pt-12">
+        <div class="w-full overflow-hidden">
+          <div class="slider flex gap-x-gutter">
+            {% for block in section.blocks %}
+              {% assign slide = block.settings %}
+              {% if slide.image %}
+                <div class="u-drag-slide h-[32.6rem] overflow-clip">
+                  {% render 'image',
+                    image: slide.image,
+                    alt: slide.image.alt,
+                    sizes: '(max-width: 990px) 100vw, 50vw',
+                    image_class: 'object-cover w-full h-full'
+                  %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Title Slider",
+  "class": "section section-title-slider",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Ajoutez au minimum 4 slides pour activer le slider."
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Titre avec slider",
+      "category": "Contenu",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

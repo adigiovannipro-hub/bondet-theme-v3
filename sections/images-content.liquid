@@ -1,0 +1,149 @@
+<div class="u-container">
+  {% if section.settings.separator %}
+    <div class="w-fit mx-auto pt-28">
+      {% render 'separator', is_big: true %}
+    </div>
+  {% endif %}
+  {% if section.settings.tag != blank or section.settings.accroche != blank %}
+    <div class="u-grid">
+      <div class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
+        <div class="flex flex-col items-center gap-y-14 py-24">
+          {% if section.settings.tag != blank %}
+            <p class="font-suptitle uppercase">{{ section.settings.tag }}</p>
+          {% endif %}
+          {% if section.settings.accroche != blank %}
+            <p class="font-text-l-mobile lg:font-text-l text-center">{{ section.settings.accroche | newline_to_br }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="u-grid py-32">
+    <div class="hidden lg:block lg:col-span-3 lg:h-[43.2rem]">
+      {% if section.settings.image_small %}
+        {% render 'image',
+          image: section.settings.image_small,
+          alt: section.settings.image_small.alt,
+          sizes: '(max-width: 990px) 100vw, 50vw',
+          image_class: 'object-cover w-full h-full'
+        %}
+      {% endif %}
+    </div>
+    <div class="col-span-12 h-[43.2rem] md:col-span-6 lg:col-span-4">
+      {% if section.settings.image_big %}
+        {% render 'image',
+          image: section.settings.image_big,
+          alt: section.settings.image_big.alt,
+          sizes: '(max-width: 990px) 100vw, 50vw',
+          image_class: 'object-cover w-full h-full'
+        %}
+      {% endif %}
+    </div>
+    <div class="col-span-12 mt-40 md:col-span-6 lg:col-span-4 lg:mt-80 xl:col-start-9 xl:col-span-3">
+      <div class="flex flex-col gap-y-10">
+        {% if section.settings.title %}
+          {% render 'title', data: section.settings %}
+        {% endif %}
+        {% if section.settings.text %}
+          <p class="font-text-s">{{ section.settings.text | newline_to_br }}</p>
+        {% endif %}
+        {% if section.settings.button_url and section.settings.button_text %}
+          {% render 'button',
+            title: section.settings.button_text,
+            url: section.settings.button_url,
+            is_link: true,
+            class: 'full-dark transparent  reverse'
+          %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Images Content",
+  "tag": "section",
+  "class": "section section-images-content",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "separator",
+      "label": "Afficher le séparateur",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Tag et accroche"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag"
+    },
+    {
+      "type": "textarea",
+      "id": "accroche",
+      "label": "Accroche"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "URL du bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Label du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_small",
+      "label": "Image (petite)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_big",
+      "label": "Image (grande)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Images et contenu",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

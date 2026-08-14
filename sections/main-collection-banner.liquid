@@ -1,0 +1,52 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+<div class="pt-[14.4rem] pb-[5.3rem]">
+  <div class="u-container">
+    <div class="w-fit mx-auto">
+      {% render 'separator', no_bottom_line: true %}
+    </div>
+    <h1 class="mt-[4.4rem] font-text-m mx-auto max-w-[81.6rem] text-center">
+      {% if collection.handle contains 'solaire' %}
+        {{ section.settings.collection_description_solar }}
+      {% elsif collection.handle contains 'optique' %}
+        {{ section.settings.collection_description_optical }}
+      {% endif %}
+    </h1>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bannière de collection",
+  "class": "section",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu Solaire"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "collection_description_solar",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Contenu Optique"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "collection_description_optical",
+      "label": "Description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière de collection",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

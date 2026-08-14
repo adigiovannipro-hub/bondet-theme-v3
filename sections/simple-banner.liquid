@@ -1,0 +1,90 @@
+<div class="relative min-h-[50rem]">
+  {% if section.settings.image != blank %}
+    <div class="absolute top-0 left-0 w-full h-full">
+      {% render 'image',
+        image: section.settings.image,
+        alt: section.settings.image.alt,
+        image_class: 'object-cover w-full h-full'
+      %}
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+    </div>
+  {% endif %}
+  <div class="u-container relative min-h-[50rem]">
+    <div class="grid justify-center min-h-[50rem] pt-[var(--header-height)]">
+      <div class="flex flex-col items-center gap-6 text-center text-white justify-center xl:justify-start xl:pb-20 xl:pt-[18.4rem] max-w-[61.5rem] xl:max-w-[60vw]">
+        {% if section.settings.title %}
+          {% render 'title', data: section.settings %}
+        {% endif %}
+        {% if section.settings.text %}
+          <p class="max-w-[48rem]">{{ section.settings.text }}</p>
+        {% endif %}
+        {% if section.settings.button_label != blank %}
+          <div class="mt-10">
+            {% render 'button',
+              title: section.settings.button_label,
+              url: section.settings.button_link,
+              is_link: true,
+              new_tab: false,
+              class: 'orange'
+            %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bannière simple",
+  "class": "section section-simple-banner",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière simple",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

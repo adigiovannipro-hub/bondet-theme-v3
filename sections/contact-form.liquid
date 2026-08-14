@@ -1,0 +1,467 @@
+{%- liquid
+  assign has_social_icons = true
+  if settings.social_linkedin_link == blank and settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign has_social_icons = false
+  endif
+-%}
+
+<div class="relative">
+  {% if section.settings.image != blank %}
+    <div class="absolute top-0 left-0 w-full h-[50rem]">
+      {% render 'image',
+        image: section.settings.image,
+        alt: section.settings.image.alt,
+        image_class: 'object-cover h-full w-full'
+      %}
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+    </div>
+  {% endif %}
+  <div class="u-container">
+    <div class="u-grid">
+      <div class="col-span-12 bg-white relative mt-[17.2rem] py-32 lg:col-span-10 lg:col-start-2">
+        <div class="grid grid-cols-12 gap-x-gutter lg:grid-cols-10">
+          <div class="col-span-10 col-start-2 lg:col-span-8 lg:col-start-2">
+            <div class="flex flex-col gap-y-20">
+              <div class="flex flex-col gap-y-6 max-w-[48rem] mx-auto">
+                <h1 class="font-title-xl-mobile lg:font-title-xl text-center">
+                  {{ section.settings.title | newline_to_br }}
+                </h1>
+                <p class="font-text-s text-center">
+                  {{ section.settings.text | newline_to_br }}
+                </p>
+              </div>
+              {% render 'separator', is_big: true %}
+              <div class="form">
+                {%- capture form_id -%}form__form-{{ section.id }}{%- endcapture -%}
+                {%- form 'contact', id: form_id -%}
+                  <div class="form__form-response">
+                    {%- if form.posted_successfully? -%}
+                      <p class="form__form-reply--success">{{ 'templates.contact.form.post_success' | t }}</p>
+                    {%- elsif form.errors -%}
+                      {%- for field in form.errors -%}
+                        <p class="form__form-reply--error">{{ field }} - {{ form.errors.messages[field] }}</p>
+                      {%- endfor -%}
+                    {%- endif -%}
+                  </div>
+                  <input type="hidden" name="challenge" value="false">
+                  <div class="grid grid-cols-8 gap-6">
+                    {%- for block in section.blocks -%}
+                      <div
+                        id="BD--{{ block.id }}"
+                        class="form__element element--{{ block.type }} form__field--{{ block.settings.width }}"
+                        {{ block.shopify_attributes }}
+                      >
+                        {%- if block.type == 'dropdown' -%}
+                          {% assign all_options = block.settings.option_list | split: ',' %}
+                          <label class="u-sr-only" for="{{ block.settings.title | replace: ' ', '_' }}">
+                            {{ block.settings.title }}
+                            {%- if block.settings.required -%}*{%- endif -%}
+                          </label>
+                          <div class="form__select-wrapper">
+                            <select
+                              class="form__select form__field u-input"
+                              name="contact[{{ block.settings.title }}]"
+                              id="{{ block.settings.title | replace: ' ', '_' }}"
+                              {%- if block.settings.required -%}
+                                required="required"
+                              {%- endif -%}
+                            >
+                              <option value="" disabled selected>
+                                {{ block.settings.title }}
+                                {%- if block.settings.required -%}*{%- endif -%}
+                              </option>
+                              {% for option in all_options %}
+                                {% if option != blank %}
+                                  <option value="{{ option }}">
+                                    {{ option }}
+                                  </option>
+                                {% endif %}
+                              {% endfor %}
+                            </select>
+                          </div>
+                        {%- elsif block.type == 'email' -%}
+                          <label class="u-sr-only" for="{{ block.settings.title | replace: ' ', '_' }}">
+                            {{- block.settings.title }}*</label
+                          >
+                          <input
+                            class="form__field u-input"
+                            type="email"
+                            name="contact[email]"
+                            required
+                            id="{{ block.settings.title | replace: ' ', '_' }}"
+                            placeholder="{{ block.settings.placeholder }}*"
+                          >
+                        {%- elsif block.type == 'textarea' -%}
+                          <label class="u-sr-only" for="{{ block.settings.title | replace: ' ', '_' }}">
+                            {{ block.settings.title }}
+                            {%- if block.settings.required -%}*{%- endif -%}
+                          </label>
+                          <textarea
+                            class="form__field u-input u-textarea"
+                            id="{{ block.settings.title | replace: ' ', '_' }}"
+                            name="contact[{{ block.settings.title }}]"
+                            {%- if block.settings.required -%}
+                              required="required"
+                            {%- endif -%}
+                            placeholder="{{ block.settings.placeholder }}{%- if block.settings.required -%}*{%- endif -%}"
+                          ></textarea>
+                        {%- elsif block.type == 'textfield' -%}
+                          <label class="u-sr-only" for="{{ block.settings.title | replace: ' ', '_' }}">
+                            {{ block.settings.title }}
+                            {%- if block.settings.required -%}*{%- endif -%}
+                          </label>
+                          <input
+                            class="form__field u-input"
+                            type="text"
+                            name="contact[{{ block.settings.title }}]"
+                            id="{{ block.settings.title | replace: ' ', '_' }}"
+                            {%- if block.settings.required -%}
+                              required="required"
+                            {%- endif -%}
+                            placeholder="{{ block.settings.placeholder }}{%- if block.settings.required -%}*{%- endif -%}"
+                          >
+                        {%- endif -%}
+                      </div>
+                    {%- endfor -%}
+                    <input
+                      type="hidden"
+                      name="contact[{{ 'form_name__form_location' | t | default: 'Form location'}}]"
+                      value="{{ 'form_label__page_title' | t | escape }}: {{ page_title | escape }} | {{ 'form_label__template' | t | escape }}: {{ template | escape }}"
+                    >
+                    <button
+                      class="col-start-3 col-span-4 cursor-pointer mx-auto button orange"
+                      type="submit"
+                    ><span>{{ section.settings.button }}</span></button>
+                  </div>
+
+                  {%- comment -%} Keeping this string below the form keeps the little fixed floating widget from appearing on the page. But this message can be disabled by turning off the "Enable Google reCAPTCHA on contact form with texts" setting under Online Store > Preferences > Spam protection {%- endcomment -%}
+                  <div class="font-text-s text-center mt-6">
+                    {{ 'shopify.online_store.spam_detection.disclaimer_html' | t }}
+                  </div>
+                {%- endform -%}
+              </div>
+              <div class="w-full lg:grid lg:grid-cols-8 lg:gap-gutter">
+                <div class="bg-primary-beige p-10 flex flex-col gap-y-12 md:p-20 lg:col-span-6 lg:col-start-2">
+                  {% if section.settings.logo %}
+                    <div class="w-[7.7rem] h-[1.5rem]">
+                      {% render 'image',
+                        image: section.settings.logo,
+                        alt: section.settings.logo.alt,
+                        sizes: '20vw',
+                        image_class: 'object-contain'
+                      %}
+                    </div>
+                  {% endif %}
+                  {% if section.settings.text_address != blank and section.settings.link_address != blank %}
+                    <a
+                      href="{{ section.settings.link_address }}"
+                      class="link link--text font-text-m u-hover-opacity max-w-[16rem]"
+                    >
+                      {{ section.settings.text_address }}
+                    </a>
+                  {% endif %}
+                  <div class="flex flex-wrap gap-4 justify-center items-stretch md:justify-start">
+                    {% if section.settings.text_phone != blank and section.settings.link_phone != blank %}
+                      {% render 'button',
+                        title: section.settings.text_phone,
+                        url: section.settings.link_phone,
+                        is_link: true,
+                        new_tab: true,
+                        icon: true,
+                        class: 'beige border-dark'
+                      %}
+                    {% endif %}
+                    {%- if section.settings.show_social and has_social_icons -%}
+                      {%- render 'social-icons', class: 'list-social--info' -%}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact Form",
+  "tag": "section",
+  "class": "section section-contact-form",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "text",
+      "label": "Texte du bouton",
+      "id": "button",
+      "default": "Envoyer"
+    },
+    {
+      "type": "header",
+      "content": "Informations"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "text_address",
+      "label": "Adresse"
+    },
+    {
+      "type": "url",
+      "id": "link_address",
+      "label": "Lien Google Maps"
+    },
+    {
+      "type": "text",
+      "id": "text_phone",
+      "label": "Label du bouton téléphone"
+    },
+    {
+      "type": "url",
+      "id": "link_phone",
+      "label": "Lien du bouton téléphone"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "default": true,
+      "label": "Afficher les réseaux sociaux",
+      "info": "Afficher les icônes de réseaux sociaux. Les liens des réseaux sociaux sont à configurer dans les paramètres du thème."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "dropdown",
+      "name": "Menu déroulant",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Étiquette du champ",
+          "info": "L'étiquette ne peut pas être vide",
+          "default": "À quelle fréquence faites-vous vos achats ?"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Champ obligatoire"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Largeur",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Pleine largeur"
+            },
+            {
+              "value": "half",
+              "label": "Demi largeur"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Options"
+        },
+        {
+          "type": "text",
+          "id": "option_list",
+          "label": "Liste des options",
+          "default": "Tous les jours !, 1 à 2 fois par mois !, Euh... presque jamais.",
+          "info": "Utilisez une liste d'options séparées par des virgules."
+        }
+      ]
+    },
+    {
+      "type": "email",
+      "name": "Email *obligatoire",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Étiquette du champ",
+          "info": "L'étiquette ne peut pas être vide",
+          "default": "Adresse e-mail"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Largeur",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Pleine largeur"
+            },
+            {
+              "value": "half",
+              "label": "Demi largeur"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "name": "Zone de texte",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Étiquette du champ",
+          "info": "L'étiquette ne peut pas être vide",
+          "default": "Message"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "default": "Dites-nous pourquoi vous nous contactez."
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Champ obligatoire"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Largeur",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Pleine largeur"
+            },
+            {
+              "value": "half",
+              "label": "Demi largeur"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "textfield",
+      "name": "Champ de texte",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Étiquette du champ",
+          "info": "L'étiquette ne peut pas être vide",
+          "default": "Compte de réseau social"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Champ obligatoire"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Largeur",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Pleine largeur"
+            },
+            {
+              "value": "half",
+              "label": "Demi largeur"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Formulaire de contact",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}
+
+{%- comment -%} JSON Settings {%- endcomment -%}
+<script type="application/json" data-bondet="{{ section.id }}">
+  {
+    "id": {{ section.id | json }}
+  }
+</script>
+{%- comment -%} External scripts {%- endcomment -%}
+<script
+  data-bondet-external-js="{{ section.id }}"
+  src="https://cdn.shopify.com/s/files/1/0577/7673/4361/files/configurable-date-input-polyfill.dist.js?v=1641477261"
+  defer
+></script>
+{%- comment -%} JavaScript {%- endcomment -%}
+<script
+  data-bondet-js="{{ section.id }}"
+  type="module"
+  defer
+>
+(function(){
+  'use strict';
+
+  const bondet = {
+    settings: {},
+    load: function (section) {},
+    unload: function (section) {}
+  }
+
+  window.addEventListener('shopify:section:unload', function (e) {
+    const settings = document.querySelector(`[data-bondet="${e.detail.sectionId}"]`);
+    const sectionId = e.detail.sectionId;
+    const section = document.querySelector(`#BD--${e.detail.sectionId}`);
+
+    if (sectionId == bondet.settings.id) bondet.unload(section);
+  });
+
+  bondet.settings = JSON.parse(document.querySelector('[data-bondet="{{ section.id }}"]').innerHTML);
+
+  const sectionId = {{ section.id | json }};
+  const section = document.querySelector(`#BD--${sectionId}`);
+
+  if (sectionId == bondet.settings.id) bondet.load(section);
+})();
+</script>

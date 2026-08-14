@@ -1,0 +1,120 @@
+<div class="relative pb-[6rem] md:pb-[12.5rem] overflow-clip">
+  <div class="left-content-image__bg"></div>
+  {% if section.settings.image_secondary %}
+    <div class="left-content-image__top-image">
+      <div class="relative w-[1px] bg-secondary-brown/30 h-[3rem]"></div>
+      <div data-scroll class="u-glasses-reveal mix-blend-multiply absolute inset-0">
+        {% render 'image',
+          image: section.settings.image_secondary,
+          alt: section.settings.image_secondary.alt,
+          sizes: '33vw',
+          image_class: 'object-contain'
+        %}
+      </div>
+      <div class="relative w-[1px] bg-secondary-brown/30 h-[3rem]"></div>
+    </div>
+  {% endif %}
+  <div class="u-container md:relative">
+    <div class="u-grid gap-y-8 md:items-center lg:items-start">
+      {% if section.settings.title %}
+        <div class="flex flex-col gap-y-10 text-secondary-brown col-span-12 md:col-span-6 lg:col-span-3 lg:col-start-2 lg:mt-44 lg:max-w-[25rem]">
+          {% render 'title', data: section.settings %}
+          {% if section.settings.text %}
+            <p class="font-text-s">
+              {{ section.settings.text | newline_to_br }}
+            </p>
+          {% endif %}
+          {% if section.settings.button_label != blank %}
+            {% render 'button',
+              title: section.settings.button_label,
+              url: section.settings.button_link,
+              is_link: true,
+              new_tab: false,
+              class: 'orange'
+            %}
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if section.settings.image_primary %}
+        <div class="left-content-image__main-image flex flex-col items-center col-span-12 md:col-span-6 lg:col-span-4 lg:-mb-20">
+          <div class="wrapper">
+            {% render 'image',
+              image: section.settings.image_primary,
+              alt: section.settings.image_primary.alt,
+              sizes: '(max-width: 990px) 100vw, 33vw',
+              image_class: 'object-cover w-full h-full'
+            %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contenu avec image",
+  "tag": "section",
+  "class": "section section-left-content-image",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_primary",
+      "label": "Image (principale)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_secondary",
+      "label": "Image (secondaire)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contenu à gauche et image",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

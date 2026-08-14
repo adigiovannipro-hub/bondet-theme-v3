@@ -1,0 +1,118 @@
+<div class="main-collection py-[7rem]">
+  <div class="w-fit mx-auto mb-[6.8rem]">{% render 'separator', is_big: true %}</div>
+  <div class="u-container">
+    {% if section.settings.title %}
+      <div class="text-center xl:max-w-[81.6rem] mx-auto">
+        {% render 'title', data: section.settings, class: 'font-text-l-mobile mt-[3.5rem] lg:font-text-l' %}
+      </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-[6rem]">
+      {% if section.settings.first_collection %}
+        <a href="{{ section.settings.first_collection.url }}" class="cursor-none relative group h-[36rem] lg:h-[63.8rem]">
+          <div class="overflow-clip relative h-full -rotate-[2.6deg] md:rotate-0 transition-transform duration-500 ease-smooth group-hover:-rotate-[3.8deg] group-hover:z-[1]">
+            {% render 'image',
+              image: section.settings.first_collection_image,
+              alt: section.settings.first_collection.title,
+              sizes: '(max-width: 990px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-smooth'
+            %}
+            <div
+              class="absolute inset-0 bg-black opacity-10"
+            ></div>
+          </div>
+          <span class="text-white font-title-xl-mobile absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-[2] lg:font-title-xl">
+            {{- section.settings.first_collection.title -}}
+          </span>
+        </a>
+      {% endif %}
+      {% if section.settings.second_collection %}
+        <a href="{{ section.settings.second_collection.url }}" class="cursor-none relative group h-[36rem] lg:h-[63.8rem]">
+          <div class="overflow-clip relative h-full rotate-[3.9deg] -mt-12 md:rotate-0 md:mt-0 transition-transform duration-500 ease-smooth group-hover:rotate-[3.8deg] group-hover:z-[1]">
+            {% render 'image',
+              image: section.settings.second_collection_image,
+              alt: section.settings.second_collection.title,
+              sizes: '(max-width: 990px) 100vw, 50vw',
+              image_class: 'object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-smooth'
+            %}
+            <div
+              class="absolute inset-0 bg-black opacity-10"
+            ></div>
+          </div>
+          <span class="text-white font-title-xl-mobile absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-[2] lg:font-title-xl">
+            {{- section.settings.second_collection.title -}}
+          </span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Collection",
+  "tag": "section",
+  "class": "section section-main-collection",
+  "disabled_on": {
+    "templates": ["404", "product", "collection"],
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collections"
+    },
+    {
+      "type": "collection",
+      "id": "first_collection",
+      "label": "Première collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "first_collection_image",
+      "label": "Image première collection"
+    },
+    {
+      "type": "collection",
+      "id": "second_collection",
+      "label": "Deuxième collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "second_collection_image",
+      "label": "Image deuxième collection"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "suptitle",
+      "label": "Sur-titre"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection principale",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

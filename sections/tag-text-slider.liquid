@@ -1,0 +1,103 @@
+<div class="u-container">
+  {% if section.settings.tag != blank or section.settings.accroche != blank %}
+    <div class="u-grid">
+      <div class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
+        <div class="flex flex-col items-center gap-y-14 py-24">
+          {% if section.settings.tag != blank %}
+            <p class="font-suptitle uppercase">{{ section.settings.tag }}</p>
+          {% endif %}
+          {% if section.settings.accroche != blank %}
+            <p class="font-text-l-mobile lg:font-text-l text-center">{{ section.settings.accroche | newline_to_br }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if section.blocks.size >= 4 %}
+    <div class="u-grid py-24">
+      <div class="col-span-12 ">
+        <div class="w-full overflow-hidden">
+          <div class="slider flex gap-x-gutter">
+            {% for block in section.blocks %}
+              {% assign slide = block.settings %}
+              {% if slide.image %}
+                <div class="u-drag-slide h-[32.6rem] overflow-clip">
+                  {% render 'image',
+                    image: slide.image,
+                    alt: slide.image.alt,
+                    sizes: '(max-width: 990px) 100vw, 50vw',
+                    image_class: 'object-cover w-full h-full'
+                  %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Tag Text Slider",
+  "class": "section section-tag-text-slider",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Ajoutez au minimum 4 slides pour activer le slider."
+    },
+    {
+      "type": "header",
+      "content": "Tag et accroche"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag"
+    },
+    {
+      "type": "textarea",
+      "id": "accroche",
+      "label": "Accroche"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tag avec contenu et slider",
+      "category": "Contenu",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

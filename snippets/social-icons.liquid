@@ -1,0 +1,43 @@
+{% comment %}
+  Renders social icons.
+  Accepts:
+  - class: {String} a class to be added to the <ul> element (optional).
+
+  Usage:
+  {% render 'social-icons',
+    class: 'my-class'
+  %}
+{% endcomment %}
+
+<ul class="list-unstyled list-social{% if class %} {{ class}}{% endif %}" role="list">
+  {%- if settings.social_facebook_link != blank -%}
+    <li class="list-social__item">
+      <a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener" class="link list-social__link">
+        <span class="svg-wrapper">
+          {{- 'icon-facebook.svg' | inline_asset_content -}}
+        </span>
+        <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_instagram_link != blank -%}
+    <li class="list-social__item">
+      <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener" class="link list-social__link">
+        <span class="svg-wrapper">
+          {{- 'icon-instagram.svg' | inline_asset_content -}}
+        </span>
+        <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_linkedin_link != blank -%}
+    <li class="list-social__item">
+      <a href="{{ settings.social_linkedin_link }}" target="_blank" rel="noopener" class="link list-social__link">
+        <span class="svg-wrapper">
+          {{- 'icon-linkedin.svg' | inline_asset_content -}}
+        </span>
+        <span class="visually-hidden">{{ 'general.social.links.linkedin' | t }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+</ul>

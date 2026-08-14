@@ -1,0 +1,80 @@
+<div class="u-container mb-28">
+  <product-recommendations
+    class="related-products"
+    data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.products_to_show }}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product.id }}"
+  >
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <div class="flex flex-wrap gap-gutter items-center justify-between mb-10">
+        <h2 class="related-products__headin font-title-l">
+          {{ section.settings.heading }}
+        </h2>
+        <div class="flex gap-x-4 items-center">
+          {% render 'pager' %}
+          {% render 'pager', mode: 'next' %}
+        </div>
+      </div>
+      <ul
+        class="related-products__list flex gap-gutter overflow-clip"
+        role="list"
+      >
+        {% for recommendation in recommendations.products %}
+          {% assign variant = recommendation.variants.first %}
+          {% assign option_index = 0 %}
+          {% for option in variant.options_with_values %}
+            {% if option.name == 'Color' or option.name == 'Couleur' %}
+              {% assign option_index = forloop.index0 %}
+            {% endif %}
+          {% endfor %}
+          <li class="related-products__item w-full min-w-full md:w-[calc(50%_-_1rem)] md:min-w-[calc(50%_-_1rem)] lg:w-[calc(33.333%_-_1.333rem)] lg:min-w-[calc(33.333%_-_1.333rem)]">
+            {% render 'card-product',
+              card_product: recommendation,
+              card_variant: variant,
+              variant_color: variant.options[option_index],
+              section_id: section.id
+            %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </product-recommendations>
+</div>
+
+{% schema %}
+{
+  "name": "Produits associés",
+  "tag": "section",
+  "class": "section section-related-products",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.related-products.settings.paragraph__1.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Découvrir aussi",
+      "label": "Titre"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.related-products.settings.products_to_show.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Produits associés",
+      "category": "Produit"
+    }
+  ]
+}
+{% endschema %}

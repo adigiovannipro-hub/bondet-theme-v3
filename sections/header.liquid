@@ -1,0 +1,349 @@
+<link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+<link
+  rel="stylesheet"
+  href="{{ 'component-cart-notification.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
+
+{%- if settings.predictive_search_enabled -%}
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+
+<style>
+  header-drawer {
+    justify-self: start;
+  }
+
+  .menu-drawer-container {
+    display: flex;
+  }
+
+  .list-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .list-menu--inline {
+    display: inline-flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .list-menu__item {
+    display: flex;
+    align-items: center;
+  }
+
+  .list-menu__item--link {
+    text-decoration: none;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    line-height: calc(1 + 0.8 / var(--font-body-scale));
+  }
+
+  @media screen and (min-width: 750px) {
+    .list-menu__item--link {
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+    }
+  }
+</style>
+
+<script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+
+<div class="header-wrapper p-12 xl:px-[3.2rem] xl:py-[2.6rem] xxxl:py-[2rem] bg-white transition-all duration-300 ease-out">
+  {%- liquid
+    assign localization_forms = false
+
+    if localization.available_countries.size > 1 and section.settings.enable_country_selector or section.settings.enable_language_selector and localization.available_languages.size > 1
+      assign localization_forms = true
+    endif
+  -%}
+
+  <header class="header">
+    {% render 'header-drawer' %}
+    {%- render 'cart-drawer' -%}
+
+    <a
+      href="{{ routes.root_url }}"
+      class="w-[13.3rem] md:w-[17rem] header__heading-link link link--text focus-inset u-hover-opacity xxxl:w-[15rem]"
+    >
+      <div class="header__heading-logo-wrapper">
+        {%- if settings.logo_svg != blank -%}
+          {{ settings.logo_svg }}
+        {%- elsif settings.logo != blank -%}
+          {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+          {% capture sizes %}(max-width: 130px) 50vw, 170px{% endcapture %}
+          {{
+            settings.logo
+            | image_url: width: 600
+            | image_tag:
+              class: 'header__heading-logo',
+              height: 35,
+              width: 170,
+              alt: logo_alt,
+              sizes: sizes,
+              preload: true
+          }}
+        {%- endif -%}
+      </div>
+    </a>
+
+    {%- liquid
+      if section.settings.menu != blank
+        render 'header-mega-menu'
+      endif
+    %}
+
+    <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
+      <div class="desktop-localization-wrapper">
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <localization-form class="small-hide medium-hide" data-prevent-hide>
+            {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {% endif %}
+
+        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+          <localization-form class="small-hide medium-hide" data-prevent-hide>
+            {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+              <div>
+                <h2 class="visually-hidden " id="HeaderLanguageLabel">
+                  {{ 'localization.language_label' | t }}
+                </h2>
+                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%}
+      </div>
+
+      {% if section.settings.partners_link != blank %}
+        <a
+          href="{{ section.settings.partners_link }}"
+          class="header__icon header__icon--partners link focus-inset u-hover-opacity"
+        >
+          <span class="svg-wrapper">{{ 'icon-map.svg' | inline_asset_content }}</span>
+          <span class="visually-hidden ">{{ 'sections.header.partners_link' | t }}</span>
+        </a>
+      {% endif %}
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a
+          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+          class="u-hover-opacity header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
+          rel="nofollow"
+        >
+          {%- if section.settings.enable_customer_avatar -%}
+            <account-icon>
+              {%- if customer and customer.has_avatar? -%}
+                {{ customer | avatar }}
+              {%- else -%}
+                <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+              {%- endif -%}
+            </account-icon>
+          {%- else -%}
+            <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+          {%- endif -%}
+          <span class="visually-hidden ">
+            {%- liquid
+              if customer
+                echo 'customer.account_fallback' | t
+              else
+                echo 'customer.log_in' | t
+              endif
+            -%}
+          </span>
+        </a>
+      {%- endif -%}
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="u-hover-opacity header__icon header__icon--cart link focus-inset"
+        id="cart-icon-bubble"
+      >
+        {% if cart == empty %}
+          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+        {% else %}
+          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+        {% endif %}
+        <span class="visually-hidden ">{{ 'templates.cart.cart' | t }}</span>
+        {%- if cart != empty -%}
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden ">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
+  </header>
+</div>
+
+{%- if settings.cart_type == 'notification' -%}
+  {%- render 'cart-notification',
+    color_scheme: section.settings.color_scheme,
+    desktop_menu_type: section.settings.menu_type_desktop
+  -%}
+{%- endif -%}
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {% if settings.logo %}
+      "logo": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }},
+    {% endif %}
+    "sameAs": [
+      {{ settings.social_twitter_link | json }},
+      {{ settings.social_facebook_link | json }},
+      {{ settings.social_pinterest_link | json }},
+      {{ settings.social_instagram_link | json }},
+      {{ settings.social_tiktok_link | json }},
+      {{ settings.social_tumblr_link | json }},
+      {{ settings.social_snapchat_link | json }},
+      {{ settings.social_youtube_link | json }},
+      {{ settings.social_vimeo_link | json }}
+    ],
+    "url": {{ request.origin | append: page.url | json }}
+  }
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "tag": "div",
+  "class": "section-header fixed top-0 left-0 right-0 z-50",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "header",
+      "content": "Lien mis en avant"
+    },
+    {
+      "type": "text",
+      "id": "featured_link_label",
+      "label": "Texte du lien mis en avant (Fabrication française)"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__utilities.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": true,
+      "label": "t:sections.header.settings.enable_language_selector.label",
+      "info": "t:sections.header.settings.enable_language_selector.info"
+    },
+    {
+      "type": "url",
+      "id": "partners_link",
+      "label": "Lien vers la carte des revendeurs",
+      "info": "Ajouter un lien vers la carte des revendeurs dans le header. Ce lien sera visible à côté du menu et redirigera les clients vers la page de la carte des revendeurs."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_customer_avatar",
+      "default": true,
+      "label": "t:sections.header.settings.enable_customer_avatar.label",
+      "info": "t:sections.header.settings.enable_customer_avatar.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega_button",
+      "name": "Mega menu bouton",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_parent",
+          "label": "Menu parent (ex: Solaires)"
+        },
+        {
+          "type": "text",
+          "id": "column",
+          "label": "Nom de la colonne (ex: Par genre)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texte bouton"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    },
+    {
+      "type": "mega_image",
+      "name": "Mega menu image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_parent",
+          "label": "Menu parent (ex: Solaires)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Sur-titre"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre"
+        },
+        {
+          "type": "text",
+          "id": "label_button",
+          "label": "Label bouton"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

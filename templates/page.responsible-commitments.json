@@ -1,0 +1,216 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "simple-banner",
+      "settings": {
+        "title": "Engagements responsables",
+        "hn": "1",
+        "text": "Prendre soin de la planète autant que des regards",
+        "image": "shopify://shop_images/sanstitre-183.jpg",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "content_image_rBwLza": {
+      "type": "content-image",
+      "name": "Content Image",
+      "settings": {
+        "tag": "",
+        "accroche": "",
+        "description": "Chez Bondet, chaque monture a une histoire. Une histoire qui ne se limite pas au design ou à la précision technique, mais qui commence par un engagement : celui de produire autrement, en tentant de faire au mieux pour respecter notre environnement.",
+        "title": "Fabriquer\nautrement,\npenser\nautrement,",
+        "hn": "2",
+        "text": "Chez Bondet, fabriquer des lunettes ne se limite pas à assembler des montures. C’est une promesse : faire autrement, et toujours au mieux.\n\nDepuis 2020, chaque décision, chaque geste est guidé par cette conviction. Relocaliser toute notre production à Oyonnax, réduire nos déplacements, optimiser nos process : autant de choix qui allient respect de l’environnement et exigence de qualité.",
+        "image_primary": "shopify://shop_images/a35da74d-1f10-4e63-9f50-3da80736a02a.jpg",
+        "image_secondary": "shopify://shop_images/lunettes-francaises-bondet-dessin-3.png"
+      }
+    },
+    "right_content_image_3CQ8bA": {
+      "type": "right-content-image",
+      "name": "Right Content Image",
+      "settings": {
+        "title": "L’exigence au\nservice de la\nplanète",
+        "hn": "2",
+        "text": "Nos montures ne naissent pas seulement de mains expertes, elles naissent aussi d’une matière responsable. \n\nL’huile de ricin, utilisée pour nos lunettes, donne des montures légères comme une plume, robustes et confortables.\n\nLa conception, la fabrication, l’assemblage et la finition se déroulent intégralement à Oyonnax, là où le savoir-faire français s’exprime depuis quatre générations. Chaque étape est pensée pour réduire notre empreinte carbone, concentrer la production et garantir une traçabilité totale, sans compromis sur la qualité.",
+        "image": "shopify://shop_images/sanstitre-552_11733293-2265-4db7-b785-d4bf8fd47d89.jpg"
+      }
+    },
+    "flexible_media_HRtYPK": {
+      "type": "flexible-media",
+      "name": "Flexible Media",
+      "settings": {
+        "image": "shopify://shop_images/e206adc7-3d25-4e13-b15a-a944b4ca7769.jpg"
+      }
+    },
+    "images_content_W4h7Jt": {
+      "type": "images-content",
+      "name": "Images Content",
+      "settings": {
+        "separator": false,
+        "tag": "",
+        "accroche": "",
+        "title": "Des collections qui\nracontent notre\nengagement",
+        "hn": "2",
+        "text": "Aujourd’hui, chaque monture Bondet est un acte responsable. Bio-sourcée, fabriquée en France, pensée pour durer et être confortable, elle est le reflet de nos valeurs : précision, durabilité, respect et innovation.\n\nPorter une monture Bondet, c’est porter le fruit de quatre générations de savoir-faire et l’histoire d’une manufacture qui a choisi de faire mieux, pour les porteurs comme pour la planète.",
+        "button_url": "",
+        "button_text": "",
+        "image_small": "shopify://shop_images/LOGO_BIOSOURCE_GRIS.png",
+        "image_big": "shopify://shop_images/sanstitre-381.jpg"
+      }
+    },
+    "separator_content_BpLhM9": {
+      "type": "separator-content",
+      "name": "Separator Content",
+      "settings": {
+        "show": true,
+        "show_top_line": false,
+        "show_bottom_line": false,
+        "tag": "Une conviction partagée",
+        "accroche": "Toute l'équipe de la Maison Bondet remercient les opticiens, partenaires et clients pour leur confiance et leur accompagnement dans cette démarche"
+      }
+    },
+    "bondet_collections_VcLjn7": {
+      "type": "bondet-collections",
+      "blocks": {
+        "collection_Y4j6fA": {
+          "type": "collection",
+          "settings": {
+            "collection": "solaires"
+          }
+        },
+        "collection_yDT3xn": {
+          "type": "collection",
+          "settings": {
+            "collection": "ecaille"
+          }
+        },
+        "collection_W8QniJ": {
+          "type": "collection",
+          "settings": {
+            "collection": "combi"
+          }
+        },
+        "collection_AHa7rt": {
+          "type": "collection",
+          "settings": {
+            "collection": "flex"
+          }
+        },
+        "collection_z7i7me": {
+          "type": "collection",
+          "settings": {
+            "collection": "neo-retro"
+          }
+        },
+        "collection_k99pj4": {
+          "type": "collection",
+          "settings": {
+            "collection": "junior"
+          }
+        },
+        "collection_9FYqXC": {
+          "type": "collection",
+          "settings": {
+            "collection": "equo"
+          }
+        }
+      },
+      "block_order": [
+        "collection_Y4j6fA",
+        "collection_yDT3xn",
+        "collection_W8QniJ",
+        "collection_AHa7rt",
+        "collection_z7i7me",
+        "collection_k99pj4",
+        "collection_9FYqXC"
+      ],
+      "name": "Bondet Collections",
+      "settings": {
+        "suptitle": "les collections Bondet",
+        "title": "Conçues à Oyonnax, réalisées à partir de matériaux biosourcés, nos montures incarnent une vision de la lunetterie plus locale, durable et exigeante.",
+        "hn": "2",
+        "image": "shopify://shop_images/lunettes-francaises-bondet-dessin-5.png"
+      }
+    },
+    "flexible_media_EXQwMe": {
+      "type": "flexible-media",
+      "name": "Média (vidéo ou image)",
+      "settings": {
+        "image": "shopify://shop_images/sanstitre-78.jpg"
+      }
+    },
+    "1785490430f3690ce2": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_Px8YYP": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "all",
+            "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "medium",
+            "image_ratio": "1",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "header_text_color": "#3F2121",
+            "text_color": "#3F2121",
+            "card_color": "#F2E9DB",
+            "stars_color": "#FF9E1B",
+            "arrows_color": "#3F2121",
+            "transition_speed": 5,
+            "header_text": "Laissons nos client parler pour nous",
+            "show_average_rating": false,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_Px8YYP"
+      ],
+      "custom_css": [
+        "{padding-top: 80px; padding-bottom: 80px;}",
+        "h2 {font: 400 3rem / 1 var(--font-primary);}",
+        "p {font-size: 14px;}",
+        "span {font-size: 80%;}",
+        "button {height: 10px; width: 10px; border: 2px;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "content_image_rBwLza",
+    "right_content_image_3CQ8bA",
+    "flexible_media_HRtYPK",
+    "images_content_W4h7Jt",
+    "separator_content_BpLhM9",
+    "bondet_collections_VcLjn7",
+    "flexible_media_EXQwMe",
+    "1785490430f3690ce2"
+  ]
+}

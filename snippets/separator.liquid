@@ -1,0 +1,33 @@
+{% doc %}
+  Separator snippet
+  Usage:
+  {% render 'separator',
+    class: 'beige'
+  %}
+
+  @param {boolean} [is_light] - Whether the separator should be light (default: false)
+  @param {boolean} [is_big] - Whether the separator should be big (default: false)
+  @param {boolean} [no_line] - Whether the separator should have no line (default: false)
+  @param {boolean} [no_bottom_line] - Whether the separator should have no bottom line (default: false)
+{% enddoc %}
+
+{% liquid
+  assign is_light = is_light | default: false
+  assign is_big = is_big | default: true
+  assign no_line = no_line | default: false
+  assign no_bottom_line = no_bottom_line | default: false
+%}
+
+<div class="separator flex flex-col items-center gap-[2rem] w-fit mx-auto">
+  {% unless no_line %}
+    <div
+      class="separato__line w-[1px] {% if is_light %}bg-primary-beige{% else %}bg-secondary-brown/30{% endif %} h-[3rem]"
+    ></div>
+  {% endunless %}
+  <div class="logo-small {% if no_line %}no-line{% endif %} {% if is_light %}light{% endif %} {% if is_big %}big{% endif %}"></div>
+  {% unless no_line or no_bottom_line %}
+    <div
+      class="separato__line w-[1px] {% if is_light %}bg-primary-beige{% else %}bg-secondary-brown/30{% endif %} h-[3rem]"
+    ></div>
+  {% endunless %}
+</div>

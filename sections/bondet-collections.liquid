@@ -1,0 +1,127 @@
+<div class="relative pt-[23.3rem] pb-40 overflow-clip md:pt-[15rem] md:pb-[9rem]">
+  {% if section.settings.image %}
+    <div data-scroll class="u-glasses-reveal absolute w-[25rem] h-[25rem] md:w-[38.9rem] md:h-[38.9rem] -left-[5.6rem] top-0 md:right-auto md:-left-[6.6rem]">
+      {% render 'image',
+        image: section.settings.image,
+        alt: section.settings.image.alt,
+        sizes: '(max-width: 990px) 100vw, 50vw',
+        image_class: 'object-contain w-full h-full'
+      %}
+    </div>
+  {% endif %}
+  <div class="u-container">
+    <div class="u-grid">
+      <div class="col-span-12 md:col-span-7 md:col-start-6 lg:col-span-6 lg:col-end-12 xl:col-span-5 xl:col-start-7">
+        {% if section.settings.title %}
+          <div class="flex flex-col gap-y-[3.5rem]">
+            {% render 'title', data: section.settings, class: 'font-text-l-mobile lg:font-text-l' %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="section-bondet-collection__slider u-nsb">
+    <div class="section-bondet-collection__slider-pagers">
+      {% render 'pager' %}
+      {% render 'pager', mode: 'next' %}
+    </div>
+    <div class="section-bondet-collection__slider-wrapper">
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+        {% if collection %}
+          <a href="{{ collection.url }}" class="cursor-none group section-bondet-collection__slider-slide">
+            <div class="aspect-[280/374] w-full overflow-clip xl:h-[37.4rem]">
+              {% if collection.image %}
+                {% render 'image',
+                  image: collection.image,
+                  alt: collection.title,
+                  sizes: '(max-width: 990px) 100vw, 25vw',
+                  image_class: 'object-cover w-full h-full group-hover:scale-105 transition-transform duration-1000 ease-smooth'
+                %}
+              {% endif %}
+            </div>
+            <div class="mt-8">
+              <span class="font-suptitle uppercase">Collection</span>
+              <div class="font-name-collection uppercase">{{ collection.title }}</div>
+                {% if collection.description != blank %}
+                  <div class="font-text-s mt-4">{{ collection.description }}</div>
+                {% endif %}
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bondet Collections",
+  "tag": "section",
+  "class": "section section-bondet-collections",
+  "disabled_on": {
+    "templates": ["404", "product", "collection"],
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Titre de la section"
+    },
+    {
+      "type": "text",
+      "id": "suptitle",
+      "label": "Sur-titre"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "hn",
+      "label": "Heading level",
+      "options": [
+        { "value": "1", "label": "H1" },
+        { "value": "2", "label": "H2" },
+        { "value": "3", "label": "H3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collections en vedette",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

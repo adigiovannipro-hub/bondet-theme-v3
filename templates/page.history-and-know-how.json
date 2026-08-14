@@ -1,0 +1,311 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "simple-banner",
+      "settings": {
+        "title": "Le supplément d’âme de Bondet",
+        "hn": "1",
+        "text": "Héritage et innovation réunis",
+        "image": "shopify://shop_images/DSC03241.jpg",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "content_image_FPa646": {
+      "type": "content-image",
+      "name": "Content Image",
+      "settings": {
+        "tag": "Histoire et savoir-faire",
+        "accroche": "Il est des entreprises qui naissent d’une idée.\nBondet est née d'une histoire de famille",
+        "description": "Le 1er mai 1929, dans le berceau industriel d’Oyonnax, Jules Aimé Bondet façonne ses premières pièces. À l’époque, il fabrique des peignes, des lunettes, des objets du quotidien. Il ne le sait pas encore, mais il pose les fondations d’une aventure industrielle qui traversera un siècle.",
+        "title": "Chez Bondet,\non ne parle pas d’héritage. On parle de transmission.",
+        "hn": "2",
+        "text": "La transmission se vit dans chaque geste, chaque innovation, chaque décision. Elle est technique, humaine et industrielle. Elle forge la précision, l’exigence et la volonté de faire mieux pour les opticiens, pour les porteurs de lunettes, pour demain.",
+        "image_primary": "shopify://shop_images/bondet-lunettes-frabrication-france-histoire-1.png",
+        "image_secondary": "shopify://shop_images/lunettes-francaises-bondet-dessin-3.png"
+      }
+    },
+    "flexible_media_RMBccF": {
+      "type": "flexible-media",
+      "name": "Flexible Media",
+      "settings": {
+        "image": "shopify://shop_images/bondet-lunettes-frabrication-france-histoire-2.jpg"
+      }
+    },
+    "images_content_YTxG4Q": {
+      "type": "images-content",
+      "name": "Images Content",
+      "settings": {
+        "separator": false,
+        "tag": "",
+        "accroche": "",
+        "title": "4 générations,\nune famille, \nune même\nexigence",
+        "hn": "2",
+        "text": "Roland Bondet, dans les années 60-70, choisit de consacrer sa vie à la lunetterie, affinant la technique, transformant la précision en signature. Puis vient Pierre, petit-fils de Jules, qui modernise l’entreprise, innove à l’international et invente des solutions techniques devenues emblématiques. \n\nAujourd’hui, la nouvelle génération poursuit cette aventure : fidèle au geste fondateur, elle imagine des collections durables, bio-sourcées et 100 % françaises.\nQuatre générations, quatre visions, mais un même engagement : transmettre un savoir-faire unique et faire perdurer l'entreprise familiale.",
+        "button_url": "",
+        "button_text": "",
+        "image_small": "shopify://shop_images/corpo_2.jpg",
+        "image_big": "shopify://shop_images/corpo.jpg"
+      }
+    },
+    "left_content_image_FYVmw3": {
+      "type": "left-content-image",
+      "name": "Left Content Image",
+      "settings": {
+        "title": "Excellence et\ninnovation",
+        "hn": "2",
+        "text": "Au début des années 2000, Bondet est la dernière manufacture française à maîtriser la monture moulée, une technique rare qui exige patience, minutie et constance.\n\nChaque monture qu’elle soit optique, solaire ou destinée au ski et à la moto reflète ce savoir-faire perfectionné depuis quatre générations.\n\nL’invention du modèle iconique Slider de Smith US, avec ses verres interchangeables et produit à plus de 2,5 millions d’exemplaires, illustre cette capacité à allier technique, confort et innovation pour améliorer le quotidien des porteurs de lunettes.",
+        "button_label": "",
+        "button_link": "",
+        "image_primary": "shopify://shop_images/9e52fa7f-f2a0-4e10-acc2-f8c635e33aa8_1d61a6dd-8ccf-40a5-8e1a-ff173a6d7e1b.jpg",
+        "image_secondary": "shopify://shop_images/lunettes-francaises-bondet-dessin-1.png"
+      }
+    },
+    "right_content_image_yQWkh7": {
+      "type": "right-content-image",
+      "name": "Right Content Image",
+      "settings": {
+        "title": "Fabrication\nfrançaise et\ndurabilité",
+        "hn": "2",
+        "text": "En 2018, Bondet relocalise toute sa production à Oyonnax, affirmant que le Made in France peut redevenir accessible.\nLa certification Origine France Garantie en 2019 officialise cet engagement.\n\nDepuis 2020, tous nos matériaux sont bio-sourcés, conjuguant performance et responsabilité.",
+        "image": "shopify://shop_images/OFG_BIO_SOURCE_2026.png"
+      }
+    },
+    "tag_text_slider_cB3rah": {
+      "type": "tag-text-slider",
+      "blocks": {
+        "slide_HbehWD": {
+          "type": "slide",
+          "settings": {}
+        },
+        "slide_CHfxzd": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/sanstitre-183.jpg"
+          }
+        },
+        "slide_gQ6b4X": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/sanstitre-331.jpg"
+          }
+        },
+        "slide_KzKDVx": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/f49cdbe7-6e06-4c31-a9cb-b58cfd31e2a9_ae10f59a-876e-408a-83c0-410666394a50.jpg"
+          }
+        },
+        "slide_JiQwAF": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/sanstitre-188.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slide_HbehWD",
+        "slide_CHfxzd",
+        "slide_gQ6b4X",
+        "slide_KzKDVx",
+        "slide_JiQwAF"
+      ],
+      "name": "Tag Text Slider",
+      "settings": {
+        "tag": "une marque au service du regard",
+        "accroche": "Après plusieurs dizaines d'années à fabriquer pour les plus grandes marques,\nBondet présente aujourd’hui sa propre collection : des montures qui racontent une histoire, allient héritage et modernité, et reflètent la précision, l’innovation et l’exigence de quatre générations."
+      }
+    },
+    "multicolumn_gMLtBR": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_FTj4Cp": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/france.svg",
+            "title": "+ 150 revendeurs"
+          }
+        },
+        "column_UVmiDW": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/livraison.svg",
+            "title": "Livraison en 72h !"
+          }
+        },
+        "column_3LDrpp": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/made-in-france.svg",
+            "title": "Fabrication française"
+          }
+        },
+        "column_yenA3g": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/bio-energy.svg",
+            "title": "matériaux bio-sourcés"
+          }
+        }
+      },
+      "block_order": [
+        "column_FTj4Cp",
+        "column_UVmiDW",
+        "column_3LDrpp",
+        "column_yenA3g"
+      ],
+      "name": "Multicolonne",
+      "settings": {
+        "padding_top": 10,
+        "padding_bottom": 0,
+        "border_top": true,
+        "border_bottom": true
+      }
+    },
+    "bondet_collections_rPwUGF": {
+      "type": "bondet-collections",
+      "blocks": {
+        "collection_LW7tCE": {
+          "type": "collection",
+          "settings": {
+            "collection": "solaires"
+          }
+        },
+        "collection_jGxepT": {
+          "type": "collection",
+          "settings": {
+            "collection": "flex"
+          }
+        },
+        "collection_7x6Ndr": {
+          "type": "collection",
+          "settings": {
+            "collection": "neo-retro"
+          }
+        },
+        "collection_cyweMa": {
+          "type": "collection",
+          "settings": {
+            "collection": "junior"
+          }
+        },
+        "collection_wBc9Lx": {
+          "type": "collection",
+          "settings": {
+            "collection": "combi"
+          }
+        },
+        "collection_3FD8fg": {
+          "type": "collection",
+          "settings": {
+            "collection": "equo"
+          }
+        },
+        "collection_bW8Y3p": {
+          "type": "collection",
+          "settings": {
+            "collection": "ecaille"
+          }
+        }
+      },
+      "block_order": [
+        "collection_LW7tCE",
+        "collection_jGxepT",
+        "collection_7x6Ndr",
+        "collection_cyweMa",
+        "collection_wBc9Lx",
+        "collection_3FD8fg",
+        "collection_bW8Y3p"
+      ],
+      "name": "Bondet Collections",
+      "settings": {
+        "suptitle": "les collections Bondet",
+        "title": "Conçues à Oyonnax, réalisées à partir de matériaux biosourcés, nos montures incarnent une vision de la lunetterie plus locale, durable et exigeante.",
+        "hn": "2",
+        "image": "shopify://shop_images/lunettes-francaises-bondet-dessin-5.png"
+      }
+    },
+    "17854906727ed4589c": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_njLNPW": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "all",
+            "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "medium",
+            "image_ratio": "1",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "header_text_color": "#3F2121",
+            "text_color": "#3F2121",
+            "card_color": "#F2E9DB",
+            "stars_color": "#FF9E1B",
+            "arrows_color": "#3F2121",
+            "transition_speed": 5,
+            "header_text": "Laissons nos clients parler pour nous",
+            "show_average_rating": false,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_njLNPW"
+      ],
+      "custom_css": [
+        "{padding-top: 80px; padding-bottom: 80px;}",
+        "h2 {font: 400 3rem / 1 var(--font-primary);}",
+        "p {font-size: 14px;}",
+        "span {font-size: 80%;}",
+        "button {height: 10px; width: 10px; border: 2px;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "flexible_media_Htb4gn": {
+      "type": "flexible-media",
+      "name": "Média (vidéo ou image)",
+      "settings": {
+        "image": "shopify://shop_images/bondet-lunettes-francaises-solaire-home-7.jpg"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "content_image_FPa646",
+    "flexible_media_RMBccF",
+    "images_content_YTxG4Q",
+    "left_content_image_FYVmw3",
+    "right_content_image_yQWkh7",
+    "tag_text_slider_cB3rah",
+    "multicolumn_gMLtBR",
+    "bondet_collections_rPwUGF",
+    "flexible_media_Htb4gn",
+    "17854906727ed4589c"
+  ]
+}

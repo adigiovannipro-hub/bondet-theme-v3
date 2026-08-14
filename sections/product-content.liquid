@@ -1,0 +1,144 @@
+<div class="relative">
+  <div data-scroll class="u-glasses-reveal absolute -right-52 top-8 aspect-[1/1] h-[34.4rem]">
+    {% render 'image',
+      image: section.settings.image_top_right,
+      alt: section.settings.image_top_right.alt,
+      sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 30vw, 29vw',
+      image_class: 'object-cover h-full w-full',
+      lazyload: 'eager'
+    %}
+  </div>
+  {% if section.settings.title != blank %}
+    <div class="u-container pb-48 ">
+      <div class="w-fit mx-auto pt-20 pb-28">
+        {% render 'separator' %}
+      </div>
+      <div class="u-grid">
+        <div class="col-span-12">
+          <div class="font-suptitle uppercase w-fit mx-auto mb-14">{{ section.settings.suptitle }}</div>
+          <h2 class="max-w-[78rem] xl:max-w-[61vw] mx-auto text-center font-text-l-mobile lg:font-text-l">
+            {{ section.settings.title | metafield_tag }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="u-container">
+    <div class="flex flex-col-reverse gap-gutter md:flex-row md:items-end lg:grid lg:grid-cols-12">
+      <div class="flex flex-col gap-10 items-end text-right lg:col-span-4 xl:pr-16 xl:w-[24vw] xl:ml-auto">
+        {% if section.settings.title != blank %}
+          <h3 class="font-title-xl-mobile lg:font-title-xl">{{ section.settings.content_title | newline_to_br }}</h3>
+        {% else %}
+          <h2 class="font-title-xl-mobile lg:font-title-xl">{{ section.settings.content_title | newline_to_br }}</h2>
+        {% endif %}
+        <p class="font-text-s xl:pl-12">
+          {{ section.settings.content_text | newline_to_br }}
+        </p>
+        {% render 'button',
+          title: section.settings.button_text,
+          url: section.settings.button_url,
+          is_link: true,
+          new_tab: false,
+          class: 'orange'
+        %}
+      </div>
+      <div class="lg:flex lg:justify-between lg:gap-x-gutter lg:col-span-8">
+        <div class="hidden lg:block lg:w-[40%] lg:h-[34.4rem] xl:h-[33.75vw] xl:w-full">
+          {% render 'image',
+            image: section.settings.image_small,
+            alt: section.settings.image_small.alt,
+            sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 30vw, 29vw',
+            image_class: 'object-cover h-full w-full'
+          %}
+        </div>
+        <div class="block aspect-[1/1] h-[34.4rem] lg:w-[60%] xl:h-[33.75vw] xl:w-[33.75vw] xl:min-w-[33.75vw]">
+          {% render 'image',
+            image: section.settings.image_large,
+            alt: section.settings.image_large.alt,
+            sizes: '(max-width: 768px) 100vw, 60vw',
+            image_class: 'object-cover h-full w-full'
+          %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Savoir-faire",
+  "class": "section section-product-content",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_top_right",
+      "label": "Image (top droite)"
+    },
+    {
+      "type": "header",
+      "content": "Savoir-faire"
+    },
+    {
+      "type": "text",
+      "id": "suptitle",
+      "label": "Titre",
+      "default": "savoir-faire"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Description",
+      "default": "Production locale, traçabilité certifiée, matériaux innovants à base d’huile de ricin : Bondet incarne une nouvelle génération de lunettes françaises responsables."
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "richtext",
+      "id": "content_title",
+      "label": "Titre"
+    },
+    {
+      "type": "textarea",
+      "id": "content_text",
+      "label": "Texte",
+      "default": "La certification Origine France Garantie atteste que toutes les étapes clés de fabrication de nos lunettes sont réalisées en France, sous contrôle d’organismes indépendants. Une transparence rare dans l’univers de la lunetterie."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte du bouton"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Url du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_small",
+      "label": "Image (petite)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_large",
+      "label": "Image (grande)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Savoir-faire",
+      "category": "Contenu"
+    }
+  ]
+}
+{% endschema %}

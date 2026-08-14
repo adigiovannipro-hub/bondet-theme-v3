@@ -1,0 +1,242 @@
+{% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign has_social_icons = true
+  if settings.social_linkedin_link == blank and settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign has_social_icons = false
+  endif
+-%}
+
+<div id="mf-sprite" class="hidden"></div>
+<footer class="footer {% if template.suffix contains 'find-an-optician' %}hidden{% endif %}">
+  <div class="footer__bg"></div>
+  <div class="u-container">
+    <div class="u-grid">
+      <div class="col-span-12 mb-10 mt-[9.3rem] lg:mb-20 xl:mt-[13rem]">
+        {% render 'separator', no_line: true %}
+      </div>
+      <div class="col-span-12 flex flex-col items-center mb-24 lg:col-span-8 lg:mb-0 lg:items-start xl:col-span-6 xl:col-start-2">
+        {% if section.settings.logo %}
+          <div class="w-[13.2rem] h-[2.5rem] mb-28 mx-inline lg:mb-20">
+            {% render 'image',
+              image: section.settings.logo,
+              alt: section.settings.logo.alt,
+              sizes: '25vw',
+              image_class: 'object-contain w-full h-full'
+            %}
+          </div>
+        {% endif %}
+        <div class="grid grid-cols-2 gap-10 md:grid-cols-3 xl:grid-cols-6 xl:gap-x-gutter">
+          {% for block in section.blocks %}
+            {% if block.type == 'column' and block.settings.menu != blank %}
+              <ul class="flex flex-col list-unstyled lg:gap-4 xl:col-span-2">
+                {% for link in block.settings.menu.links %}
+                  <li>
+                    <a
+                      href="{{ link.url }}"
+                      class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %} font-footer u-hover-opacity"
+                    >
+                      {{ link.title | escape }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="flex flex-wrap justify-center gap-[1.3rem] mt-[5.6rem]">
+          {% for block in section.blocks %}
+            {% if block.type == 'button' %}
+              {% render 'button',
+                title: block.settings.text_button,
+                url: block.settings.link_button,
+                is_link: true,
+                new_tab: false,
+                class: 'full-dark'
+              %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-span-12 lg:col-span-3 lg:col-start-10 xl:col-start-9">
+        <div class="flex flex-col items-center gap-y-10 text-center lg:items-start lg:text-left">
+          <p class="font-title-s uppercase max-w-[18rem]">{{ section.settings.text }}</p>
+          {% if section.settings.text_address != blank and section.settings.link_address != blank %}
+            <a
+              href="{{ section.settings.link_address }}"
+              class="link link--text font-text-m u-hover-opacity max-w-[16rem]"
+            >
+              {{ section.settings.text_address }}
+            </a>
+          {% endif %}
+          <div class="flex flex-col items-center gap-y-[0.6rem] lg:items-start">
+            {% if section.settings.text_phone != blank and section.settings.link_phone != blank %}
+              {% render 'button',
+                title: section.settings.text_phone,
+                url: section.settings.link_phone,
+                is_link: true,
+                new_tab: false,
+                icon: true,
+                class: 'beige border-dark'
+              %}
+            {% endif %}
+            {% if section.settings.text_email != blank and section.settings.link_email != blank %}
+              {% render 'button',
+                title: section.settings.text_email,
+                url: section.settings.link_email,
+                is_link: true,
+                new_tab: false,
+                icon: true,
+                icon_type: 'email',
+                class: 'beige border-dark'
+              %}
+            {% endif %}
+            <div class="flex gap-x-[0.6rem]">
+              {%- if section.settings.show_social and has_social_icons -%}
+                {%- render 'social-icons', class: 'list-social--footer' -%}
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-12 lg:mt-[7.5rem]">
+        <div class="flex justify-center pb-[4.5rem] mt-44">
+          {% if section.settings.legal_menu != blank %}
+            <ul class="flex flex-col items-center md:flex-row md:justify-center md:gap-16 w-full">
+              {% for link in section.settings.legal_menu.links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %} font-footer u-hover-opacity"
+                  >
+                    {{ link.title | escape }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pied de page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Accroche"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte d'accroche"
+    },
+    {
+      "type": "header",
+      "content": "Adresse"
+    },
+    {
+      "type": "text",
+      "id": "text_address",
+      "label": "Adresse"
+    },
+    {
+      "type": "url",
+      "id": "link_address",
+      "label": "Lien Google Maps"
+    },
+    {
+      "type": "header",
+      "content": "Téléphone"
+    },
+    {
+      "type": "text",
+      "id": "text_phone",
+      "label": "Label du bouton téléphone"
+    },
+    {
+      "type": "url",
+      "id": "link_phone",
+      "label": "Lien du bouton téléphone"
+    },
+    {
+      "type": "header",
+      "content": "Email"
+    },
+    {
+      "type": "text",
+      "id": "text_email",
+      "label": "Label du bouton email"
+    },
+    {
+      "type": "url",
+      "id": "link_email",
+      "label": "Lien du bouton email"
+    },
+    {
+      "type": "header",
+      "content": "Réseaux sociaux"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "default": true,
+      "label": "Afficher les réseaux sociaux",
+      "info": "Afficher les icônes de réseaux sociaux dans le pied de page. Les liens des réseaux sociaux sont à configurer dans les paramètres du thème."
+    },
+    {
+      "type": "header",
+      "content": "Menu légales"
+    },
+    {
+      "id": "legal_menu",
+      "type": "link_list",
+      "label": "Menu légales"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Bouton",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text_button",
+          "label": "Texte du bouton"
+        },
+        {
+          "type": "url",
+          "id": "link_button",
+          "label": "Lien du bouton"
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "name": "Colonne du menu",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Choix du menu"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
