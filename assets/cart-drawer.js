@@ -3,8 +3,18 @@ class CartDrawer extends HTMLElement {
     super();
 
     this.addEventListener('keyup', (evt) => evt.code === 'Escape' && this.close());
-    this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
+    this.bindOverlay();
     this.setHeaderCartIconAccessibility();
+  }
+
+  // The overlay is re-created every time the drawer contents are re-rendered, so binding is
+  // idempotent: without the flag a stack of listeners builds up on repeated cart updates.
+  bindOverlay() {
+    const overlay = this.querySelector('#CartDrawer-Overlay') || this.querySelector('.cart-drawer__overlay');
+    if (!overlay || overlay.dataset.closeBound === 'true') return;
+
+    overlay.dataset.closeBound = 'true';
+    overlay.addEventListener('click', this.close.bind(this));
   }
 
   connectedCallback() {
@@ -16,11 +26,18 @@ class CartDrawer extends HTMLElement {
   }
 
   setHeaderCartIconAccessibility() {
-    const cartLink = document.querySelector('#cart-icon-bubble');
+    // Prefer the cart icon of the header this drawer belongs to, so each instance drives its own
+    // trigger instead of every instance piling listeners onto the first icon in the document.
+    const scope = this.closest('header') || this.closest('.header-wrapper');
+    const cartLink = (scope && scope.querySelector('#cart-icon-bubble')) || document.querySelector('#cart-icon-bubble');
     if (!cartLink) return;
 
     cartLink.setAttribute('role', 'button');
     cartLink.setAttribute('aria-haspopup', 'dialog');
+
+    if (cartLink.dataset.cartDrawerBound === 'true') return;
+    cartLink.dataset.cartDrawerBound = 'true';
+
     cartLink.addEventListener('click', (event) => {
       event.preventDefault();
       this.open(cartLink);
@@ -45,10 +62,16 @@ class CartDrawer extends HTMLElement {
     this.addEventListener(
       'transitionend',
       () => {
+        // The drawer may have been closed again before the transition ended; trapping focus then
+        // would leave a keyboard trap on a hidden drawer.
+        if (!this.classList.contains('active')) return;
+
         const containerToTrapFocusOn = this.classList.contains('is-empty')
           ? this.querySelector('.drawer__inner-empty')
-          : document.getElementById('CartDrawer');
+          : this.querySelector('#CartDrawer') || document.getElementById('CartDrawer');
         const focusElement = this.querySelector('.drawer__inner') || this.querySelector('.drawer__close');
+        if (!containerToTrapFocusOn || !focusElement) return;
+
         trapFocus(containerToTrapFocusOn, focusElement);
       },
       { once: true }
@@ -58,8 +81,15 @@ class CartDrawer extends HTMLElement {
   }
 
   close() {
-    this.classList.remove('active');
+    // Clear every instance, not just this one: the close button and the overlay each only reach
+    // the drawer they live in, so a second instance left with `active` would keep its
+    // full-viewport overlay painted above the page.
+    document.querySelectorAll('cart-drawer').forEach((drawer) => {
+      drawer.classList.remove('active', 'animate');
+    });
+
     removeTrapFocus(this.activeElement);
+    this.activeElement = null;
     document.body.classList.remove('overflow-hidden');
   }
 
@@ -82,8 +112,9 @@ class CartDrawer extends HTMLElement {
     this.classList.contains('is-empty') && this.classList.remove('is-empty');
     this.productId = parsedState.id;
     this.getSectionsToRender().forEach((section) => {
+      // Look inside this instance first so a drawer never re-renders another one's contents.
       const sectionElement = section.selector
-        ? document.querySelector(section.selector)
+        ? this.querySelector(section.selector) || document.querySelector(section.selector)
         : document.getElementById(section.id);
 
       if (!sectionElement) return;
@@ -91,7 +122,7 @@ class CartDrawer extends HTMLElement {
     });
 
     setTimeout(() => {
-      this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
+      this.bindOverlay();
       this.open();
     });
   }

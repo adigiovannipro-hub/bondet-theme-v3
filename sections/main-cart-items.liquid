@@ -152,7 +152,7 @@
                                 <dt>{{ property.first }}:</dt>
                                 <dd>
                                   {%- if property.last contains '/uploads/' -%}
-                                    <a href="{{ property.last }}" class="link" target="_blank">
+                                    <a href="{{ property.last }}" class="link" target="_blank" rel="noopener">
                                       {{ property.last | split: '/' | last }}
                                     </a>
                                   {%- else -%}
@@ -230,6 +230,7 @@
                               <button
                                 type="button"
                                 aria-expanded="false"
+                                aria-label="{{ 'products.product.quantity.note' | t }}"
                                 class="quantity-popover__info-button quantity-popover__info-button--icon-only button button--tertiary small-hide medium-hide"
                               >
                                 {{- 'icon-info.svg' | inline_asset_content -}}

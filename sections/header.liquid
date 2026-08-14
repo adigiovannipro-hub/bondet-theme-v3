@@ -54,6 +54,38 @@
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 
+{%- comment -%}
+  Bandeau de réassurance.
+
+  Il vit à l'intérieur de la section header, et non dans une section voisine du header-group,
+  parce que .section-header est en `position: fixed` : un bandeau frère serait recouvert par le
+  header. Placé ici, il est compris dans le `offsetHeight` de .section-header dont le JS déduit
+  `--header-height`, et il se rétracte avec le header au défilement.
+{%- endcomment -%}
+{%- assign reassurance_blocks = section.blocks | where: 'type', 'reassurance' -%}
+{%- if reassurance_blocks.size > 0 -%}
+  {%- if reassurance_blocks.size > 1 -%}
+    <script src="{{ 'reassurance-bar.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  <reassurance-bar
+    class="reassurance-bar"
+    role="region"
+    aria-label="{{ 'sections.header.announcement' | t }}"
+    data-rotate-speed="{{ section.settings.reassurance_speed | default: 4 }}"
+  >
+    <ul class="reassurance-bar__list">
+      {%- for block in reassurance_blocks -%}
+        <li
+          class="reassurance-bar__item{% if forloop.first %} is-active{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.text | escape }}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </reassurance-bar>
+{%- endif -%}
+
 <div class="header-wrapper p-12 xl:px-[3.2rem] xl:py-[2.6rem] xxxl:py-[2rem] bg-white transition-all duration-300 ease-out">
   {%- liquid
     assign localization_forms = false
@@ -279,9 +311,39 @@
       "default": true,
       "label": "t:sections.header.settings.enable_customer_avatar.label",
       "info": "t:sections.header.settings.enable_customer_avatar.info"
+    },
+    {
+      "type": "header",
+      "content": "Bandeau de réassurance"
+    },
+    {
+      "type": "paragraph",
+      "content": "Ajoutez un bloc « Message de réassurance » par message. Sur mobile les messages s'affichent un par un en alternance ; à partir de 768px ils sont tous visibles sur une ligne."
+    },
+    {
+      "type": "range",
+      "id": "reassurance_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Durée d'affichage de chaque message (mobile)",
+      "default": 4
     }
   ],
   "blocks": [
+    {
+      "type": "reassurance",
+      "name": "Message de réassurance",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message",
+          "default": "Fabrication française certifiée"
+        }
+      ]
+    },
     {
       "type": "mega_button",
       "name": "Mega menu bouton",

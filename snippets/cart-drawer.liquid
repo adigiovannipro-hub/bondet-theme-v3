@@ -11,9 +11,123 @@
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 
+{%- comment -%}
+  Safety net for the closed state (the authoritative rules live in base.css).
+  `.drawer` on its own would also hide the drawer while it is open, because the
+  `.drawer.active` rule that reveals it lives in an earlier stylesheet.
+{%- endcomment -%}
 <style>
-  .drawer {
+  .drawer:not(.active) {
     visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* CGV consent. Mandatory before checkout, so it has to be impossible to miss and easy to hit
+     with a thumb: the whole label is the target, never smaller than the 4.4rem touch minimum. */
+  .cart-cgv {
+    width: 100%;
+    margin-top: 1.6rem;
+  }
+
+  .cart-cgv__control {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 1.2rem 1.4rem;
+    border: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.25);
+    border-radius: 0.4rem;
+    background-color: var(--bg-facets, #f8f4f1);
+    cursor: pointer;
+    transition: border-color var(--duration-default) ease, background-color var(--duration-default) ease;
+  }
+
+  .cart-cgv .cart-cgv__input {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    flex: 0 0 auto;
+    width: 2.4rem;
+    height: 2.4rem;
+    margin: 0;
+    border: 0.15rem solid rgba(var(--rgb-secondary-brown), 0.55);
+    border-radius: 0.3rem;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color var(--duration-default) ease, background-color var(--duration-default) ease;
+  }
+
+  .cart-cgv .cart-cgv__input:checked {
+    border-color: rgb(var(--rgb-secondary-brown));
+    background-color: rgb(var(--rgb-secondary-brown));
+  }
+
+  /* Tick drawn in CSS so the state is readable without loading an extra asset. */
+  .cart-cgv .cart-cgv__input:checked::after {
+    content: '';
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    width: 0.6rem;
+    height: 1.1rem;
+    border: solid #fff;
+    border-width: 0 0.2rem 0.2rem 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .cart-cgv .cart-cgv__input:focus-visible {
+    outline: 0.2rem solid rgb(var(--rgb-secondary-brown));
+    outline-offset: 0.2rem;
+  }
+
+  .cart-cgv__text {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    text-align: left;
+    color: rgb(var(--rgb-secondary-brown));
+  }
+
+  .cart-cgv__link {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+    font-weight: 600;
+  }
+
+  .cart-cgv--error .cart-cgv__control {
+    border-color: rgb(var(--rgb-secondary-brown));
+    background-color: rgba(var(--rgb-primary-beige), 0.6);
+  }
+
+  .cart-cgv--error .cart-cgv__input {
+    border-color: rgb(var(--rgb-secondary-brown));
+  }
+
+  .cart-cgv__error {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    text-align: left;
+    color: rgb(var(--rgb-secondary-brown));
+  }
+
+  .cart-cgv__error[hidden] {
+    display: none;
+  }
+
+  .cart-cgv__error-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .cart-cgv__error-icon svg {
+    width: 100%;
+    height: 100%;
   }
 </style>
 
@@ -29,7 +143,12 @@
     >
       <div class="drawer__header">
         <p class="drawer__heading font-menu">{{ 'sections.cart.title' | t }}</p>
-        <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()">
+        <button
+          class="drawer__close"
+          type="button"
+          aria-label="{{ 'accessibility.close' | t }}"
+          onclick="this.closest('cart-drawer').close()"
+        >
           <span class="svg-wrapper !w-6 !h-6">{{- 'icon-close.svg' | inline_asset_content -}}</span>
         </button>
       </div>
@@ -119,7 +238,7 @@
                                   <dt>{{ property.first }}:</dt>
                                   <dd>
                                     {%- if property.last contains '/uploads/' -%}
-                                      <a href="{{ property.last }}" target="_blank">
+                                      <a href="{{ property.last }}" target="_blank" rel="noopener">
                                         {{- property.last | split: '/' | last -}}
                                       </a>
                                     {%- else -%}
@@ -374,30 +493,48 @@
               </div>
             </div>
             {%- if cart != empty -%}
-              <div class="cart-cgv w-full mt-4">
-                <div class="flex items-center gap-2 ml-auto w-fit">
+              <div class="cart-cgv" data-cart-cgv>
+                {%- comment -%}
+                  The CGV link stays inside the label on purpose: per the HTML spec a label is not
+                  activated by clicks on interactive descendants, so opening the terms does not
+                  toggle the checkbox. The whole label is the touch target.
+                {%- endcomment -%}
+                <label class="cart-cgv__control" for="CartDrawer-CGV">
                   <input
                     type="checkbox"
                     id="CartDrawer-CGV"
+                    class="cart-cgv__input"
                     name="attributes[CGV acceptées]"
                     value="Oui"
                     form="CartDrawer-Form"
-                    class="w-4 h-4 cursor-pointer"
+                    required
+                    aria-describedby="CartDrawer-CGV-Error"
                   >
-                  <input
-                    type="hidden"
-                    id="CartDrawer-CGV-Timestamp"
-                    name="attributes[CGV - Date d'acceptation]"
-                    value=""
-                    form="CartDrawer-Form"
-                  >
-                  <label for="CartDrawer-CGV" class="cursor-pointer">
+                  <span class="cart-cgv__text">
                     {{ 'sections.cart.cgv_agree' | t }}
-                    <a href="{{ 'sections.cart.cgv_link_url' | t }}" target="_blank" class="underline">
-                      {{ 'sections.cart.cgv_link_text' | t }}
+                    <a
+                      href="{{ 'sections.cart.cgv_link_url' | t }}"
+                      target="_blank"
+                      rel="noopener"
+                      class="cart-cgv__link"
+                    >
+                      {{- 'sections.cart.cgv_link_text' | t -}}
                     </a>
-                  </label>
-                </div>
+                  </span>
+                </label>
+                <input
+                  type="hidden"
+                  id="CartDrawer-CGV-Timestamp"
+                  name="attributes[CGV - Date d'acceptation]"
+                  value=""
+                  form="CartDrawer-Form"
+                >
+                <p id="CartDrawer-CGV-Error" class="cart-cgv__error" role="alert" hidden>
+                  <span class="cart-cgv__error-icon" aria-hidden="true">
+                    {{- 'icon-error.svg' | inline_asset_content -}}
+                  </span>
+                  {{ 'sections.cart.cgv_error' | t }}
+                </p>
               </div>
             {%- endif -%}
 
@@ -405,14 +542,20 @@
               <button
                 type="submit"
                 id="CartDrawer-Checkout"
-                class="cart__checkout-button button full-dark full-dark--transparent "
+                class="cart__checkout-button button full-dark full-dark--transparent"
                 name="checkout"
                 form="CartDrawer-Form"
-                disabled
               >
                 <span>{{ 'sections.cart.checkout' | t }}</span>
               </button>
             </div>
+
+            {%- comment -%}
+              Réassurance juste sous le bouton de paiement. Elle lit les mêmes réglages
+              settings.cart_column_* que le bloc de bas de tiroir qu'elle remplace, qui était en
+              `hidden xl:block` donc invisible sur mobile.
+            {%- endcomment -%}
+            {% render 'reassurance-block', reassurance_class: 'reassurance-block--cart' %}
 
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
             <p id="CartDrawer-LineItemStatus" class="visually-hidden" role="status">
@@ -422,78 +565,70 @@
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
       </cart-drawer-items>
-      <div class="drawer__column hidden xl:block">
-        {%- assign has_columns = false -%}
-        {%- for i in (1..4) -%}
-          {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
-          {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
-          {%- if settings[image_key] != blank or settings[title_key] != blank -%}
-            {%- assign has_columns = true -%}
-          {%- endif -%}
-        {%- endfor -%}
-
-        {%- if has_columns -%}
-          <div class="grid grid-cols-4 gap-4">
-            {%- for i in (1..4) -%}
-              {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
-              {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
-              {%- assign col_image = settings[image_key] -%}
-              {%- assign col_title = settings[title_key] -%}
-              {%- if col_image != blank or col_title != blank -%}
-                <div class="col-span-1 flex flex-col items-center gap-y-[1.5rem] p-[2.4rem] border-t border-b border-solid border-secondary-brown/30">
-                  {%- if col_image != blank -%}
-                    {% render 'image',
-                      image: col_image,
-                      alt: col_title,
-                      sizes: '(max-width: 990px) 100vw, 25vw',
-                      wrapper_class: 'max-w-[5rem] max-h-[3rem]',
-                      image_class: 'object-contain w-full h-full'
-                    %}
-                  {%- endif -%}
-                  {%- if col_title != blank -%}
-                    <span class="font-suptitle uppercase text-center">{{ col_title }}</span>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
     </div>
   </div>
 <script>
-  function initCGVCheckbox() {
-    var checkbox  = document.getElementById('CartDrawer-CGV');
-    var btn       = document.getElementById('CartDrawer-Checkout');
-    var timestamp = document.getElementById('CartDrawer-CGV-Timestamp');
+  // CGV gate. The checkout button used to be `disabled` until the box was ticked, which gave the
+  // customer no feedback at all on tap — it read as a broken button. The button now stays tappable
+  // and the submit is blocked with an explicit message instead.
+  //
+  // Everything is delegated from `document` because the drawer contents are replaced wholesale on
+  // every cart update, which would drop listeners bound to the elements themselves.
+  (function () {
+    var CGV_ID = 'CartDrawer-CGV';
 
-    if (!checkbox || !btn) return;
-    if (checkbox.dataset.cgvInit === 'true') return;
+    function getParts() {
+      var checkbox = document.getElementById(CGV_ID);
+      if (!checkbox) return null;
 
-    btn.disabled = true;
-    checkbox.dataset.cgvInit = 'true';
-
-    checkbox.addEventListener('change', function () {
-      btn.disabled = !this.checked;
-      if (timestamp) {
-        timestamp.value = this.checked
-          ? new Date().toLocaleString('fr-FR')
-          : '';
-      }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', initCGVCheckbox);
-  document.documentElement.addEventListener('cart:rerender', function () {
-    setTimeout(initCGVCheckbox, 50);
-  });
-  document.addEventListener('DOMContentLoaded', function () {
-    if (typeof subscribe !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
-      subscribe(PUB_SUB_EVENTS.cartUpdate, function () {
-        setTimeout(initCGVCheckbox, 100);
-      });
+      return {
+        checkbox: checkbox,
+        wrapper: checkbox.closest('[data-cart-cgv]'),
+        error: document.getElementById('CartDrawer-CGV-Error'),
+        timestamp: document.getElementById('CartDrawer-CGV-Timestamp'),
+      };
     }
 
+    function setError(parts, visible) {
+      if (parts.error) parts.error.hidden = !visible;
+      if (parts.wrapper) parts.wrapper.classList.toggle('cart-cgv--error', visible);
+      parts.checkbox.setAttribute('aria-invalid', visible ? 'true' : 'false');
+    }
+
+    document.addEventListener('change', function (event) {
+      if (!event.target || event.target.id !== CGV_ID) return;
+
+      var parts = getParts();
+      if (!parts) return;
+
+      if (parts.checkbox.checked) setError(parts, false);
+      if (parts.timestamp) {
+        parts.timestamp.value = parts.checkbox.checked ? new Date().toLocaleString('fr-FR') : '';
+      }
+    });
+
+    document.addEventListener(
+      'submit',
+      function (event) {
+        var form = event.target;
+        if (!form || form.id !== 'CartDrawer-Form') return;
+
+        var parts = getParts();
+        if (!parts || parts.checkbox.checked) return;
+
+        event.preventDefault();
+        setError(parts, true);
+
+        if (parts.wrapper && parts.wrapper.scrollIntoView) {
+          parts.wrapper.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+        parts.checkbox.focus({ preventScroll: true });
+      },
+      true
+    );
+  })();
+
+  document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function() {
       if (typeof CartItems !== 'undefined') {
         CartItems.prototype.setValidity = function(event, index, message) {

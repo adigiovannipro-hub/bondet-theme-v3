@@ -317,6 +317,7 @@
       "cgv_agree": "I agree to the",
       "cgv_link_text": "Terms and Conditions",
       "cgv_link_url": "/pages/terms-and-conditions",
+      "cgv_error": "Please accept the Terms and Conditions to continue",
       "headings": {
         "product": "Product",
         "price": "Price",
