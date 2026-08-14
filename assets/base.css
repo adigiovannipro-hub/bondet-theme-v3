@@ -3695,3 +3695,65 @@ cart-drawer:not(.active) .drawer__inner {
 [class*='gsap-marker'] {
   display: none !important;
 }
+
+/* ---------------------------------------------------------------------------
+   Colour swatches on product cards (collection grid).
+   The theme's `swatch` snippet only sets `--swatch--background`; its base rules
+   live in component-swatch.css, which is not loaded on collection pages. They
+   are redefined here, sized for a card rather than for a variant picker.
+   --------------------------------------------------------------------------- */
+.card__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card__swatch-link {
+  display: block;
+  padding: 0.2rem;
+  border: 0.1rem solid transparent;
+  border-radius: 50%;
+  line-height: 0;
+}
+
+.card__swatch-link.is-current {
+  border-color: rgb(var(--rgb-secondary-brown));
+}
+
+/* `background` in shorthand, like component-swatch.css: the snippet feeds
+   --swatch--background either a url() for an image swatch or an rgb() for a
+   colour one, and background-image would silently drop the colour case. */
+.card__swatches .swatch {
+  display: block;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--swatch--background);
+  background-position: var(--swatch-focal-point, center);
+  background-size: cover;
+  background-origin: border-box;
+  border: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.25);
+}
+
+/* A swatch whose metaobject carries no colour or image: shown as an outline so
+   the count still matches what the label announces. */
+.card__swatches .swatch--unavailable {
+  border-style: dashed;
+  border-color: rgba(var(--rgb-secondary-brown), 0.45);
+}
+
+.card__swatches-more {
+  font: 400 1rem / 1 var(--font-primary);
+  color: rgba(var(--rgb-secondary-brown), 0.65);
+}
+
+@media screen and (min-width: 1200px) {
+  .card__swatches .swatch {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
