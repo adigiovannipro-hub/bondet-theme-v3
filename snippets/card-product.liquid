@@ -137,16 +137,19 @@
 
             {%- comment -%}
               `index` has been incremented once per extra slide above, so it is the total slide
-              count. Below 2 the arrows would be dead controls, so they are not rendered.
-              Positioning and visibility live in base.css (.card__pager) rather than in utility
-              classes: on touch there is no hover, so the arrows have to stay on screen.
+              count. Below 2 there is nothing to page through, so nothing is rendered.
+
+              Les flèches ont été remplacées par des pastilles : elles occupaient le centre de la
+              photo, qui ne fait qu'environ 12rem de large dans la grille à 2 par ligne. Le
+              glissement du doigt sur la photo fait toujours défiler les vues (le slider du thème
+              écoute touchstart/touchend sur .card__inner) ; les pastilles ne servent qu'à
+              l'annoncer et à situer la vue courante. Position et style : base.css (.card__dots).
             {%- endcomment -%}
             {%- if index > 1 -%}
-              <div class="card__pager card__pager--prev">
-                {% render 'pager', size: 'small', bg: 'false' %}
-              </div>
-              <div class="card__pager card__pager--next">
-                {% render 'pager', mode: 'next', size: 'small', bg: 'false' %}
+              <div class="card__dots" aria-hidden="true">
+                {%- for i in (1..index) -%}
+                  <span class="card__dot{% if forloop.first %} is-current{% endif %}"></span>
+                {%- endfor -%}
               </div>
             {%- endif -%}
           </div>
