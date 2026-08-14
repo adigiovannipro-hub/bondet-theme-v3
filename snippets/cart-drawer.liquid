@@ -545,6 +545,13 @@
               </button>
             </div>
 
+            {%- comment -%}
+              Réassurance juste sous le bouton de paiement. Elle lit les mêmes réglages
+              settings.cart_column_* que le bloc de bas de tiroir qu'elle remplace, qui était en
+              `hidden xl:block` donc invisible sur mobile.
+            {%- endcomment -%}
+            {% render 'reassurance-block', reassurance_class: 'reassurance-block--cart' %}
+
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
             <p id="CartDrawer-LineItemStatus" class="visually-hidden" role="status">
               {{ 'accessibility.loading' | t }}
@@ -553,43 +560,6 @@
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
       </cart-drawer-items>
-      <div class="drawer__column hidden xl:block">
-        {%- assign has_columns = false -%}
-        {%- for i in (1..4) -%}
-          {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
-          {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
-          {%- if settings[image_key] != blank or settings[title_key] != blank -%}
-            {%- assign has_columns = true -%}
-          {%- endif -%}
-        {%- endfor -%}
-
-        {%- if has_columns -%}
-          <div class="grid grid-cols-4 gap-4">
-            {%- for i in (1..4) -%}
-              {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
-              {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
-              {%- assign col_image = settings[image_key] -%}
-              {%- assign col_title = settings[title_key] -%}
-              {%- if col_image != blank or col_title != blank -%}
-                <div class="col-span-1 flex flex-col items-center gap-y-[1.5rem] p-[2.4rem] border-t border-b border-solid border-secondary-brown/30">
-                  {%- if col_image != blank -%}
-                    {% render 'image',
-                      image: col_image,
-                      alt: col_title,
-                      sizes: '(max-width: 990px) 100vw, 25vw',
-                      wrapper_class: 'max-w-[5rem] max-h-[3rem]',
-                      image_class: 'object-contain w-full h-full'
-                    %}
-                  {%- endif -%}
-                  {%- if col_title != blank -%}
-                    <span class="font-suptitle uppercase text-center">{{ col_title }}</span>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
     </div>
   </div>
 <script>

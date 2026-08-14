@@ -3615,3 +3615,69 @@ cart-drawer:not(.active) .drawer__inner {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Reassurance block (product page + cart drawer, near the CTA).
+   Two columns on mobile so four items stay readable in a narrow drawer, four
+   across from 1024px. Sized to reassure without pushing the CTA off screen.
+   --------------------------------------------------------------------------- */
+.reassurance-block {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1rem;
+  width: 100%;
+  margin: 0;
+  padding: 1.6rem 0 0;
+  list-style: none;
+  border-top: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
+}
+
+.reassurance-block__item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.reassurance-block__icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.reassurance-block__icon .image {
+  width: 100%;
+  height: 100%;
+}
+
+.reassurance-block__label {
+  font-size: 0.95rem;
+  line-height: 1.25;
+  text-align: left;
+  color: rgb(var(--rgb-secondary-brown));
+  overflow-wrap: break-word;
+}
+
+@media screen and (min-width: 1024px) {
+  .reassurance-block {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.6rem;
+  }
+
+  .reassurance-block__item {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .reassurance-block__icon {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .reassurance-block__label {
+    text-align: center;
+  }
+}

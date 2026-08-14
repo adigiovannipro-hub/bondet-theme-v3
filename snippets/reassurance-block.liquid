@@ -1,0 +1,56 @@
+{% comment %}
+  Renders the reassurance block (made in France, delivery, exchanges, secure payment).
+
+  It reads the existing `settings.cart_column_1..4_image` / `_title` theme settings — the same
+  ones the cart drawer already used on desktop — so the icons and wording stay edited in a
+  single place and cannot drift between the product page and the cart.
+
+  Accepts:
+  - reassurance_class: {String} extra classes for the wrapper (optional)
+
+  Usage:
+  {% render 'reassurance-block' %}
+{% endcomment %}
+
+{%- liquid
+  assign has_columns = false
+  for i in (1..4)
+    assign image_key = 'cart_column_' | append: i | append: '_image'
+    assign title_key = 'cart_column_' | append: i | append: '_title'
+    if settings[image_key] != blank or settings[title_key] != blank
+      assign has_columns = true
+    endif
+  endfor
+-%}
+
+{%- if has_columns -%}
+  <ul class="reassurance-block {{ reassurance_class }}" role="list">
+    {%- for i in (1..4) -%}
+      {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
+      {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
+      {%- assign col_image = settings[image_key] -%}
+      {%- assign col_title = settings[title_key] -%}
+      {%- if col_image != blank or col_title != blank -%}
+        <li class="reassurance-block__item">
+          {%- comment -%}
+            alt is empty on purpose: the icon repeats the label right next to it, so naming it
+            would make screen readers read every item twice.
+          {%- endcomment -%}
+          {%- if col_image != blank -%}
+            <div class="reassurance-block__icon">
+              {% render 'image',
+                image: col_image,
+                alt: '',
+                sizes: '40px',
+                image_class: 'object-contain w-full h-full'
+              %}
+            </div>
+          {%- endif -%}
+          {%- if col_title != blank -%}
+            <span class="reassurance-block__label font-suptitle uppercase">{{ col_title }}</span>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

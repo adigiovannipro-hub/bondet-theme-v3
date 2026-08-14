@@ -380,6 +380,8 @@
           <div class="cart-totals-text rte mt-4 text-center font-suptitle">{{ settings.cart_totals_text }}</div>
         {%- endif -%}
 
+        {% render 'reassurance-block', reassurance_class: 'reassurance-block--product' %}
+
         <div class="hidden absolute bottom-16 xl:flex gap-4 mt-16 xl:gap-20">
           <a
             href="#description"
