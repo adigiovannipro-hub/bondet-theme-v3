@@ -3692,6 +3692,14 @@ cart-drawer:not(.active) .drawer__inner {
   margin-top: 2rem;
 }
 
+/* Sur la fiche produit, le bloc termine la colonne d'achat et la section d'avis (« Laissons nos
+   clients parler pour nous ») s'enchaîne juste derrière, sans rien pour marquer la coupure. On
+   ajoute un second filet en bas, en symétrie de celui du haut, avec le même retrait. */
+.reassurance-block--product {
+  padding-bottom: 2rem;
+  border-bottom: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
+}
+
 .reassurance-block__item {
   display: flex;
   flex-direction: column;
