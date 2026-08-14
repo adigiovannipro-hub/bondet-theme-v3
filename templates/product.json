@@ -184,10 +184,11 @@
         "judge_me_reviews_cards_carousel_aXpcHY"
       ],
       "custom_css": [
-        "{padding-top: 80px; padding-bottom: 80px; background-color: #f2e9db; margin-bottom: 80px;}",
-        "h2 {font: 400 3rem / 1 var(--font-primary);}",
+        "{padding-top: clamp(40px, 8vw, 80px); padding-bottom: clamp(40px, 8vw, 80px); background-color: #f2e9db; margin-bottom: clamp(40px, 8vw, 80px);}",
+        "h2 {font: 400 clamp(2rem, 5.5vw, 3rem) / 1.2 var(--font-primary); overflow-wrap: break-word;}",
         "p {font-size: 14px;}",
         "span {font-size: 80%;}",
+        "span span {font-size: 100%;}",
         "button {height: 10px; width: 10px; border: 2px;}"
       ],
       "settings": {
