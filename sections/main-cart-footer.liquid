@@ -104,6 +104,15 @@
                 </small>
               </div>
             {%- else -%}
+              {%- comment -%}
+                Même consentement CGV que dans le tiroir, et même verrou : cette page a son
+                propre bouton de paiement, elle ouvrirait sinon un chemin vers la caisse sans
+                acceptation des conditions.
+              {%- endcomment -%}
+              {%- if cart != empty -%}
+                {% render 'cart-cgv', id_prefix: 'Cart', form_id: 'cart' %}
+              {%- endif -%}
+
               <div class="cart__ctas" {{ block.shopify_attributes }}>
                 <button
                   type="submit"

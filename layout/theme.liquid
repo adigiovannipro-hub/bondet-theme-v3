@@ -82,11 +82,17 @@
       }
     </script>
 
-    {% if template == 'cart' %}
-      <script>
-        window.location.replace('/');
-      </script>
-    {% endif %}
+    {%- comment -%}
+      Ici se trouvait une redirection de la page /cart vers l'accueil. Elle faisait du panier un
+      cul-de-sac pour tous les chemins qui ne passent pas par le tiroir : les liens de réduction
+      en `?redirect=/cart` des campagnes, un panier mis en favori ou partagé, /cart référencé,
+      et le repli de l'icône du header sur son `href` si le tiroir ne s'ouvre pas. Le thème a une
+      page panier complète (templates/cart.json), elle est de nouveau accessible.
+
+      Le tiroir continue d'intercepter le clic sur l'icône du header (cart-drawer.js), le
+      parcours normal est donc inchangé, et la page applique le même consentement CGV que le
+      tiroir (snippets/cart-cgv.liquid, rendu dans main-cart-footer.liquid).
+    {%- endcomment -%}
 
     {% assign lang_prefix = '' %}
 
@@ -151,6 +157,13 @@
       Nuanciers des vignettes : chargé globalement, les cartes produit apparaissant dans une
       demi-douzaine de sections et pas seulement dans la grille de collection.
     {%- endcomment -%}
+    {%- comment -%}
+      Verrou CGV : chargé ici et non dans le tiroir, qui n'est rendu que lorsque le panier est
+      en tiroir. La page /cart a son propre bouton de paiement et doit être gardée dans tous
+      les cas. Un seul chargement, donc un seul jeu d'écouteurs.
+    {%- endcomment -%}
+    <script src="{{ 'cart-cgv.js' | asset_url }}" defer="defer"></script>
+
     <script src="{{ 'card-swatches.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'card-dots.js' | asset_url }}" defer="defer"></script>
 
