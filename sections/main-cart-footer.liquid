@@ -128,11 +128,19 @@
                 </button>
               </div>
 
-              {%- if additional_checkout_buttons -%}
-                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
-                  {{ content_for_additional_checkout_buttons }}
-                </div>
-              {%- endif -%}
+              {%- comment -%}
+                Les boutons de paiement accéléré (Shop Pay, PayPal, Apple Pay) étaient rendus
+                ici. Ils sont retirés : ils ne passent pas par le formulaire du panier, donc
+                aucun verrou ne peut les intercepter, et ils ouvraient un chemin vers la caisse
+                sans acceptation des CGV — ce que ce thème doit empêcher.
+
+                Rien n'est perdu au passage : le tiroir panier ne les a jamais proposés, et
+                cette page était redirigée vers l'accueil, donc ils n'ont jamais été montrés à
+                un client. Le paiement reste celui du bouton ci-dessus, protégé par les CGV.
+
+                Pour les rétablir, il faudra d'abord un consentement recueilli en amont du
+                panier (à l'ajout, par exemple), sinon le verrou est contournable.
+              {%- endcomment -%}
           {%- endcase -%}
         {% endfor %}
 
