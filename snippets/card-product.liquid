@@ -229,6 +229,11 @@
                 <ul class="card__swatches" aria-label="{{ montures_count }} coloris disponibles">
                   {%- for value in color_option.values limit: 4 -%}
                     {%- capture value_name %}{{ value.name | default: value }}{% endcapture -%}
+                    {%- comment -%}
+                      `value.variant` est la voie documentée : la variante associée à cette valeur
+                      d'option. On garde l'appariement manuel en repli, et parce que lui seul sait
+                      conserver la couleur de verre de la carte courante sur les solaires.
+                    {%- endcomment -%}
                     {%- assign target_variant = null -%}
                     {%- for v in card_product.variants -%}
                       {%- if v.option1 == value_name -%}
@@ -241,7 +246,10 @@
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
-                    {%- assign swatch_media = target_variant.featured_media | default: card_product.featured_media -%}
+                    {%- unless target_variant -%}
+                      {%- assign target_variant = value.variant -%}
+                    {%- endunless -%}
+                    {%- assign swatch_media = target_variant.featured_media | default: target_variant.image -%}
                     <li>
                       <a
                         href="{{ target_variant.url | default: card_product.url }}"

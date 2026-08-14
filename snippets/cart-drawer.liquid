@@ -30,6 +30,27 @@
     margin-top: 1.6rem;
   }
 
+  /* Le bouton est un flex : l'icône se place avant le libellé sans le décentrer. */
+  .cart__checkout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .cart__checkout-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.8rem;
+  }
+
+  .cart__checkout-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
   .cart-cgv__control {
     display: flex;
     align-items: center;
@@ -98,8 +119,8 @@
     }
 
     .cart-cgv__text {
-      font-size: 1.2rem;
-      line-height: 1.35;
+      font-size: 1.3rem;
+      line-height: 1.45;
     }
   }
 
@@ -566,6 +587,13 @@
                 name="checkout"
                 form="CartDrawer-Form"
               >
+                {%- comment -%}
+                  Cadenas à gauche du libellé : le thème n'a pas d'icône de carte bancaire, et
+                  sur un bouton de paiement le cadenas est le repère le plus lu.
+                {%- endcomment -%}
+                <span class="cart__checkout-icon" aria-hidden="true">
+                  {{- 'icon-padlock.svg' | inline_asset_content -}}
+                </span>
                 <span>{{ 'sections.cart.checkout' | t }}</span>
               </button>
             </div>
