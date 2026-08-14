@@ -522,12 +522,19 @@
                   {% if show_variant %}
                     {% assign item_index = item_index | plus: 1 %}
 
+                    {%- comment -%}
+                      2 produits par ligne sur mobile : la largeur mobile est imposée en CSS
+                      (.collection-products .product-item dans base.css) et non par une classe
+                      Tailwind, car `col-span-6` sans préfixe n'existe pas dans le bundle compilé
+                      et le dossier source du build n'est pas versionné.
+                    {%- endcomment -%}
                     <li class="product-item col-span-12 md:col-span-6 lg:col-span-4 hidden">
                       {% render 'card-product',
                         card_product: product,
                         card_variant: variant,
                         variant_color: variant.options[option_index],
-                        section_id: section.id
+                        section_id: section.id,
+                        card_sizes: '(max-width: 767px) 50vw, (max-width: 1200px) 50vw, 33vw'
                       %}
                     </li>
 

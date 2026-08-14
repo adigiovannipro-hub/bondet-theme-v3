@@ -16,6 +16,8 @@
   - horizontal_class: {Boolean} Add a card--horizontal class if set to true. Default: false (optional)
   - horizontal_quick_add: {Boolean} Changes the quick add button styles when set to true. Default: false (optional)
   - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+  - card_sizes: {String} `sizes` attribute for the card images. Override it when the card is not
+    laid out full-width on mobile (e.g. the 2-per-row collection grid). (optional)
 
   Usage:
   {% render 'card-product', show_vendor: section.settings.show_vendor %}
@@ -28,6 +30,8 @@
     if card_variant and card_variant.featured_media
       assign featured_media = card_variant.featured_media
     endif
+
+    assign card_sizes = card_sizes | default: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
   -%}
 
   <div class="product-card relative cursor-pointer h-[41.7rem] xl:h-[47rem] group">
@@ -115,7 +119,7 @@
                   {% render 'image',
                     image: main_media,
                     alt: main_media.alt,
-                    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                    sizes: card_sizes,
                     image_class: 'object-cover w-full h-full pointer-events-none'
                   %}
                 </div>
@@ -132,7 +136,7 @@
                     {% render 'image',
                       image: media,
                       alt: media.alt,
-                      sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+                      sizes: card_sizes,
                       image_class: 'object-cover w-full h-full pointer-events-none'
                     %}
                   </div>
