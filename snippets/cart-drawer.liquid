@@ -43,7 +43,7 @@
     transition: border-color var(--duration-default) ease, background-color var(--duration-default) ease;
   }
 
-  .cart-cgv__input {
+  .cart-cgv .cart-cgv__input {
     appearance: none;
     -webkit-appearance: none;
     position: relative;
@@ -58,13 +58,13 @@
     transition: border-color var(--duration-default) ease, background-color var(--duration-default) ease;
   }
 
-  .cart-cgv__input:checked {
+  .cart-cgv .cart-cgv__input:checked {
     border-color: rgb(var(--rgb-secondary-brown));
     background-color: rgb(var(--rgb-secondary-brown));
   }
 
   /* Tick drawn in CSS so the state is readable without loading an extra asset. */
-  .cart-cgv__input:checked::after {
+  .cart-cgv .cart-cgv__input:checked::after {
     content: '';
     position: absolute;
     top: 46%;
@@ -76,7 +76,7 @@
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  .cart-cgv__input:focus-visible {
+  .cart-cgv .cart-cgv__input:focus-visible {
     outline: 0.2rem solid rgb(var(--rgb-secondary-brown));
     outline-offset: 0.2rem;
   }
