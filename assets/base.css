@@ -3928,9 +3928,14 @@ cart-drawer:not(.active) .drawer__inner {
     min-width: 0;
   }
 
+  /* Désormais hors de .totals, elle a toute la largeur du tiroir : on peut la garder lisible
+     tout en verrouillant la ligne unique. */
   cart-drawer .cart-totals-text {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.25rem);
     line-height: 1.45;
+    margin-top: 0.6rem;
+    text-align: right;
+    white-space: nowrap;
   }
 
   cart-drawer .totals {
@@ -3939,5 +3944,23 @@ cart-drawer:not(.active) .drawer__inner {
 
   cart-drawer .totals__total-value {
     line-height: 1.3;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Bloc de réassurance de l'accueil : un trait au-dessus ET un en dessous, pour
+   le détacher de la section d'avis qui le suit.
+   Le thème pose ces bordures sur chaque bloc ; sur mobile la grille fait deux
+   lignes, ce qui ajouterait un trait au milieu. On ne garde donc que les traits
+   extérieurs.
+   --------------------------------------------------------------------------- */
+@media screen and (max-width: 1023px) {
+  .section-multicolumn .grid > div:nth-child(1),
+  .section-multicolumn .grid > div:nth-child(2) {
+    border-bottom: 0;
+  }
+
+  .section-multicolumn .grid > div:nth-child(n + 3) {
+    border-top: 0;
   }
 }

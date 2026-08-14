@@ -118,9 +118,13 @@
       gap: 1rem;
     }
 
+    /* Taille pilotée par la largeur de fenêtre plutôt que devinée : la police de la marque est
+       plus large que celle de mon banc de test, ce qui m'avait fait conclure à tort que
+       1.3rem tenait. `nowrap` verrouille la ligne unique. */
     .cart-cgv__text {
-      font-size: 1.3rem;
-      line-height: 1.45;
+      font-size: clamp(1rem, 2.9vw, 1.3rem);
+      line-height: 1.5;
+      white-space: nowrap;
     }
   }
 
@@ -527,11 +531,17 @@
                       {%- endif -%}
                     {%- endif -%}
                   </small>
-                  {%- if settings.cart_totals_text != blank -%}
-                    <div class="cart-totals-text rte mt-4">{{ settings.cart_totals_text }}</div>
-                  {%- endif -%}
                 </div>
               </div>
+
+              {%- comment -%}
+                Sortie de .totals volontairement : à l'intérieur elle héritait de la colonne
+                étroite du flex (le titre « Total estimé » prend la moitié de la largeur) et
+                passait sur deux lignes quelle que soit la taille de police.
+              {%- endcomment -%}
+              {%- if settings.cart_totals_text != blank -%}
+                <div class="cart-totals-text rte">{{ settings.cart_totals_text }}</div>
+              {%- endif -%}
             </div>
             {%- if cart != empty -%}
               <div class="cart-cgv" data-cart-cgv>

@@ -6,8 +6,13 @@
 // colour opened the product on the wrong frame. Propagation is stopped here before it
 // reaches that handler.
 //
-// Delegated from `document` so it survives the collection grid being re-rendered by the
-// facets (facets-collection.js replaces .collection-inner wholesale).
+// Delegated from `document` in the CAPTURE phase, and c'est le point crucial : le handler du
+// thème est posé sur la carte elle-même, donc plus bas dans l'arbre. En phase de propagation
+// (bubble) il s'exécute AVANT un écouteur sur `document` — `stopPropagation()` arrivait trop
+// tard, la navigation avait déjà eu lieu. En capture, l'ordre est inversé : document d'abord.
+//
+// La délégation permet aussi de survivre au re-rendu complet de la grille par les filtres
+// (facets-collection.js remplace .collection-inner).
 (function () {
   function swapImage(card, src) {
     if (!src) return;
@@ -21,25 +26,32 @@
     image.src = src;
   }
 
-  document.addEventListener('click', function (event) {
-    var swatch = event.target.closest && event.target.closest('[data-card-swatch]');
-    if (!swatch) return;
+  document.addEventListener(
+    'click',
+    function (event) {
+      var swatch = event.target.closest && event.target.closest('[data-card-swatch]');
+      if (!swatch) return;
 
-    var card = swatch.closest('.product-card');
-    if (!card) return;
+      var card = swatch.closest('.product-card');
+      if (!card) return;
 
-    event.preventDefault();
-    event.stopPropagation();
+      // preventDefault ne suffit pas : le thème ne se sert pas de l'action par défaut du lien,
+      // il affecte window.location.href directement. Il faut l'empêcher d'être notifié.
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
 
-    swapImage(card, swatch.dataset.swatchImage);
+      swapImage(card, swatch.dataset.swatchImage);
 
-    // The card link drives both the title link and the theme's whole-card click, so
-    // pointing it at the chosen colour keeps every way into the product consistent.
-    var cardLink = card.querySelector('.card__link');
-    if (cardLink && swatch.getAttribute('href')) cardLink.href = swatch.getAttribute('href');
+      // Le lien de la carte commande à la fois le titre et le clic sur toute la carte : le faire
+      // pointer sur la couleur choisie garde toutes les entrées vers le produit cohérentes.
+      var cardLink = card.querySelector('.card__link');
+      if (cardLink && swatch.getAttribute('href')) cardLink.href = swatch.getAttribute('href');
 
-    card.querySelectorAll('[data-card-swatch]').forEach(function (other) {
-      other.classList.toggle('is-current', other === swatch);
-    });
-  });
+      card.querySelectorAll('[data-card-swatch]').forEach(function (other) {
+        other.classList.toggle('is-current', other === swatch);
+      });
+    },
+    true
+  );
 })();
