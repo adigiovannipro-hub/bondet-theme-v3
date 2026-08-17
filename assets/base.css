@@ -3694,7 +3694,9 @@ cart-drawer:not(.active) .drawer__inner {
 
 /* Sur la fiche produit, le bloc termine la colonne d'achat et la section d'avis (« Laissons nos
    clients parler pour nous ») s'enchaîne juste derrière, sans rien pour marquer la coupure. On
-   ajoute un second filet en bas, en symétrie de celui du haut, avec le même retrait. */
+   ajoute un second filet en bas, en symétrie de celui du haut, avec le même retrait.
+   Ce filet est neutralisé à partir de 1200px, voir plus bas : la colonne d'achat y change
+   complètement de structure et il n'a plus rien à séparer. */
 .reassurance-block--product {
   padding-bottom: 2rem;
   border-bottom: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
@@ -3737,6 +3739,47 @@ cart-drawer:not(.active) .drawer__inner {
   .reassurance-block {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.6rem;
+  }
+}
+
+/* Fiche produit à partir de 1200px, et là seulement.
+   À cette largeur la colonne d'achat devient `xl:h-screen xl:grid xl:place-items-center`
+   (sections/main-product.liquid) : sa hauteur est figée à 100vh, son contenu est centré, et la
+   rangée d'ancres « Description / Détails / Mesures / Livraison » est sortie du flux en
+   `absolute bottom-16`, épinglée à 4rem du bas de la fenêtre. Les deux se disposent donc
+   indépendamment, et le bloc de réassurance venait mordre sur les ancres : le filet du bas
+   tombait pile sur leur texte.
+
+   Trois corrections, mesurées sur les fenêtres de bureau courantes :
+   - le filet du bas est retiré ; sous 1200px il sépare le bloc de la section d'avis, ici il n'y
+     a rien derrière lui et il ne faisait que traverser les ancres ;
+   - le libellé passe à 0.9rem, ce qui fait tenir « matériaux bio-sourcés » sur une seule ligne
+     au lieu de deux — c'est ce retour à la ligne qui creusait l'essentiel du chevauchement ;
+   - l'icône passe de 4rem à 2.6rem : moins massive, et les vides entre les quatre colonnes
+     s'ouvrent d'autant puisque la largeur des colonnes ne change pas.
+
+   À noter pour toute retouche future : le contenu étant centré, chaque rem retiré au bloc ne
+   libère qu'un demi-rem au-dessus des ancres. Inversement, réserver de l'espace en bas est
+   contre-productif — la colonne finit par déborder de ses 100vh, le contenu s'aligne alors en
+   haut et le titre du produit passe sous le header. La marge de manœuvre est donc étroite. */
+@media screen and (min-width: 1200px) {
+  .reassurance-block--product {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .reassurance-block--product .reassurance-block__item {
+    gap: 1rem;
+  }
+
+  .reassurance-block--product .reassurance-block__icon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .reassurance-block--product .reassurance-block__label {
+    font-size: 0.9rem;
+    line-height: 1.35;
   }
 }
 
