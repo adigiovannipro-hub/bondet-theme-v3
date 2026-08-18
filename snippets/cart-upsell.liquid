@@ -153,61 +153,17 @@ offrez-vous la livraison :{% endcapture -%}
                     </span>
                   </div>
 
-                  {%- for option in product.options_with_values limit: 2 -%}
-                    {%- liquid
-                      assign option_index = forloop.index
-                      assign label = option.name
-                      assign label = label | replace: 'Couleur de la ', '' | replace: 'Couleur des ', ''
-                      assign label = label | replace: 'Couleur du ', '' | replace: 'Couleur ', ''
-                      assign label = label | capitalize
-
-                      if option_index == 1
-                        assign selected_value = current.option1
-                      else
-                        assign selected_value = current.option2
-                      endif
-                    -%}
-                    <div class="cart-upsell__option">
-                      <span class="cart-upsell__option-label">{{ label }}</span>
-                      <ul
-                        class="cart-upsell__swatches"
-                        data-upsell-option="{{ option_index }}"
-                        aria-label="{{ option.name | escape }}"
-                      >
-                        {%- for value in option.values -%}
-                          {%- assign value_name = value.name | default: value -%}
-                          <li>
-                            {%- comment -%}
-                              Nom accessible porté par `aria-label`, et non par un
-                              `<span class="visually-hidden">` : celui-ci est en
-                              `position: absolute`, donc son bloc conteneur est
-                              `.cart-upsell__viewport` — en dehors de la piste qui défile. Il
-                              échappait au rognage et se posait à la coordonnée de sa
-                              diapositive, plusieurs centaines de pixels à droite : la page
-                              gagnait un défilement horizontal vers du vide, invisible mais bien
-                              là sous le doigt.
-                            {%- endcomment -%}
-                            <button
-                              type="button"
-                              class="cart-upsell__swatch{% if value_name == selected_value %} is-selected{% endif %}"
-                              data-upsell-value="{{ value_name | escape }}"
-                              data-upsell-option-index="{{ option_index }}"
-                              title="{{ value_name | escape }}"
-                              aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
-                              aria-pressed="{% if value_name == selected_value %}true{% else %}false{% endif %}"
-                            >
-                              {%- if value.swatch -%}
-                                {% render 'swatch', swatch: value.swatch %}
-                              {%- else -%}
-                                <span class="swatch swatch--unavailable"></span>
-                              {%- endif -%}
-                            </button>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    </div>
-                  {%- endfor -%}
-
+                  {%- comment -%}
+                    Sélecteur partagé avec les vignettes produit : c'est lui qui tient l'état et
+                    annonce la variante par `variant:selected`, cart-upsell.js n'a plus qu'à
+                    suivre pour la photo, le prix et le bouton.
+                  {%- endcomment -%}
+                  {% render 'variant-swatches',
+                    swatch_product: product,
+                    swatch_variant: current,
+                    swatch_class: 'swatch-picker--cart',
+                    swatch_image_width: 500
+                  %}
                 </div>
 
                 <button
@@ -227,19 +183,6 @@ offrez-vous la livraison :{% endcapture -%}
                   </span>
                 </button>
 
-                {%- comment -%}
-                  Variant table read by cart-upsell.js. In a JSON script tag rather than a data
-                  attribute: option values carry accents and spaces, and a 24-line table would be
-                  unreadable — and fragile — squeezed into an attribute.
-                {%- endcomment -%}
-                {%- capture variant_rows -%}
-                  {%- for variant in product.variants -%}
-                    {%- assign variant_image = variant.featured_image | default: product.featured_image -%}
-                    {%- unless forloop.first %},{% endunless -%}
-                    {"id":{{ variant.id | json }},"o1":{{ variant.option1 | json }},"o2":{{ variant.option2 | json }},"price":{{ variant.price | money | strip_html | json }},"compare":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},"available":{{ variant.available | json }},"url":{{ variant.url | json }},"image":{% if variant_image %}{{ variant_image | image_url: width: 500 | json }}{% else %}null{% endif %}}
-                  {%- endfor -%}
-                {%- endcapture -%}
-                <script type="application/json" data-upsell-variants>[{{ variant_rows }}]</script>
               </article>
             {%- endif -%}
           {%- endfor -%}

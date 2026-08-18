@@ -164,6 +164,12 @@
     {%- endcomment -%}
     <script src="{{ 'cart-cgv.js' | asset_url }}" defer="defer"></script>
 
+    {%- comment -%}
+      Sélecteur de coloris partagé par les vignettes produit et la relance « deuxième paire » du
+      panier. Chargé globalement, avant ses deux hôtes : c'est lui qui définit <variant-swatches>.
+    {%- endcomment -%}
+    <script src="{{ 'variant-swatches.js' | asset_url }}" defer="defer"></script>
+
     <script src="{{ 'card-swatches.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'card-dots.js' | asset_url }}" defer="defer"></script>
 

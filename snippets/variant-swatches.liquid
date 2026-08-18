@@ -1,0 +1,132 @@
+{% comment %}
+  Sélecteur de coloris partagé — la monture et les verres, en pastilles.
+
+  Le même bloc sert la relance « deuxième paire » du panier et les vignettes produit : c'est le
+  mécanisme éprouvé du panier, porté tel quel plutôt que redécrit une deuxième fois. Il ne sait
+  rien de son hôte : il résout la variante courante et l'annonce par un évènement
+  `variant:selected` (et `variant:peek` au survol). C'est l'hôte qui décide quoi en faire —
+  changer sa photo, son prix, son lien, activer son bouton d'ajout.
+
+  Accepte :
+  - swatch_product: {Object} le produit (obligatoire)
+  - swatch_variant: {Object} la variante affichée au départ (défaut : première disponible)
+  - swatch_class: {String} classe supplémentaire sur la racine (optionnel)
+  - swatch_labels: {Boolean} afficher « Monture » / « Verres ». Défaut : true
+  - swatch_image_width: {Number} largeur des photos de la table. Défaut : 500
+
+  Usage :
+  {% render 'variant-swatches', swatch_product: product, swatch_variant: variant %}
+{% endcomment %}
+
+{%- liquid
+  assign sw_product = swatch_product
+  assign sw_current = swatch_variant | default: sw_product.selected_or_first_available_variant
+  assign sw_width = swatch_image_width | default: 500
+  assign sw_labels = true
+  if swatch_labels == false
+    assign sw_labels = false
+  endif
+-%}
+
+{%- if sw_product and sw_product.options_with_values.size > 0 -%}
+  {%- comment -%}
+    Une option à valeur unique n'offre aucun choix : on ne rend rien plutôt qu'une rangée d'une
+    seule pastille inerte.
+  {%- endcomment -%}
+  {%- assign sw_choices = 0 -%}
+  {%- for option in sw_product.options_with_values limit: 2 -%}
+    {%- if option.values.size > 1 -%}
+      {%- assign sw_choices = sw_choices | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if sw_choices > 0 -%}
+    <variant-swatches
+      class="swatch-picker{% if swatch_class %} {{ swatch_class }}{% endif %}"
+      data-current-variant="{{ sw_current.id }}"
+    >
+      {%- for option in sw_product.options_with_values limit: 2 -%}
+        {%- if option.values.size > 1 -%}
+          {%- liquid
+            assign option_index = forloop.index
+
+            comment
+              « Couleur de la monture » tient sur une ligne de vignette une fois débarrassé de son
+              préfixe ; le nom complet reste porté par aria-label.
+            endcomment
+            assign label = option.name
+            assign label = label | replace: 'Couleur de la ', '' | replace: 'Couleur des ', ''
+            assign label = label | replace: 'Couleur du ', '' | replace: 'Couleur ', ''
+            assign label = label | capitalize
+
+            if option_index == 1
+              assign selected_value = sw_current.option1
+            else
+              assign selected_value = sw_current.option2
+            endif
+          -%}
+          <div class="swatch-picker__row">
+            {%- if sw_labels -%}
+              <span class="swatch-picker__label">{{ label }}</span>
+            {%- endif -%}
+            {%- comment -%}
+              `nowrap` + défilement horizontal : huit coloris de verres passaient sur deux
+              rangées et doublaient la hauteur du bloc. La rangée reste sur une ligne, et sur
+              les vignettes les plus étroites elle glisse au doigt plutôt que de se replier.
+            {%- endcomment -%}
+            <ul
+              class="swatch-picker__list"
+              data-swatch-option="{{ option_index }}"
+              aria-label="{{ option.name | escape }}"
+            >
+              {%- for value in option.values -%}
+                {%- assign value_name = value.name | default: value -%}
+                <li>
+                  {%- comment -%}
+                    Nom accessible en `aria-label`, jamais en `<span class="visually-hidden">` :
+                    celui-ci est en position absolue, donc rattaché au premier ancêtre positionné
+                    — hors de la rangée qui défile. Il échappait au rognage et se posait à sa
+                    coordonnée de mise en page, ouvrant un défilement horizontal vers du vide.
+                  {%- endcomment -%}
+                  <button
+                    type="button"
+                    class="swatch-picker__swatch{% if value_name == selected_value %} is-selected{% endif %}"
+                    data-swatch-value="{{ value_name | escape }}"
+                    data-swatch-option-index="{{ option_index }}"
+                    title="{{ value_name | escape }}"
+                    aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
+                    aria-pressed="{% if value_name == selected_value %}true{% else %}false{% endif %}"
+                  >
+                    {%- if value.swatch -%}
+                      {% render 'swatch', swatch: value.swatch %}
+                    {%- else -%}
+                      <span class="swatch swatch--unavailable"></span>
+                    {%- endif -%}
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- comment -%}
+        Table des variantes lue par variant-swatches.js. Dans une balise script JSON plutôt que
+        dans un attribut : les valeurs portent accents et espaces, et vingt-quatre lignes
+        seraient illisibles — et fragiles — comprimées dans un attribut.
+
+        Deux formats de prix : le panier affiche les centimes, la vignette produit s'en passe
+        (`settings.currency_code_enabled`). Chaque hôte prend celui qui correspond à ce que son
+        Liquid a déjà rendu, pour qu'un changement de coloris ne change pas la typographie.
+      {%- endcomment -%}
+      {%- capture sw_rows -%}
+        {%- for variant in sw_product.variants -%}
+          {%- assign variant_image = variant.featured_image | default: sw_product.featured_image -%}
+          {%- unless forloop.first %},{% endunless -%}
+          {"id":{{ variant.id | json }},"o1":{{ variant.option1 | json }},"o2":{{ variant.option2 | json }},"price":{{ variant.price | money | strip_html | json }},"priceShort":{{ variant.price | money_without_trailing_zeros | strip_html | json }},"compare":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},"compareShort":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money_without_trailing_zeros | strip_html | json }}{% else %}null{% endif %},"available":{{ variant.available | json }},"url":{{ variant.url | json }},"image":{% if variant_image %}{{ variant_image | image_url: width: sw_width | json }}{% else %}null{% endif %}}
+        {%- endfor -%}
+      {%- endcapture -%}
+      <script type="application/json" data-swatch-variants>[{{ sw_rows }}]</script>
+    </variant-swatches>
+  {%- endif -%}
+{%- endif -%}
