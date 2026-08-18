@@ -180,6 +180,21 @@
       variant-swatches.js, chargé juste après, n'ajoute que le raffinement : table complète des
       variantes, glissement de l'autre option vers une combinaison disponible, marquage des
       ruptures, prévisualisation au survol. S'il ne s'exécute pas, le plancher tient.
+
+      Deux blindages, nés du constat que même un écouteur en capture sur document a échoué en
+      production alors qu'il passait tous les bancs de test :
+
+      - Les écouteurs sont sur `window`, premier nœud de la propagation, et le clic est résolu
+        par ses COORDONNÉES en plus de sa cible : si un élément étranger au thème (app embed,
+        barre d'annonce en panne…) recouvre la grille, `event.target` ne sera jamais la pastille
+        et `closest()` ne trouvera rien — mais le point de contact, lui, ne ment pas. On cherche
+        alors la pastille sous les coordonnées du geste. Le choix se fait dès `pointerup`, pour
+        tenir même si l'évènement `click` n'est jamais délivré.
+
+      - Un panneau de diagnostic embarqué, activé en ajoutant `swatch-debug` à l'URL
+        (`?swatch-debug` ou `#swatch-debug`) : thème servi, mode éditeur, nombre de pastilles,
+        recouvrement éventuel de la première pastille visible, et trace des derniers gestes.
+        Il permet de lire l'état réel de la page sans console — depuis un téléphone aussi.
     {%- endcomment -%}
     <script>
       (function () {
@@ -275,11 +290,136 @@
           );
         }
 
-        document.addEventListener(
+        {%- comment -%}
+          Repli par coordonnées : si un calque invisible attrape le geste, event.target n'est
+          jamais la pastille et closest() ne trouve rien. On regarde d'abord ce que le document
+          voit au point de contact, puis, si ce n'est toujours pas une pastille, on compare le
+          point aux rectangles de toutes les pastilles — un calque ne peut pas mentir sur la
+          géométrie.
+        {%- endcomment -%}
+        {%- comment -%}
+          Le repli ne doit s'appliquer qu'aux calques INERTES. Un élément cliquable au-dessus
+          d'une pastille — bouton d'un popup volontaire, bandeau de consentement, tiroir ouvert —
+          a le droit de recevoir son clic : le confisquer casserait une interface légitime. On ne
+          passe donc au travers que d'un élément qui n'est ni de l'interface connue du thème, ni
+          interactif, ni même désigné comme tel par son curseur.
+        {%- endcomment -%}
+        function inert(el) {
+          if (!el || el === document.documentElement || el === document.body) return true;
+          if (!el.closest) return false;
+          if (el.closest('cart-drawer, menu-drawer, dialog, [role="dialog"], details[open], .section-header, predictive-search')) {
+            return false;
+          }
+          if (el.closest('a, button, input, select, textarea, label, summary, [onclick], [role="button"]')) {
+            return false;
+          }
+          return window.getComputedStyle(el).cursor !== 'pointer';
+        }
+
+        function swatchAtPoint(x, y) {
+          if (typeof x !== 'number' || typeof y !== 'number') return null;
+
+          var over = document.elementFromPoint(x, y);
+          var direct = swatchAt(over);
+          if (direct) return direct;
+
+          {%- comment -%}
+            À l'intérieur d'une vignette, les coordonnées priment sans autre condition : tout y
+            est cliquable par design (la carte entière navigue, cursor:pointer hérité), et un
+            clic au point exact d'une pastille vise la pastille — pas la fiche. Le garde-fou
+            d'inertie ne protège que les surcouches extérieures aux vignettes.
+          {%- endcomment -%}
+          var insideCard = over && over.closest && over.closest('.product-card');
+          if (!insideCard && !inert(over)) return null;
+
+          var buttons = document.querySelectorAll('.swatch-picker__swatch');
+          for (var i = 0; i < buttons.length; i++) {
+            var rect = buttons[i].getBoundingClientRect();
+            if (rect.width > 0 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+              return buttons[i];
+            }
+          }
+          return null;
+        }
+
+        function resolveSwatch(event) {
+          return swatchAt(event.target) || swatchAtPoint(event.clientX, event.clientY);
+        }
+
+        function choose(swatch) {
+          var host = swatch.closest('variant-swatches');
+          if (host && typeof host.select === 'function' && typeof host.setup === 'function' && host.setup()) {
+            host.select(swatch);
+            return;
+          }
+
+          var variant = variantOnSwatch(swatch);
+          if (!variant) return;
+
+          markRow(swatch);
+          announce(swatch, variant, 'variant:selected');
+          if (!window.CardSwatchesReady) updateCard(swatch, variant);
+        }
+
+        function moved(a, event) {
+          var dx = a.x - event.clientX;
+          var dy = a.y - event.clientY;
+          {%- comment -%}
+            12px : sous ce seuil c'est un clic, au-delà c'est le défilement de la rangée. Dans
+            ce second cas on ne choisit rien, mais on continue de couper le clic final — un
+            glissement qui se termine sur la vignette ne doit pas non plus ouvrir la fiche.
+          {%- endcomment -%}
+          return dx * dx + dy * dy > 144;
+        }
+
+        var press = null;
+        var chosenAt = 0;
+
+        window.addEventListener(
+          'pointerdown',
+          function (event) {
+            var swatch = resolveSwatch(event);
+            press = swatch ? { swatch: swatch, x: event.clientX, y: event.clientY } : null;
+            debugEvent('pointerdown', event, swatch);
+          },
+          true
+        );
+
+        window.addEventListener(
+          'pointercancel',
+          function () {
+            press = null;
+          },
+          true
+        );
+
+        {%- comment -%}
+          Le choix se fait dès pointerup : si l'évènement click n'est jamais délivré — quelle
+          qu'en soit la raison — le coloris change quand même. Le click qui suit est coupé et
+          dédoublonné par chosenAt.
+        {%- endcomment -%}
+        window.addEventListener(
+          'pointerup',
+          function (event) {
+            var swatch = resolveSwatch(event);
+            debugEvent('pointerup', event, swatch);
+            if (!swatch || !press || moved(press, event)) return;
+
+            chosenAt = Date.now();
+            choose(swatch);
+          },
+          true
+        );
+
+        window.addEventListener(
           'click',
           function (event) {
-            var swatch = swatchAt(event.target);
-            if (!swatch) return;
+            var swatch = resolveSwatch(event);
+            debugEvent('click', event, swatch);
+
+            var pressed = press;
+            press = null;
+            if (!swatch && !pressed) return;
 
             {%- comment -%}
               Coupé dans tous les cas, avant même de savoir si on saura traiter le clic : le
@@ -287,20 +427,15 @@
               coloris ne doit jamais quitter la page.
             {%- endcomment -%}
             event.preventDefault();
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
             event.stopPropagation();
 
-            var host = swatch.closest('variant-swatches');
-            if (host && typeof host.select === 'function' && typeof host.setup === 'function' && host.setup()) {
-              host.select(swatch);
-              return;
-            }
+            if (!swatch) return;
+            if (pressed && moved(pressed, event)) return;
+            if (Date.now() - chosenAt < 600) return;
 
-            var variant = variantOnSwatch(swatch);
-            if (!variant) return;
-
-            markRow(swatch);
-            announce(swatch, variant, 'variant:selected');
-            if (!window.CardSwatchesReady) updateCard(swatch, variant);
+            chosenAt = Date.now();
+            choose(swatch);
           },
           true
         );
@@ -361,6 +496,88 @@
           },
           { passive: true }
         );
+
+        {%- comment -%}
+          Diagnostic embarqué, activé par `swatch-debug` dans l'URL. Le storefront est
+          inaccessible depuis les environnements de développement : ce panneau lit sur place ce
+          qu'on ne peut pas observer à distance — thème réellement servi, mode éditeur,
+          recouvrement de la première pastille visible, trace des gestes — et l'affiche dans un
+          coin, lisible et photographiable depuis n'importe quel appareil, console comprise ou
+          non. `pointer-events:none` : le panneau ne peut pas devenir lui-même un calque.
+        {%- endcomment -%}
+        var panel = null;
+        var logLines = [];
+
+        function label(el) {
+          if (!el) return 'null';
+          if (el === document) return 'document';
+          if (el === window) return 'window';
+
+          var name = el.tagName || String(el);
+          if (el.id) name += '#' + el.id;
+          var cls = el.className;
+          if (cls && cls.baseVal !== undefined) cls = cls.baseVal;
+          if (cls) name += '.' + String(cls).trim().split(/\s+/).slice(0, 3).join('.');
+          return name;
+        }
+
+        function debugHeader() {
+          var theme = window.Shopify && window.Shopify.theme
+            ? window.Shopify.theme.id + ' (' + window.Shopify.theme.role + ')'
+            : 'inconnu';
+          var buttons = document.querySelectorAll('.swatch-picker__swatch');
+
+          var reach = 'aucune pastille à l’écran';
+          for (var i = 0; i < buttons.length; i++) {
+            var rect = buttons[i].getBoundingClientRect();
+            if (rect.width === 0 || rect.bottom < 0 || rect.top > window.innerHeight) continue;
+            var over = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            if (!over) continue;
+            reach = buttons[i] === over || buttons[i].contains(over)
+              ? 'OUI'
+              : 'NON — recouverte par ' + label(over);
+            break;
+          }
+
+          return 'thème servi : ' + theme
+            + '\néditeur de thème : ' + (window.Shopify && window.Shopify.designMode ? 'OUI' : 'non')
+            + '\npastilles : ' + buttons.length
+            + '\n1re pastille visible cliquable : ' + reach
+            + '\n──────────────';
+        }
+
+        function renderPanel() {
+          if (!panel) return;
+          panel.textContent = debugHeader() + '\n'
+            + (logLines.length ? logLines.join('\n') : '(touche une pastille…)');
+        }
+
+        function debugEvent(type, event, swatch) {
+          if (!panel) return;
+          var how = 'non';
+          if (swatch) {
+            how = swatchAt(event.target)
+              ? 'OUI'
+              : 'OUI, par coordonnées — calque : ' + label(event.target);
+          }
+          logLines.push('[' + type + '] ' + label(event.target) + ' → pastille : ' + how);
+          if (logLines.length > 7) logLines.shift();
+          renderPanel();
+        }
+
+        if (/swatch-debug/.test(window.location.search + window.location.hash)) {
+          panel = document.createElement('div');
+          panel.setAttribute(
+            'style',
+            'position:fixed;left:8px;bottom:8px;z-index:2147483647;max-width:92vw;'
+              + 'padding:10px 12px;border-radius:8px;background:rgba(15,15,15,0.88);color:#fff;'
+              + 'font:11px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;'
+              + 'overflow-wrap:anywhere;pointer-events:none;'
+          );
+          document.body.appendChild(panel);
+          renderPanel();
+          setInterval(renderPanel, 1500);
+        }
       })();
     </script>
 
