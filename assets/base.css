@@ -3706,6 +3706,55 @@ cart-drawer:not(.active) .drawer__inner {
   border-bottom: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
 }
 
+/* ---------------------------------------------------------------------------
+   Réassurance en bandeau : un argument à la fois.
+
+   Les quatre empilés en grille 2x2 prenaient près de 18rem au bas du tiroir
+   panier — assez pour repousser le bouton de paiement hors de l'écran sur un
+   téléphone. Sur une seule ligne, ils coûtent 4.4rem et se relaient.
+
+   Grille à cellule unique : tous les arguments se superposent, la hauteur ne
+   bouge donc pas au changement et le contenu du panier ne sautille pas.
+   --------------------------------------------------------------------------- */
+.reassurance-block--rotating {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding-top: 1.4rem;
+}
+
+.reassurance-block--rotating .reassurance-block__item {
+  grid-area: 1 / 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-default) ease;
+}
+
+.reassurance-block--rotating .reassurance-block__item.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.reassurance-block--rotating .reassurance-block__icon {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.reassurance-block--rotating .reassurance-block__label {
+  text-align: left;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reassurance-block--rotating .reassurance-block__item {
+    transition: none;
+  }
+}
+
 .reassurance-block__item {
   display: flex;
   flex-direction: column;

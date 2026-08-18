@@ -139,7 +139,11 @@ class VariantSwatches extends HTMLElement {
   }
 }
 
-customElements.define('variant-swatches', VariantSwatches);
+try {
+  customElements.define('variant-swatches', VariantSwatches);
+} catch (e) {
+  // Nom deja pris : la delegation ci-dessous reste en place, c'est elle qui fait le travail.
+}
 
 (function () {
   function swatchAt(target) {
@@ -161,33 +165,88 @@ customElements.define('variant-swatches', VariantSwatches);
     return picker.setup() ? picker : null;
   }
 
+  // Variante reconstituée depuis la pastille elle-même. Ne dépend d'aucune recherche dans le
+  // DOM ni d'aucune analyse JSON : c'est ce qui garantit qu'un clic fasse toujours quelque
+  // chose, même si la table venait à manquer.
+  function variantOnSwatch(swatch) {
+    if (!swatch.dataset.variantId) return null;
+
+    return {
+      id: swatch.dataset.variantId,
+      o1: null,
+      o2: null,
+      price: swatch.dataset.variantPrice || '',
+      priceShort: swatch.dataset.variantPriceShort || swatch.dataset.variantPrice || '',
+      compare: null,
+      compareShort: null,
+      available: swatch.dataset.variantAvailable !== 'false',
+      url: swatch.dataset.variantUrl || '',
+      image: swatch.dataset.variantImage || null,
+    };
+  }
+
+  // Repli : on marque la pastille et on annonce sa variante, sans le calcul de glissement qui,
+  // lui, réclame la table entière.
+  function selectFromSwatch(swatch) {
+    var variant = variantOnSwatch(swatch);
+    if (!variant) return;
+
+    var row = swatch.closest('.swatch-picker__list');
+    if (row) {
+      row.querySelectorAll('.swatch-picker__swatch').forEach(function (other) {
+        var isSelected = other === swatch;
+        other.classList.toggle('is-selected', isSelected);
+        if (other.hasAttribute('aria-pressed')) other.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      });
+    }
+
+    var host = swatch.closest('variant-swatches') || swatch.closest('.swatch-picker');
+    (host || swatch).dispatchEvent(
+      new CustomEvent('variant:selected', {
+        bubbles: true,
+        detail: { variant: variant, picker: host, userInitiated: true },
+      })
+    );
+  }
+
   document.addEventListener(
     'click',
     function (event) {
       var swatch = swatchAt(event.target);
       if (!swatch) return;
 
-      var picker = pickerFor(swatch);
-      // Sans table exploitable on ne fait rien : la pastille est un lien sur les vignettes, sa
-      // destination reste le bon repli.
-      if (!picker) return;
-
+      // Coupé dans tous les cas, avant même de savoir si on saura traiter le clic : le composant
+      // de carte du thème redirige au moindre clic dans la vignette, et un choix de coloris ne
+      // doit jamais quitter la page — c'était tout le problème.
       event.preventDefault();
-      // Le composant de carte du thème redirige au moindre clic dans la vignette : il ne doit
-      // pas voir celui-ci.
       event.stopPropagation();
 
-      picker.select(swatch);
+      var picker = pickerFor(swatch);
+      if (picker) picker.select(swatch);
+      else selectFromSwatch(swatch);
     },
     true
   );
 
+  function peekFromSwatch(swatch) {
+    var picker = pickerFor(swatch);
+    if (picker) {
+      picker.peek(swatch);
+      return;
+    }
+
+    var variant = variantOnSwatch(swatch);
+    if (!variant) return;
+
+    var host = swatch.closest('variant-swatches') || swatch.closest('.swatch-picker');
+    (host || swatch).dispatchEvent(
+      new CustomEvent('variant:peek', { bubbles: true, detail: { variant: variant, picker: host } })
+    );
+  }
+
   document.addEventListener('pointerover', function (event) {
     var swatch = swatchAt(event.target);
-    if (!swatch) return;
-
-    var picker = pickerFor(swatch);
-    if (picker) picker.peek(swatch);
+    if (swatch) peekFromSwatch(swatch);
   });
 
   document.addEventListener('pointerout', function (event) {
@@ -211,10 +270,7 @@ customElements.define('variant-swatches', VariantSwatches);
       if (!touch) return;
 
       var swatch = swatchAt(document.elementFromPoint(touch.clientX, touch.clientY));
-      if (!swatch) return;
-
-      var picker = pickerFor(swatch);
-      if (picker) picker.peek(swatch);
+      if (swatch) peekFromSwatch(swatch);
     },
     { passive: true }
   );

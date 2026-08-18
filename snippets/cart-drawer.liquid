@@ -12,6 +12,7 @@
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'cart-testimonials.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'rotating-strip.js' | asset_url }}" defer="defer"></script>
 {%- comment -%}
   Chargé ici, donc hors de #CartDrawer : le tiroir remplace tout son contenu à chaque mise à
   jour du panier, ce qui n'exécuterait pas un <script> qui s'y trouverait. Posé au-dessus, il
@@ -483,13 +484,6 @@
               </details>
             {%- endif -%}
 
-            {%- comment -%}
-              Relance « deuxième paire » : au-dessus du total, c'est le dernier endroit où
-              l'offre de livraison peut encore changer la commande. Le bloc se rend lui-même
-              seulement quand le panier contient une monture et une seule.
-            {%- endcomment -%}
-            {% render 'cart-upsell', upsell_id: 'CartDrawer-Upsell' %}
-
             <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
               <div>
                 {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -584,11 +578,24 @@
             </div>
 
             {%- comment -%}
-              Réassurance juste sous le bouton de paiement. Elle lit les mêmes réglages
-              settings.cart_column_* que le bloc de bas de tiroir qu'elle remplace, qui était en
-              `hidden xl:block` donc invisible sur mobile.
+              Relance « deuxième paire », désormais SOUS le bouton de paiement.
+
+              Au-dessus du total, elle repoussait le bouton hors de l'écran sur un téléphone :
+              le parcours d'achat passait derrière une proposition annexe. Ici l'essentiel —
+              article, total, consentement, paiement — tient d'un seul coup d'œil, et l'offre
+              apparaît juste en dessous, au moment où le regard redescend.
             {%- endcomment -%}
-            {% render 'reassurance-block', reassurance_class: 'reassurance-block--cart' %}
+            {% render 'cart-upsell', upsell_id: 'CartDrawer-Upsell' %}
+
+            {%- comment -%}
+              Réassurance en bandeau défilant plutôt qu'en grille de quatre : empilée, elle
+              prenait près de 18rem au bas du tiroir. Un argument à la fois, sur une ligne,
+              coûte quatre fois moins et se lit aussi bien.
+            {%- endcomment -%}
+            {% render 'reassurance-block',
+              reassurance_class: 'reassurance-block--cart',
+              reassurance_rotating: true
+            %}
 
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
             <p id="CartDrawer-LineItemStatus" class="visually-hidden" role="status">
