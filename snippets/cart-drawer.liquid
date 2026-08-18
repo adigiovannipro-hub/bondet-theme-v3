@@ -484,6 +484,17 @@
               </details>
             {%- endif -%}
 
+            {%- comment -%}
+              Réassurance en bandeau défilant, entre l'article et le total : c'est là qu'elle
+              travaille, juste avant que le regard tombe sur le montant. En grille de quatre au
+              bas du tiroir elle prenait près de 18rem ; un argument à la fois, sur une ligne,
+              coûte quatre fois moins et se lit aussi bien.
+            {%- endcomment -%}
+            {% render 'reassurance-block',
+              reassurance_class: 'reassurance-block--cart',
+              reassurance_rotating: true
+            %}
+
             <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
               <div>
                 {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -587,15 +598,6 @@
             {%- endcomment -%}
             {% render 'cart-upsell', upsell_id: 'CartDrawer-Upsell' %}
 
-            {%- comment -%}
-              Réassurance en bandeau défilant plutôt qu'en grille de quatre : empilée, elle
-              prenait près de 18rem au bas du tiroir. Un argument à la fois, sur une ligne,
-              coûte quatre fois moins et se lit aussi bien.
-            {%- endcomment -%}
-            {% render 'reassurance-block',
-              reassurance_class: 'reassurance-block--cart',
-              reassurance_rotating: true
-            %}
 
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
             <p id="CartDrawer-LineItemStatus" class="visually-hidden" role="status">

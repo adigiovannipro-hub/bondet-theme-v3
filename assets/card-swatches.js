@@ -123,6 +123,10 @@
 
   // Délégué depuis `document` : les vignettes apparaissent dans une demi-douzaine de sections,
   // les filtres de collection remplacent la grille entière et le thème navigue en AJAX.
+  // Signale au point d'entrée inline (layout/theme.liquid) qu'il peut laisser la mise à jour
+  // de la vignette à ce fichier, qui la fait plus finement.
+  window.CardSwatchesReady = true;
+
   document.addEventListener('variant:peek', function (event) {
     var card = event.target.closest('.product-card');
     if (card) apply(card, event.detail.variant, false);
