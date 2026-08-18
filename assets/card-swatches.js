@@ -89,30 +89,21 @@
     block.classList.toggle('price--sold-out', variant.available === false);
   }
 
-  // Toutes les vues du carrousel suivent le coloris retenu. La prévisualisation peinte
+  // Vue 1 du carrousel : l'image de fond suit le coloris retenu. La prévisualisation peinte
   // par-dessus donne le fondu et couvre tous les états du carrousel, mais elle doit pouvoir
   // s'effacer dès que le visiteur fait défiler les vues — sinon le carrousel coulisse dessous,
   // points compris, image immobile : la vignette semble morte. Pour que ce retrait ne fasse
   // pas resurgir l'ancien coloris, la vue 1 est alignée sur le choix au moment où il est fait.
-  function setSlides(card, variant) {
-    var slides = card.querySelectorAll('.card__media .slide');
+  function setMainImage(card, src) {
+    if (!src) return;
 
-    slides.forEach(function (slide, index) {
-      var image = slide.querySelector('img');
-      if (!image) return;
+    var image = card.querySelector('.main-media img');
+    if (!image) return;
 
-      // La première case est la photo de la variante ; les suivantes, sa galerie. À défaut de
-      // galerie pour ce coloris, on remet la photo du coloris plutôt que de laisser la vue
-      // d'un autre : mieux vaut deux fois la bonne monture qu'une fois la mauvaise.
-      var src = index === 0 ? variant.image : (variant.images || [])[index - 1];
-      if (!src) src = variant.image;
-      if (!src || image.getAttribute('src') === src) return;
-
-      // srcset garderait la main sur src : ses déclinaisons sont celles de l'ancienne photo.
-      image.removeAttribute('srcset');
-      image.removeAttribute('sizes');
-      image.src = src;
-    });
+    // srcset garderait la main sur src : ses déclinaisons sont celles de l'ancienne photo.
+    image.removeAttribute('srcset');
+    image.removeAttribute('sizes');
+    image.src = src;
   }
 
   // Même mécanisme d'observation que card-dots.js : le slider du bundle écrit l'état visible
@@ -155,7 +146,7 @@
 
     if (!commit) return;
 
-    setSlides(card, variant);
+    setMainImage(card, variant.image);
     watchSlides(card);
 
     setPrice(card, variant);
