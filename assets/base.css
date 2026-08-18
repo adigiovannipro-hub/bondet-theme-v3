@@ -3804,6 +3804,45 @@ cart-drawer:not(.active) .drawer__inner {
    are redefined here, sized for a card rather than for a variant picker.
    --------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------
+   Tiroir panier : en-tete allege.
+
+   `padding: 4rem` en haut et en bas donnait une cartouche « Votre panier » de
+   pres de 10rem de haut pour une ligne de texte de 1.4rem. Depuis que la
+   relance « deuxieme paire » s'intercale au-dessus du total, ces 8rem
+   repoussaient le bouton de paiement sous la ligne de flottaison sur mobile.
+   --------------------------------------------------------------------------- */
+.cart-drawer .drawer__header,
+cart-drawer .drawer__header {
+  padding-top: 2.2rem;
+  padding-bottom: 2.2rem;
+}
+
+/* Meme intention : la zone defilante s'ouvrait sur 3rem de vide sous l'en-tete. */
+cart-drawer cart-drawer-items {
+  padding-top: 2rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Tiroir panier : un seul defilement.
+
+   `#CartDrawer-LineItemStatus` et les autres `.visually-hidden` du tiroir sont
+   en `position: absolute`. Sans ancetre positionne a l'interieur, leur bloc
+   conteneur etait <cart-drawer> lui-meme — en `position: fixed`, donc au-dessus
+   des deux zones qui defilent. Ils echappaient au rognage et se posaient a leur
+   coordonnee de mise en page, en bas du contenu : sur un panier long, cela
+   rallongeait <cart-drawer-items> ET .drawer__inner de la meme centaine de
+   pixels. Le tiroir se retrouvait avec deux defilements imbriques, chacun de
+   116 px, sur du vide — d'ou le grand blanc en bas et le contenu qui semblait
+   se couper en remontant.
+
+   `position: relative` sur la zone qui defile la designe comme bloc conteneur :
+   les elements masques restent dans son contenu et sont rognes avec lui.
+   --------------------------------------------------------------------------- */
+cart-drawer cart-drawer-items {
+  position: relative;
+}
+
+/* ---------------------------------------------------------------------------
    Hauteur de vignette : minimale, jamais fixe.
 
    `h-[41.7rem] xl:h-[47rem]` verrouillait la hauteur. Entre 768 et 1279 px la
