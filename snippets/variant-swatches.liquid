@@ -13,6 +13,10 @@
   - swatch_class: {String} classe supplémentaire sur la racine (optionnel)
   - swatch_labels: {Boolean} afficher « Monture » / « Verres ». Défaut : true
   - swatch_image_width: {Number} largeur des photos de la table. Défaut : 500
+  - swatch_links: {Boolean} rendre chaque pastille comme un lien vers sa variante plutôt que
+    comme un bouton. Sur une vignette produit c'est le repli utile si le script ne tourne pas :
+    le clic ouvre la fiche sur le bon coloris, comme avant. Dans le panier ce serait une
+    régression — on ne veut pas quitter le panier — donc bouton. Défaut : false
 
   Usage :
   {% render 'variant-swatches', swatch_product: product, swatch_variant: variant %}
@@ -25,6 +29,11 @@
   assign sw_labels = true
   if swatch_labels == false
     assign sw_labels = false
+  endif
+
+  assign sw_links = false
+  if swatch_links
+    assign sw_links = true
   endif
 -%}
 
@@ -88,21 +97,67 @@
                     — hors de la rangée qui défile. Il échappait au rognage et se posait à sa
                     coordonnée de mise en page, ouvrant un défilement horizontal vers du vide.
                   {%- endcomment -%}
-                  <button
-                    type="button"
-                    class="swatch-picker__swatch{% if value_name == selected_value %} is-selected{% endif %}"
-                    data-swatch-value="{{ value_name | escape }}"
-                    data-swatch-option-index="{{ option_index }}"
-                    title="{{ value_name | escape }}"
-                    aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
-                    aria-pressed="{% if value_name == selected_value %}true{% else %}false{% endif %}"
-                  >
-                    {%- if value.swatch -%}
-                      {% render 'swatch', swatch: value.swatch %}
-                    {%- else -%}
-                      <span class="swatch swatch--unavailable"></span>
-                    {%- endif -%}
-                  </button>
+                  {%- liquid
+                    comment
+                      Variante visée par cette valeur : celle qui garde l'autre option telle
+                      qu'elle est affichée. Elle ne sert qu'à l'attribut href du repli — le
+                      script, lui, résout tout depuis la table JSON.
+                    endcomment
+                    assign target = null
+                    if sw_links
+                      for v in sw_product.variants
+                        if option_index == 1 and v.option1 == value_name
+                          unless target
+                            assign target = v
+                          endunless
+                          if v.option2 == sw_current.option2
+                            assign target = v
+                            break
+                          endif
+                        elsif option_index == 2 and v.option2 == value_name
+                          unless target
+                            assign target = v
+                          endunless
+                          if v.option1 == sw_current.option1
+                            assign target = v
+                            break
+                          endif
+                        endif
+                      endfor
+                    endif
+                  -%}
+                  {%- if sw_links -%}
+                    <a
+                      href="{{ target.url | default: sw_product.url }}"
+                      class="swatch-picker__swatch{% if value_name == selected_value %} is-selected{% endif %}"
+                      data-swatch-value="{{ value_name | escape }}"
+                      data-swatch-option-index="{{ option_index }}"
+                      title="{{ value_name | escape }}"
+                      aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
+                    >
+                      {%- if value.swatch -%}
+                        {% render 'swatch', swatch: value.swatch %}
+                      {%- else -%}
+                        <span class="swatch swatch--unavailable"></span>
+                      {%- endif -%}
+                    </a>
+                  {%- else -%}
+                    <button
+                      type="button"
+                      class="swatch-picker__swatch{% if value_name == selected_value %} is-selected{% endif %}"
+                      data-swatch-value="{{ value_name | escape }}"
+                      data-swatch-option-index="{{ option_index }}"
+                      title="{{ value_name | escape }}"
+                      aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
+                      aria-pressed="{% if value_name == selected_value %}true{% else %}false{% endif %}"
+                    >
+                      {%- if value.swatch -%}
+                        {% render 'swatch', swatch: value.swatch %}
+                      {%- else -%}
+                        <span class="swatch swatch--unavailable"></span>
+                      {%- endif -%}
+                    </button>
+                  {%- endif -%}
                 </li>
               {%- endfor -%}
             </ul>

@@ -4,17 +4,36 @@
 // connaît pas son hôte : il tient l'état de la sélection et émet `variant:selected` (au clic),
 // `variant:peek` / `variant:peekend` (au survol ou au doigt). C'est l'hôte qui décide quoi en
 // faire — changer sa photo, son prix, son lien, activer son bouton d'ajout.
+//
+// Tout est délégué depuis `document` en phase de CAPTURE, et non posé sur l'élément lui-même :
+//
+// - Le composant de carte du thème pose un `click` sur `.product-card` qui redirige vers le lien
+//   de la vignette quoi qu'on ait cliqué dedans. En capture depuis `document`, on passe avant
+//   lui quel que soit l'ordre de chargement.
+// - Surtout, cela ne dépend plus du moment où l'élément personnalisé est « promu ». Une grille
+//   re-rendue par les filtres, un `connectedCallback` qui tomberait avant que ses enfants soient
+//   analysés : dans tous ces cas l'initialisation se rattrape au premier geste.
+//
+// Et si le script ne tournait pas du tout, les pastilles des vignettes restent des liens vers
+// leur variante (swatch_links) : le clic ouvre la fiche sur le bon coloris. C'est le repli.
 class VariantSwatches extends HTMLElement {
   connectedCallback() {
+    this.setup();
+  }
+
+  // Idempotent, et rejouable : renvoie true quand la table des variantes est exploitable.
+  setup() {
+    if (this.variants && this.variants.length) return true;
+
     var source = this.querySelector('[data-swatch-variants]');
-    if (!source) return;
+    if (!source) return false;
 
     try {
       this.variants = JSON.parse(source.textContent);
     } catch (e) {
       this.variants = [];
     }
-    if (!this.variants.length) return;
+    if (!this.variants.length) return false;
 
     // L'état de départ est celui rendu par Liquid : on le relit dans le DOM plutôt que de le
     // redécider ici, pour que le premier affichage et les suivants ne puissent pas diverger.
@@ -24,17 +43,8 @@ class VariantSwatches extends HTMLElement {
       this.selected[index - 1] = button.dataset.swatchValue;
     }, this);
 
-    this.addEventListener('click', this.onClick.bind(this));
-    this.addEventListener('pointerover', this.onPointerOver.bind(this));
-    this.addEventListener('pointerout', this.onPointerOut.bind(this));
-
-    this.onTouchMove = this.onTouchMove.bind(this);
-    this.onTouchEnd = this.onTouchEnd.bind(this);
-    this.addEventListener('touchmove', this.onTouchMove, { passive: true });
-    this.addEventListener('touchend', this.onTouchEnd, { passive: true });
-    this.addEventListener('touchcancel', this.onTouchEnd, { passive: true });
-
     this.refresh(false);
+    return true;
   }
 
   get current() {
@@ -80,57 +90,10 @@ class VariantSwatches extends HTMLElement {
     return { selection: selection, variant: exact || this.variants[0] };
   }
 
-  onClick(event) {
-    var swatch = event.target.closest && event.target.closest('.swatch-picker__swatch');
-    if (!swatch) return;
-
-    event.preventDefault();
-    // La vignette produit pose un `click` sur toute la carte qui redirige vers son propre lien :
-    // sans cette coupure, choisir un coloris quitterait la page au lieu de la mettre à jour.
-    event.stopPropagation();
-
+  select(swatch) {
     var index = parseInt(swatch.dataset.swatchOptionIndex, 10) - 1;
     this.selected = this.resolve(index, swatch.dataset.swatchValue).selection;
     this.refresh(true);
-  }
-
-  onPointerOver(event) {
-    var swatch = event.target.closest && event.target.closest('.swatch-picker__swatch');
-    if (!swatch) return;
-
-    this.peek(swatch);
-  }
-
-  onPointerOut(event) {
-    var swatch = event.target.closest && event.target.closest('.swatch-picker__swatch');
-    if (!swatch) return;
-
-    // `relatedTarget` est l'élément vers lequel on part : passer d'une pastille à sa voisine ne
-    // doit pas rétablir la photo entre les deux, ce qui ferait clignoter l'hôte.
-    var going = event.relatedTarget;
-    if (going && going.closest && going.closest('.swatch-picker') === this) return;
-
-    this.emit('variant:peekend', this.current);
-  }
-
-  // Au doigt il n'y a pas de survol : on suit le point de contact, de sorte que glisser le long
-  // de la rangée fasse défiler les coloris.
-  onTouchMove(event) {
-    var touch = event.touches[0];
-    if (!touch) return;
-
-    var under = document.elementFromPoint(touch.clientX, touch.clientY);
-    var swatch = under && under.closest && under.closest('.swatch-picker__swatch');
-    if (swatch && this.contains(swatch)) this.peek(swatch);
-  }
-
-  onTouchEnd(event) {
-    var touch = event.changedTouches && event.changedTouches[0];
-    var under = touch && document.elementFromPoint(touch.clientX, touch.clientY);
-    var swatch = under && under.closest && under.closest('.swatch-picker__swatch');
-
-    // Doigt relevé hors des pastilles : c'était un défilement de page, pas un choix.
-    if (!swatch || !this.contains(swatch)) this.emit('variant:peekend', this.current);
   }
 
   peek(swatch) {
@@ -151,7 +114,7 @@ class VariantSwatches extends HTMLElement {
       var isSelected = this.selected[index] === value;
 
       button.classList.toggle('is-selected', isSelected);
-      button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      if (button.hasAttribute('aria-pressed')) button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
 
       // Atténuée quand cette valeur ne donne rien d'achetable AVEC L'AUTRE OPTION RETENUE —
       // donc `match`, sans le glissement de `resolve`, qui trouverait toujours une combinaison
@@ -177,3 +140,97 @@ class VariantSwatches extends HTMLElement {
 }
 
 customElements.define('variant-swatches', VariantSwatches);
+
+(function () {
+  function swatchAt(target) {
+    return target && target.closest ? target.closest('.swatch-picker__swatch') : null;
+  }
+
+  // Hôte prêt à répondre, initialisé à la volée si sa promotion n'a pas eu lieu ou a échoué.
+  function pickerFor(swatch) {
+    var picker = swatch.closest('variant-swatches');
+    if (!picker) return null;
+
+    if (typeof picker.setup !== 'function') {
+      // L'élément n'a pas encore été promu (script chargé après ce nœud, grille re-rendue…) :
+      // on force la promotion, puis on réessaie.
+      if (window.customElements && customElements.upgrade) customElements.upgrade(picker);
+      if (typeof picker.setup !== 'function') return null;
+    }
+
+    return picker.setup() ? picker : null;
+  }
+
+  document.addEventListener(
+    'click',
+    function (event) {
+      var swatch = swatchAt(event.target);
+      if (!swatch) return;
+
+      var picker = pickerFor(swatch);
+      // Sans table exploitable on ne fait rien : la pastille est un lien sur les vignettes, sa
+      // destination reste le bon repli.
+      if (!picker) return;
+
+      event.preventDefault();
+      // Le composant de carte du thème redirige au moindre clic dans la vignette : il ne doit
+      // pas voir celui-ci.
+      event.stopPropagation();
+
+      picker.select(swatch);
+    },
+    true
+  );
+
+  document.addEventListener('pointerover', function (event) {
+    var swatch = swatchAt(event.target);
+    if (!swatch) return;
+
+    var picker = pickerFor(swatch);
+    if (picker) picker.peek(swatch);
+  });
+
+  document.addEventListener('pointerout', function (event) {
+    var swatch = swatchAt(event.target);
+    if (!swatch) return;
+
+    // `relatedTarget` est l'élément vers lequel on part : passer d'une pastille à sa voisine ne
+    // doit pas rétablir la photo entre les deux, ce qui ferait clignoter l'hôte.
+    var picker = swatch.closest('variant-swatches');
+    var going = event.relatedTarget;
+    if (going && going.closest && going.closest('variant-swatches') === picker) return;
+    if (picker && picker.variants) picker.emit('variant:peekend', picker.current);
+  });
+
+  // Au doigt il n'y a pas de survol : on suit le point de contact, de sorte que glisser le long
+  // de la rangée fasse défiler les coloris.
+  document.addEventListener(
+    'touchmove',
+    function (event) {
+      var touch = event.touches[0];
+      if (!touch) return;
+
+      var swatch = swatchAt(document.elementFromPoint(touch.clientX, touch.clientY));
+      if (!swatch) return;
+
+      var picker = pickerFor(swatch);
+      if (picker) picker.peek(swatch);
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    'touchend',
+    function (event) {
+      var touch = event.changedTouches && event.changedTouches[0];
+      var swatch = touch ? swatchAt(document.elementFromPoint(touch.clientX, touch.clientY)) : null;
+      if (swatch) return;
+
+      // Doigt relevé hors des pastilles : c'était un défilement de page, pas un choix.
+      document.querySelectorAll('variant-swatches').forEach(function (picker) {
+        if (picker.variants) picker.emit('variant:peekend', picker.current);
+      });
+    },
+    { passive: true }
+  );
+})();
