@@ -89,12 +89,65 @@
     block.classList.toggle('price--sold-out', variant.available === false);
   }
 
+  // Vue 1 du carrousel : l'image de fond suit le coloris retenu. La prévisualisation peinte
+  // par-dessus donne le fondu et couvre tous les états du carrousel, mais elle doit pouvoir
+  // s'effacer dès que le visiteur fait défiler les vues — sinon le carrousel coulisse dessous,
+  // points compris, image immobile : la vignette semble morte. Pour que ce retrait ne fasse
+  // pas resurgir l'ancien coloris, la vue 1 est alignée sur le choix au moment où il est fait.
+  function setMainImage(card, src) {
+    if (!src) return;
+
+    var image = card.querySelector('.main-media img');
+    if (!image) return;
+
+    // srcset garderait la main sur src : ses déclinaisons sont celles de l'ancienne photo.
+    image.removeAttribute('srcset');
+    image.removeAttribute('sizes');
+    image.src = src;
+  }
+
+  // Même mécanisme d'observation que card-dots.js : le slider du bundle écrit l'état visible
+  // en style inline (opacity 1/0), quelle que soit l'origine du défilement — glissement du
+  // doigt ou survol. Dès qu'une autre vue que la première est affichée, la prévisualisation
+  // s'efface ; la vue 1 porte déjà le coloris retenu, rien ne ressurgit en revenant.
+  function watchSlides(card) {
+    if (card.dataset.swatchSlidesBound) return;
+
+    var slider = card.querySelector('.slider');
+    if (!slider) return;
+
+    card.dataset.swatchSlidesBound = '1';
+
+    new MutationObserver(function () {
+      var slides = card.querySelectorAll('.slide');
+      var current = 0;
+      var highest = -1;
+
+      slides.forEach(function (slide, index) {
+        var inline = parseFloat(slide.style.opacity);
+        var opacity = isNaN(inline) ? parseFloat(window.getComputedStyle(slide).opacity) || 0 : inline;
+        if (opacity > highest) {
+          highest = opacity;
+          current = index;
+        }
+      });
+
+      if (current !== 0) {
+        var preview = card.querySelector('.' + PREVIEW_CLASS);
+        if (preview) preview.classList.remove('is-visible');
+      }
+    }).observe(slider, { attributes: true, attributeFilter: ['style'], subtree: true });
+  }
+
   function apply(card, variant, commit) {
     if (!card || !variant) return;
 
     paint(card, variant.image);
 
     if (!commit) return;
+
+    setMainImage(card, variant.image);
+    watchSlides(card);
 
     setPrice(card, variant);
 
