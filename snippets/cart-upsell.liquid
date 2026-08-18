@@ -70,8 +70,15 @@
     {%- if candidate_count >= products_limit -%}
       {%- break -%}
     {%- endif -%}
+    {%- comment -%}
+      Les cartes-cadeaux sont ecartees : la boutique en compte deux, typees « Solaire », donc
+      membres de la collection Solaires par la regle du groupe. Elles sont en brouillon
+      aujourd'hui — invisibles en boutique — mais proposer un bon d'achat comme « deuxieme
+      paire » pour declencher la livraison offerte n'aurait aucun sens le jour ou elles
+      seraient publiees.
+    {%- endcomment -%}
     {%- assign needle = ',' | append: product.id | append: ',' -%}
-    {%- unless cart_product_ids contains needle or product.available == false -%}
+    {%- unless cart_product_ids contains needle or product.available == false or product.gift_card? -%}
       {%- assign candidates = candidates | append: ',' | append: product.id | append: ',' -%}
       {%- assign candidate_count = candidate_count | plus: 1 -%}
     {%- endunless -%}
