@@ -3724,9 +3724,13 @@ cart-drawer:not(.active) .drawer__inner {
   /* Sans filet. Posé entre l'article et le total, le trait découpait le tiroir en tranches là
      où il n'y a qu'une seule liste à lire ; c'est le blanc qui sépare désormais. Il en faut
      donc autant dessous que dessus : le pied du tiroir ne pose aucune marge sur son premier
-     enfant (.cart-drawer__footer > * + *), le bandeau est seul à tenir cet écart. */
+     enfant (.cart-drawer__footer > * + *), le bandeau est seul à tenir cet écart.
+
+     1.1rem : assez pour détacher l'argument de l'article au-dessus et du total en dessous,
+     sans que ce rappel — accessoire dans le parcours d'achat — coûte au tiroir la hauteur
+     d'une ligne de contenu. Il gagne 1.4rem sur les 5.6rem qu'il occupait. */
   border-top: 0;
-  padding: 1.8rem 0;
+  padding: 1.1rem 0;
 }
 
 .reassurance-block--rotating .reassurance-block__item {
