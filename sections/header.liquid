@@ -90,16 +90,37 @@
 {%- endcomment -%}
 {%- assign reassurance_blocks = section.blocks | where: 'type', 'reassurance' -%}
 {%- if reassurance_blocks.size > 0 -%}
-  {%- if reassurance_blocks.size > 1 -%}
+  {%- comment -%}
+    Deux façons de présenter les messages, au choix dans l'éditeur : la rotation historique
+    (un message à la fois, en fondu) ou le défilement continu, qui convient à une annonce
+    qu'on veut voir passer plutôt qu'attendre — une promotion, un code.
+  {%- endcomment -%}
+  {%- assign reassurance_scroll = false -%}
+  {%- if section.settings.reassurance_mode == 'scroll' -%}
+    {%- assign reassurance_scroll = true -%}
+  {%- endif -%}
+  {%- if reassurance_blocks.size > 1 or reassurance_scroll -%}
     <script src="{{ 'reassurance-bar.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
   <reassurance-bar
-    class="reassurance-bar"
+    class="reassurance-bar{% if reassurance_scroll %} reassurance-bar--scroll{% endif %}"
     role="region"
     aria-label="{{ 'sections.header.announcement' | t }}"
     data-rotate-speed="{{ section.settings.reassurance_speed | default: 4 }}"
+    {% if reassurance_scroll %}
+      data-scroll-speed="{{ section.settings.reassurance_scroll_speed | default: 60 }}"
+    {% endif %}
   >
-    <ul class="reassurance-bar__list">
+    {%- comment -%}
+      En défilement, la liste devient un « groupe » que le script recopie autant de fois qu'il
+      en faut pour couvrir la largeur, dans une piste qu'il anime. Sans le script — ou si le
+      visiteur limite les animations — il ne reste que ce groupe unique, centré et lisible.
+    {%- endcomment -%}
+    {%- if reassurance_scroll -%}
+      <div class="reassurance-bar__viewport">
+        <div class="reassurance-bar__marquee">
+    {%- endif -%}
+    <ul class="reassurance-bar__list{% if reassurance_scroll %} reassurance-bar__group{% endif %}">
       {%- for block in reassurance_blocks -%}
         <li
           class="reassurance-bar__item{% if forloop.first %} is-active{% endif %}"
@@ -132,13 +153,23 @@
                 {%- when 'map' -%}{{ 'icon-map.svg' | inline_asset_content }}
                 {%- when 'star' -%}{{ 'icon-star.svg' | inline_asset_content }}
                 {%- when 'tick' -%}{{ 'icon-tick.svg' | inline_asset_content }}
+                {%- when 'coupon' -%}{{ 'icon-coupon.svg' | inline_asset_content }}
               {%- endcase -%}
             </span>
           {%- endif -%}
-          <span class="reassurance-bar__text">{{ block.settings.text | escape }}</span>
+          {%- comment -%}
+            Texte non échappé : le réglage est un `inline_richtext`, Shopify n'y laisse passer
+            que le gras, l'italique et les liens, déjà assainis. C'est ce qui permet de mettre
+            un code promotionnel en gras au milieu de la phrase, depuis l'éditeur.
+          {%- endcomment -%}
+          <span class="reassurance-bar__text">{{ block.settings.text }}</span>
         </li>
       {%- endfor -%}
     </ul>
+    {%- if reassurance_scroll -%}
+        </div>
+      </div>
+    {%- endif -%}
   </reassurance-bar>
 {%- endif -%}
 
@@ -383,6 +414,22 @@
       "content": "Ajoutez un bloc « Message de réassurance » par message. Les messages s'affichent un par un en alternance, sur mobile comme sur ordinateur. Si le visiteur a réglé son appareil pour limiter les animations, ils sont affichés côte à côte à partir de 768px afin qu'aucun ne soit perdu."
     },
     {
+      "type": "select",
+      "id": "reassurance_mode",
+      "label": "Présentation des messages",
+      "default": "rotate",
+      "options": [
+        {
+          "value": "rotate",
+          "label": "Rotation (un message à la fois)"
+        },
+        {
+          "value": "scroll",
+          "label": "Défilement continu"
+        }
+      ]
+    },
+    {
       "type": "range",
       "id": "reassurance_speed",
       "min": 3,
@@ -391,6 +438,17 @@
       "unit": "s",
       "label": "Durée d'affichage de chaque message",
       "default": 4
+    },
+    {
+      "type": "range",
+      "id": "reassurance_scroll_speed",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px/s",
+      "label": "Vitesse du défilement",
+      "default": 60,
+      "info": "Utilisée en défilement continu uniquement."
     }
   ],
   "blocks": [
@@ -399,10 +457,11 @@
       "name": "Message de réassurance",
       "settings": [
         {
-          "type": "text",
+          "type": "inline_richtext",
           "id": "text",
           "label": "Message",
-          "default": "Fabrication française certifiée"
+          "default": "Fabrication française certifiée",
+          "info": "Le gras et les liens sont autorisés : de quoi mettre un code promotionnel en évidence."
         },
         {
           "type": "select",
@@ -410,17 +469,54 @@
           "label": "Icône",
           "default": "none",
           "options": [
-            { "value": "none", "label": "Aucune" },
-            { "value": "padlock", "label": "Cadenas (paiement sécurisé)" },
-            { "value": "truck", "label": "Camion (livraison)" },
-            { "value": "return", "label": "Retour (échanges)" },
-            { "value": "plane", "label": "Avion (expédition)" },
-            { "value": "stopwatch", "label": "Chronomètre (rapidité)" },
-            { "value": "leaf", "label": "Feuille (matériaux)" },
-            { "value": "recycle", "label": "Recyclage" },
-            { "value": "map", "label": "Carte (revendeurs)" },
-            { "value": "star", "label": "Étoile (avis)" },
-            { "value": "tick", "label": "Coche (certifié)" }
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "padlock",
+              "label": "Cadenas (paiement sécurisé)"
+            },
+            {
+              "value": "truck",
+              "label": "Camion (livraison)"
+            },
+            {
+              "value": "return",
+              "label": "Retour (échanges)"
+            },
+            {
+              "value": "plane",
+              "label": "Avion (expédition)"
+            },
+            {
+              "value": "stopwatch",
+              "label": "Chronomètre (rapidité)"
+            },
+            {
+              "value": "leaf",
+              "label": "Feuille (matériaux)"
+            },
+            {
+              "value": "recycle",
+              "label": "Recyclage"
+            },
+            {
+              "value": "map",
+              "label": "Carte (revendeurs)"
+            },
+            {
+              "value": "star",
+              "label": "Étoile (avis)"
+            },
+            {
+              "value": "tick",
+              "label": "Coche (certifié)"
+            },
+            {
+              "value": "coupon",
+              "label": "Coupon (code promotionnel)"
+            }
           ]
         },
         {
