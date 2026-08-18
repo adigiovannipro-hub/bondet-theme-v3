@@ -335,9 +335,33 @@
           var buttons = document.querySelectorAll('.swatch-picker__swatch');
           for (var i = 0; i < buttons.length; i++) {
             var rect = buttons[i].getBoundingClientRect();
-            if (rect.width > 0 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-              return buttons[i];
+            if (rect.width === 0 || x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+              continue;
             }
+
+            {%- comment -%}
+              Le rectangle ne suffit pas : il survit à deux situations où la pastille n'est
+              pas réellement sous le doigt.
+
+              - `visibility: hidden` garde la géométrie. Les pastilles du tiroir panier fermé
+                (position fixe, plein écran) posaient leurs rectangles au-dessus de la grille :
+                selon le contenu du panier et le défilement, une bande de l'écran avalait les
+                clics au lieu de laisser la vignette naviguer.
+              - Une rangée qui défile horizontalement rogne ses pastilles débordantes ; leur
+                rectangle continue pourtant au-delà, jusque sur la carte voisine.
+
+              On exige donc une pastille visible, ET un point de contact dans la partie non
+              rognée de sa rangée.
+            {%- endcomment -%}
+            if (window.getComputedStyle(buttons[i]).visibility === 'hidden') continue;
+
+            var row = buttons[i].closest('.swatch-picker__list');
+            if (row) {
+              var clip = row.getBoundingClientRect();
+              if (x < clip.left || x > clip.right || y < clip.top || y > clip.bottom) continue;
+            }
+
+            return buttons[i];
           }
           return null;
         }
