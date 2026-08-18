@@ -3689,11 +3689,11 @@ cart-drawer:not(.active) .drawer__inner {
   border-top: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.2);
 }
 
-/* Dans le tiroir panier, le filet du bloc arrivait collé au bouton de paiement alors que le
-   bouton a 2rem d'air au-dessus de lui (.cart__ctas, mt-8). On rend l'espacement symétrique :
-   même 2rem de part et d'autre du bouton. */
+/* Le bandeau du tiroir porte lui-même son air, en haut comme en bas (voir
+   .reassurance-block--rotating). Une marge en plus le décalerait vers le total et casserait
+   cette symétrie. */
 .reassurance-block--cart {
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 /* Sur la fiche produit, le bloc termine la colonne d'achat et la section d'avis (« Laissons nos
@@ -3720,7 +3720,13 @@ cart-drawer:not(.active) .drawer__inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
-  padding-top: 1.4rem;
+
+  /* Sans filet. Posé entre l'article et le total, le trait découpait le tiroir en tranches là
+     où il n'y a qu'une seule liste à lire ; c'est le blanc qui sépare désormais. Il en faut
+     donc autant dessous que dessus : le pied du tiroir ne pose aucune marge sur son premier
+     enfant (.cart-drawer__footer > * + *), le bandeau est seul à tenir cet écart. */
+  border-top: 0;
+  padding: 1.8rem 0;
 }
 
 .reassurance-block--rotating .reassurance-block__item {
@@ -3740,11 +3746,15 @@ cart-drawer:not(.active) .drawer__inner {
 }
 
 .reassurance-block--rotating .reassurance-block__icon {
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2rem;
+  height: 2rem;
 }
 
+/* Sur une seule ligne, le libellé n'a plus à absorber de retour à la ligne comme dans la
+   grille 2×2 : il revient à la taille du suptitle du thème (.font-suptitle, 1rem), que la
+   règle générale ci-dessous relève à 1.1rem pour le seul besoin de la grille. */
 .reassurance-block--rotating .reassurance-block__label {
+  font-size: 1rem;
   text-align: left;
   white-space: nowrap;
 }
