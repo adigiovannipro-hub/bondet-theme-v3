@@ -94,8 +94,10 @@
       data-error-label="{{ 'sections.cart.cart_error' | t | escape }}"
     >
       <div class="cart-upsell__header">
+        {%- capture default_upsell_title %}Choisissez votre deuxième paire et
+offrez-vous la livraison :{% endcapture -%}
         <p class="cart-upsell__title">
-          {{- settings.cart_upsell_title | default: 'Choisissez votre deuxième paire et offrez-vous la livraison.' -}}
+          {{- settings.cart_upsell_title | default: default_upsell_title -}}
         </p>
       </div>
 

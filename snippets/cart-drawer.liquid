@@ -552,13 +552,11 @@
               </div>
 
               {%- comment -%}
-                Sortie de .totals volontairement : à l'intérieur elle héritait de la colonne
-                étroite du flex (le titre « Total estimé » prend la moitié de la largeur) et
-                passait sur deux lignes quelle que soit la taille de police.
+                `settings.cart_totals_text` (« Livraison gratuite pour 2 paires achetées ») ne
+                s'affiche plus ici : la relance « deuxieme paire » juste au-dessus porte la
+                meme promesse, en plus actionnable. Le reglage reste en place : la fiche
+                produit l'affiche toujours sous le bouton d'ajout (main-product.liquid).
               {%- endcomment -%}
-              {%- if settings.cart_totals_text != blank -%}
-                <div class="cart-totals-text rte">{{ settings.cart_totals_text }}</div>
-              {%- endif -%}
             </div>
             {%- if cart != empty -%}
               {% render 'cart-cgv', id_prefix: 'CartDrawer', form_id: 'CartDrawer-Form' %}
