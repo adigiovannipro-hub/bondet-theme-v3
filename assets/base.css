@@ -3852,6 +3852,58 @@ cart-drawer:not(.active) .drawer__inner {
   color: rgba(var(--rgb-secondary-brown), 0.65);
 }
 
+/* ---------------------------------------------------------------------------
+   Tiroir panier : en-tete allege.
+
+   `padding: 4rem` en haut et en bas donnait une cartouche « Votre panier » de
+   pres de 10rem de haut pour une ligne de texte de 1.4rem. Depuis que la
+   relance « deuxieme paire » s'intercale au-dessus du total, ces 8rem
+   repoussaient le bouton de paiement sous la ligne de flottaison sur mobile.
+   --------------------------------------------------------------------------- */
+.cart-drawer .drawer__header,
+cart-drawer .drawer__header {
+  padding-top: 2.2rem;
+  padding-bottom: 2.2rem;
+}
+
+/* Meme intention : la zone defilante s'ouvrait sur 3rem de vide sous l'en-tete. */
+cart-drawer cart-drawer-items {
+  padding-top: 2rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Hauteur de vignette : minimale, jamais fixe.
+
+   `h-[41.7rem] xl:h-[47rem]` verrouillait la hauteur. Entre 768 et 1279 px la
+   photo (qui porte son propre rapport d'aspect) est plus haute que ce que ce
+   verrou autorise : mesuré à 1024 px, la vignette a besoin de 460 px et n'en a
+   que 417. Le nuancier, dernier élément de la carte, dépassait donc de 20 px
+   sous elle — et comme la rangée de la grille fait exactement la hauteur
+   verrouillée, il se retrouvait sous la vignette suivante, dont le fond blanc
+   le recouvrait. Les pastilles devenaient inertes au survol et un clic partait
+   sur la carte du dessous.
+
+   `min-height` garde l'alignement des rangées voulu par le design, sans jamais
+   rogner le contenu. Sous 768 px on garde la hauteur intrinsèque seule : à
+   demi-largeur, un minimum de 41.7rem rouvrirait le grand vide sous le contenu
+   que la règle plus bas corrige déjà.
+   --------------------------------------------------------------------------- */
+.product-card {
+  height: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .product-card {
+    min-height: 41.7rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .product-card {
+    min-height: 47rem;
+  }
+}
+
 /* Pastille survolée (ou sous le doigt) : même anneau que la couleur courante, en plus discret,
    pour montrer ce que la vignette est en train d'afficher sans effacer le repère de la carte. */
 .card__swatch-link.is-preview {

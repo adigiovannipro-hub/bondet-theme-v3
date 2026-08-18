@@ -281,7 +281,7 @@
         "type": "textarea",
         "id": "cart_upsell_title",
         "label": "Phrase d\u2019accroche",
-        "default": "Choisissez votre deuxi\u00e8me paire et offrez-vous la livraison."
+        "default": "Choisissez votre deuxi\u00e8me paire et\noffrez-vous la livraison\u00a0:"
       },
       {
         "type": "collection",

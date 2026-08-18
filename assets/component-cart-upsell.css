@@ -8,18 +8,22 @@
    --------------------------------------------------------------------------- */
 .cart-upsell {
   display: block;
-  margin: 1.6rem 0 0.4rem;
-  padding-top: 1.6rem;
+  margin: 1.2rem 0 0.4rem;
+  padding-top: 1.2rem;
   border-top: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.15);
 }
 
 .cart-upsell__header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
 }
 
+/* `pre-line` : la coupure de ligne saisie dans le réglage est voulue — elle
+   met « offrez-vous la livraison » sur sa propre ligne, comme une promesse
+   détachée de la consigne. */
 .cart-upsell__title {
   margin: 0;
-  font: 400 1.3rem / 1.35 var(--font-secondary);
+  white-space: pre-line;
+  font: 400 1.35rem / 1.4 var(--font-secondary);
   color: rgb(var(--rgb-secondary-brown));
 }
 
@@ -46,10 +50,10 @@
    son libellé se coupait en deux lignes et la vignette y gagnait une hauteur inutile. */
 .cart-upsell__slide {
   display: grid;
-  grid-template-columns: 8.5rem minmax(0, 1fr);
+  grid-template-columns: 7rem minmax(0, 1fr);
   flex: 0 0 auto;
-  gap: 0.9rem 1.1rem;
-  width: min(30rem, 88%);
+  gap: 0.7rem 1rem;
+  width: min(32rem, 90%);
   padding: 1.2rem;
   background-color: #fff;
   scroll-snap-align: start;
@@ -58,8 +62,8 @@
 .cart-upsell__media {
   display: block;
   grid-column: 1;
-  width: 8.5rem;
-  height: 8.5rem;
+  width: 7rem;
+  height: 7rem;
   overflow: hidden;
   background-color: var(--bg-facets, #f8f4f1);
 }
@@ -78,7 +82,7 @@
   grid-column: 2;
   min-width: 0;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.45rem;
 }
 
 .cart-upsell__head {
@@ -118,23 +122,45 @@
 }
 
 .cart-upsell__swatches {
-  --swatch-input--size: 1.5rem;
-
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* La cible tactile utile est le bouton, pas la pastille : 0.3rem de padding
-   autour d'une pastille de 1.5rem donne 2.1rem, ce qui reste tenable au doigt
-   sur une rangée de huit dans un tiroir de 40rem. */
+/* Apparence de la pastille écrite ici en toutes lettres, et non héritée du
+   `.swatch` de component-swatch.css : ce fichier n'est chargé que par la fiche
+   produit et les filtres de collection, jamais par le tiroir panier. Les
+   pastilles y sortaient donc sans taille ni couleur — des ronds vides. La
+   vignette produit, elle, ne s'en aperçoit pas : base.css redéclare tout pour
+   `.card__swatches .swatch`, ce qui est exactement ce qu'on fait ici. */
+.cart-upsell__swatches .swatch {
+  display: block;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--swatch--background);
+  background-position: var(--swatch-focal-point, center);
+  background-size: cover;
+  background-origin: border-box;
+  border: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.25);
+}
+
+/* Métaobjet sans couleur ni image : cerclé en pointillés, pour que le compte de
+   coloris annoncé reste vrai. */
+.cart-upsell__swatches .swatch--unavailable {
+  border-style: dashed;
+  border-color: rgba(var(--rgb-secondary-brown), 0.45);
+}
+
+/* La cible tactile utile est le bouton, pas la pastille : 0.35rem de padding
+   autour d'une pastille de 2.2rem donne 2.9rem, confortable au doigt. */
 .cart-upsell__swatch {
   display: block;
-  padding: 0.3rem;
+  padding: 0.35rem;
   border: 0.1rem solid transparent;
   border-radius: 50%;
   background: none;
@@ -164,7 +190,7 @@
 
 .cart-upsell__add {
   grid-column: 1 / -1;
-  padding: 0.9rem 1rem;
+  padding: 0.8rem 1rem;
   border: 0;
   background-color: rgb(var(--rgb-secondary-brown));
   color: rgb(var(--rgb-primary-beige));
