@@ -165,8 +165,208 @@
     <script src="{{ 'cart-cgv.js' | asset_url }}" defer="defer"></script>
 
     {%- comment -%}
-      Sélecteur de coloris partagé par les vignettes produit et la relance « deuxième paire » du
-      panier. Chargé globalement, avant ses deux hôtes : c'est lui qui définit <variant-swatches>.
+      Choix de coloris — point d'entrée, volontairement INLINE.
+
+      Le clic sur une pastille a échoué trop longtemps sur la page collection alors que le même
+      code fonctionnait ailleurs, sans que la cause soit observable à distance. On supprime donc
+      la dépendance : ces quelques lignes font partie du document, elles ne peuvent ni manquer,
+      ni arriver trop tard, ni être servies périmées.
+
+      Elles suffisent à elles seules. Chaque pastille porte sa variante en attributs `data-`
+      (snippets/variant-swatches.liquid), ce qui donne le plancher : couper le clic pour que le
+      composant de carte du thème ne parte pas vers la fiche, retenir le coloris, et mettre à
+      jour la vignette — photo, prix, destination.
+
+      variant-swatches.js, chargé juste après, n'ajoute que le raffinement : table complète des
+      variantes, glissement de l'autre option vers une combinaison disponible, marquage des
+      ruptures, prévisualisation au survol. S'il ne s'exécute pas, le plancher tient.
+    {%- endcomment -%}
+    <script>
+      (function () {
+        function swatchAt(target) {
+          return target && target.closest ? target.closest('.swatch-picker__swatch') : null;
+        }
+
+        function variantOnSwatch(swatch) {
+          if (!swatch.dataset.variantId) return null;
+
+          return {
+            id: swatch.dataset.variantId,
+            o1: null,
+            o2: null,
+            price: swatch.dataset.variantPrice || '',
+            priceShort: swatch.dataset.variantPriceShort || swatch.dataset.variantPrice || '',
+            compare: null,
+            compareShort: null,
+            available: swatch.dataset.variantAvailable !== 'false',
+            url: swatch.dataset.variantUrl || '',
+            image: swatch.dataset.variantImage || null
+          };
+        }
+
+        function markRow(swatch) {
+          var row = swatch.closest('.swatch-picker__list');
+          if (!row) return;
+
+          var buttons = row.querySelectorAll('.swatch-picker__swatch');
+          for (var i = 0; i < buttons.length; i++) {
+            var selected = buttons[i] === swatch;
+            buttons[i].classList.toggle('is-selected', selected);
+            if (buttons[i].hasAttribute('aria-pressed')) {
+              buttons[i].setAttribute('aria-pressed', selected ? 'true' : 'false');
+            }
+          }
+        }
+
+        {%- comment -%}
+          Mise à jour de la vignette produit, faite ici quand card-swatches.js n'a pas pris la
+          main. C'est une redite assumée de sa version longue : sans elle, le clic serait bien
+          intercepté mais rien ne bougerait à l'écran, ce qui se lit exactement comme une panne.
+        {%- endcomment -%}
+        function updateCard(swatch, variant) {
+          var card = swatch.closest('.product-card');
+          if (!card) return;
+
+          var link = card.querySelector('.card__link');
+          if (link && variant.url) link.setAttribute('href', variant.url);
+
+          var block = card.querySelector('.price');
+          if (block) {
+            var short = card.dataset.cardPriceShort === 'true';
+            var amount = (short ? variant.priceShort : variant.price) || variant.price;
+            var sale = block.querySelector('.price__sale');
+            var items = block.querySelectorAll('.price-item--regular, .price-item--sale');
+            for (var i = 0; i < items.length; i++) {
+              if (sale && sale.contains(items[i]) && items[i].classList.contains('price-item--regular')) continue;
+              items[i].textContent = amount;
+            }
+          }
+
+          var media = card.querySelector('.card__media');
+          if (!media || !variant.image) return;
+
+          var preview = media.querySelector('.card__swatch-preview');
+          if (!preview) {
+            preview = document.createElement('img');
+            preview.className = 'card__swatch-preview';
+            preview.setAttribute('alt', '');
+            preview.setAttribute('aria-hidden', 'true');
+            var dots = media.querySelector('.card__dots');
+            if (dots) media.insertBefore(preview, dots);
+            else media.appendChild(preview);
+          }
+
+          if (preview.getAttribute('src') !== variant.image) {
+            preview.onload = function () {
+              preview.classList.add('is-visible');
+            };
+            preview.src = variant.image;
+          }
+          if (preview.complete && preview.naturalWidth > 0) preview.classList.add('is-visible');
+        }
+
+        function announce(swatch, variant, name) {
+          var host = swatch.closest('variant-swatches') || swatch.closest('.swatch-picker') || swatch;
+          host.dispatchEvent(
+            new CustomEvent(name, {
+              bubbles: true,
+              detail: { variant: variant, picker: host, userInitiated: true }
+            })
+          );
+        }
+
+        document.addEventListener(
+          'click',
+          function (event) {
+            var swatch = swatchAt(event.target);
+            if (!swatch) return;
+
+            {%- comment -%}
+              Coupé dans tous les cas, avant même de savoir si on saura traiter le clic : le
+              composant de carte redirige au moindre clic dans la vignette, et choisir un
+              coloris ne doit jamais quitter la page.
+            {%- endcomment -%}
+            event.preventDefault();
+            event.stopPropagation();
+
+            var host = swatch.closest('variant-swatches');
+            if (host && typeof host.select === 'function' && typeof host.setup === 'function' && host.setup()) {
+              host.select(swatch);
+              return;
+            }
+
+            var variant = variantOnSwatch(swatch);
+            if (!variant) return;
+
+            markRow(swatch);
+            announce(swatch, variant, 'variant:selected');
+            if (!window.CardSwatchesReady) updateCard(swatch, variant);
+          },
+          true
+        );
+
+        document.addEventListener('pointerover', function (event) {
+          var swatch = swatchAt(event.target);
+          if (!swatch) return;
+
+          var host = swatch.closest('variant-swatches');
+          if (host && typeof host.peek === 'function' && typeof host.setup === 'function' && host.setup()) {
+            host.peek(swatch);
+            return;
+          }
+
+          var variant = variantOnSwatch(swatch);
+          if (!variant) return;
+
+          announce(swatch, variant, 'variant:peek');
+          if (!window.CardSwatchesReady) updateCard(swatch, variant);
+        });
+
+        document.addEventListener('pointerout', function (event) {
+          var swatch = swatchAt(event.target);
+          if (!swatch) return;
+
+          var picker = swatch.closest('variant-swatches') || swatch.closest('.swatch-picker');
+          var going = event.relatedTarget;
+          if (going && going.closest && going.closest('.swatch-picker') === picker) return;
+
+          if (picker) {
+            picker.dispatchEvent(
+              new CustomEvent('variant:peekend', { bubbles: true, detail: { picker: picker } })
+            );
+          }
+        });
+
+        {%- comment -%}
+          Au doigt il n'y a pas de survol : on suit le point de contact, pour que glisser le long
+          de la rangée fasse défiler les coloris.
+        {%- endcomment -%}
+        document.addEventListener(
+          'touchmove',
+          function (event) {
+            var touch = event.touches[0];
+            if (!touch) return;
+
+            var swatch = swatchAt(document.elementFromPoint(touch.clientX, touch.clientY));
+            if (!swatch) return;
+
+            var host = swatch.closest('variant-swatches');
+            if (host && typeof host.peek === 'function' && typeof host.setup === 'function' && host.setup()) {
+              host.peek(swatch);
+              return;
+            }
+
+            var variant = variantOnSwatch(swatch);
+            if (variant) announce(swatch, variant, 'variant:peek');
+          },
+          { passive: true }
+        );
+      })();
+    </script>
+
+    {%- comment -%}
+      Raffinement du sélecteur : table complète des variantes et prévisualisation. Le point
+      d'entrée ci-dessus fonctionne sans lui.
     {%- endcomment -%}
     <script src="{{ 'variant-swatches.js' | asset_url }}" defer="defer"></script>
 
