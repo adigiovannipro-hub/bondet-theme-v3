@@ -154,6 +154,7 @@
                 {%- when 'star' -%}{{ 'icon-star.svg' | inline_asset_content }}
                 {%- when 'tick' -%}{{ 'icon-tick.svg' | inline_asset_content }}
                 {%- when 'coupon' -%}{{ 'icon-coupon.svg' | inline_asset_content }}
+                {%- when 'cart' -%}{{ 'icon-cart.svg' | inline_asset_content }}
               {%- endcase -%}
             </span>
           {%- endif -%}
@@ -515,6 +516,10 @@
             {
               "value": "coupon",
               "label": "Coupon (code promotionnel)"
+            },
+            {
+              "value": "cart",
+              "label": "Panier"
             }
           ]
         },

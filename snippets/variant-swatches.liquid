@@ -162,11 +162,23 @@
         (`settings.currency_code_enabled`). Chaque hôte prend celui qui correspond à ce que son
         Liquid a déjà rendu, pour qu'un changement de coloris ne change pas la typographie.
       {%- endcomment -%}
+      {%- comment -%}
+        Nombre de vues supplémentaires que l'hôte a rendues : la vignette monte un carrousel à
+        partir de `custom.images` de la variante affichée (snippets/card-product.liquid). Chaque
+        variante a la sienne, si bien qu'après un changement de coloris les vues au-delà de la
+        première montraient encore l'ancienne. On en emporte donc autant que le carrousel a de
+        cases — pas plus : le lot du slider est figé à son instanciation, et des URL au-delà ne
+        serviraient à personne tout en alourdissant la page.
+      {%- endcomment -%}
+      {%- assign sw_extra_count = 0 -%}
+      {%- if sw_current.metafields.custom.images.value -%}
+        {%- assign sw_extra_count = sw_current.metafields.custom.images.value.size -%}
+      {%- endif -%}
       {%- capture sw_rows -%}
         {%- for variant in sw_product.variants -%}
           {%- assign variant_image = variant.featured_image | default: sw_product.featured_image -%}
           {%- unless forloop.first %},{% endunless -%}
-          {"id":{{ variant.id | json }},"o1":{{ variant.option1 | json }},"o2":{{ variant.option2 | json }},"price":{{ variant.price | money | strip_html | json }},"priceShort":{{ variant.price | money_without_trailing_zeros | strip_html | json }},"compare":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},"compareShort":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money_without_trailing_zeros | strip_html | json }}{% else %}null{% endif %},"available":{{ variant.available | json }},"url":{{ variant.url | json }},"image":{% if variant_image %}{{ variant_image | image_url: width: sw_width | json }}{% else %}null{% endif %}}
+          {"id":{{ variant.id | json }},"o1":{{ variant.option1 | json }},"o2":{{ variant.option2 | json }},"price":{{ variant.price | money | strip_html | json }},"priceShort":{{ variant.price | money_without_trailing_zeros | strip_html | json }},"compare":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},"compareShort":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money_without_trailing_zeros | strip_html | json }}{% else %}null{% endif %},"available":{{ variant.available | json }},"url":{{ variant.url | json }},"image":{% if variant_image %}{{ variant_image | image_url: width: sw_width | json }}{% else %}null{% endif %},"images":[{% if sw_extra_count > 0 %}{% for media in variant.metafields.custom.images.value limit: sw_extra_count %}{% unless forloop.first %},{% endunless %}{{ media | image_url: width: sw_width | json }}{% endfor %}{% endif %}]}
         {%- endfor -%}
       {%- endcapture -%}
       <script type="application/json" data-swatch-variants>[{{ sw_rows }}]</script>
