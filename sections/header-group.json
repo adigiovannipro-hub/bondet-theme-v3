@@ -14,36 +14,14 @@
     "header": {
       "type": "header",
       "blocks": {
-        "reassurance_fabrication": {
-          "type": "reassurance",
-          "settings": {
-            "text": "Fabrication française certifiée",
-            "icon": "tick",
-            "icon_image": "shopify://shop_images/made-in-france.svg"
-          }
-        },
-        "reassurance_livraison": {
-          "type": "reassurance",
-          "settings": {
-            "text": "Livraison rapide",
-            "icon": "truck"
-          }
-        },
-        "reassurance_paiement": {
-          "type": "reassurance",
-          "settings": {
-            "text": "Paiement sécurisé",
-            "icon": "padlock"
-          }
-        },
-        "reassurance_echanges": {
-          "type": "reassurance",
-          "settings": {
-            "text": "Échanges facilités",
-            "icon": "return"
-          }
-        },
-        "mega_image_WU6GFL": {
+        "reassurance_promo": {
+        "type": "reassurance",
+        "settings": {
+          "text": "Vos frais de port offerts tout l'\u00e9t\u00e9 avec le code <strong>ETE2026<\/strong>",
+          "icon": "coupon"
+        }
+      },
+      "mega_image_WU6GFL": {
           "type": "mega_image",
           "settings": {
             "menu_parent": "Solaires",
@@ -96,10 +74,7 @@
         }
       },
       "block_order": [
-        "reassurance_fabrication",
-        "reassurance_livraison",
-        "reassurance_paiement",
-        "reassurance_echanges",
+        "reassurance_promo",
         "mega_image_WU6GFL",
         "mega_image_bjT8Xc",
         "mega_image_h8kfbN",
@@ -112,7 +87,9 @@
         "enable_language_selector": true,
         "partners_link": "shopify://pages/trouver-un-opticien",
         "enable_customer_avatar": true,
-        "reassurance_speed": 4
+        "reassurance_mode": "scroll",
+      "reassurance_scroll_speed": 60,
+      "reassurance_speed": 4
       }
     }
   },

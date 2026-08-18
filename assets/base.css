@@ -3674,6 +3674,123 @@ cart-drawer:not(.active) .drawer__inner {
 }
 
 /* ---------------------------------------------------------------------------
+   Bandeau en défilement continu.
+
+   Le mouvement porte sur une piste faite de copies d'un même groupe, décalée
+   d'exactement une largeur de groupe (--marquee-shift, mesurée par
+   reassurance-bar.js) : à la fin du cycle l'image est identique au départ, la
+   boucle est invisible. Le rognage reste celui de .reassurance-bar, dont
+   l'`overflow: hidden` porte sur la boîte de rembourrage : le texte entre et
+   sort donc au ras des bords, sans laisser deux réserves vides sur les côtés.
+
+   Tant que le script n'a pas mesuré — et si le visiteur limite les animations —
+   il ne reste que le groupe rendu par le Liquid, centré et immobile.
+   --------------------------------------------------------------------------- */
+.reassurance-bar--scroll .reassurance-bar__viewport {
+  display: flex;
+  align-items: center;
+  /* `safe` : quand le message est plus large que la barre, un centrage ordinaire
+     déborderait des deux côtés et rendrait son début inatteignable. */
+  justify-content: center;
+  justify-content: safe center;
+  min-height: 3.2rem;
+}
+
+.reassurance-bar--scroll.is-scrolling .reassurance-bar__viewport {
+  justify-content: flex-start;
+}
+
+.reassurance-bar--scroll .reassurance-bar__marquee {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: max-content;
+}
+
+.reassurance-bar--scroll.is-scrolling .reassurance-bar__marquee {
+  animation: reassurance-marquee var(--marquee-duration, 20s) linear infinite;
+  will-change: transform;
+}
+
+/* Le survol suspend le défilement : un code promotionnel se lit et se recopie,
+   il ne doit pas fuir sous le curseur. */
+.reassurance-bar--scroll:hover .reassurance-bar__marquee {
+  animation-play-state: paused;
+}
+
+@keyframes reassurance-marquee {
+  to {
+    transform: translateX(calc(var(--marquee-shift, 0px) * -1));
+  }
+}
+
+/* Le groupe redevient une simple ligne : la grille superposée de la rotation
+   masquerait tous les messages sauf le premier. */
+.reassurance-bar--scroll .reassurance-bar__group {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: max-content;
+}
+
+.reassurance-bar--scroll .reassurance-bar__item {
+  grid-area: auto;
+  opacity: 1;
+  visibility: visible;
+  white-space: nowrap;
+}
+
+/* Séparateur après CHAQUE message, y compris le dernier : c'est lui qui tient
+   l'écart entre deux copies successives, et il est compté dans la largeur du
+   groupe — donc dans le décalage de l'animation, qui reste exact. */
+.reassurance-bar--scroll .reassurance-bar__item::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-left: 1.8rem;
+  margin-right: 2.4rem;
+  border-radius: 50%;
+  background-color: rgba(var(--rgb-secondary-brown), 0.45);
+}
+
+.reassurance-bar--scroll .reassurance-bar__text strong,
+.reassurance-bar--scroll .reassurance-bar__text b {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Sans mouvement, le message peut dépasser la largeur de l'écran : on le rend
+   atteignable au doigt plutôt que de le laisser coupé. */
+@media (prefers-reduced-motion: reduce) {
+  .reassurance-bar--scroll .reassurance-bar__viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .reassurance-bar--scroll .reassurance-bar__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reassurance-bar--scroll .reassurance-bar__marquee {
+    animation: none;
+  }
+}
+
+/* La règle « tous les messages côte à côte » du repli sans mouvement vise la
+   rotation ; en défilement, la ligne est déjà horizontale. */
+@media screen and (min-width: 768px) and (prefers-reduced-motion: reduce) {
+  .reassurance-bar--scroll .reassurance-bar__list {
+    grid-auto-flow: initial;
+    gap: 0;
+  }
+
+  .reassurance-bar--scroll .reassurance-bar__item + .reassurance-bar__item::before {
+    content: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Reassurance block (product page + cart drawer, near the CTA).
    Icon above the label, centred, each item filling its cell: side-by-side the
    four items read as a ragged left-aligned list that leaves the row half empty.
