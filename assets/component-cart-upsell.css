@@ -50,10 +50,10 @@
    son libellé se coupait en deux lignes et la vignette y gagnait une hauteur inutile. */
 .cart-upsell__slide {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
+  grid-template-columns: 10rem minmax(0, 1fr);
   flex: 0 0 auto;
   gap: 0.7rem 1rem;
-  width: min(32rem, 90%);
+  width: min(34rem, 92%);
   padding: 1.2rem;
   background-color: #fff;
   scroll-snap-align: start;
@@ -62,8 +62,8 @@
 .cart-upsell__media {
   display: block;
   grid-column: 1;
-  width: 7rem;
-  height: 7rem;
+  width: 10rem;
+  height: 10rem;
   overflow: hidden;
   background-color: var(--bg-facets, #f8f4f1);
 }
@@ -121,71 +121,14 @@
   color: rgba(var(--rgb-secondary-brown), 0.65);
 }
 
-.cart-upsell__swatches {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+/* Le sélecteur de coloris est partagé avec les vignettes produit : son habillage vit dans
+   base.css (.swatch-picker). Ici on ne fait que le doser pour la place disponible dans le
+   tiroir — huit coloris de verres doivent tenir sur une seule ligne à côté de la photo. */
+.swatch-picker--cart {
+  --swatch-dot: 1.4rem;
 
-/* Apparence de la pastille écrite ici en toutes lettres, et non héritée du
-   `.swatch` de component-swatch.css : ce fichier n'est chargé que par la fiche
-   produit et les filtres de collection, jamais par le tiroir panier. Les
-   pastilles y sortaient donc sans taille ni couleur — des ronds vides. La
-   vignette produit, elle, ne s'en aperçoit pas : base.css redéclare tout pour
-   `.card__swatches .swatch`, ce qui est exactement ce qu'on fait ici. */
-.cart-upsell__swatches .swatch {
-  display: block;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  background: var(--swatch--background);
-  background-position: var(--swatch-focal-point, center);
-  background-size: cover;
-  background-origin: border-box;
-  border: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.25);
-}
-
-/* Métaobjet sans couleur ni image : cerclé en pointillés, pour que le compte de
-   coloris annoncé reste vrai. */
-.cart-upsell__swatches .swatch--unavailable {
-  border-style: dashed;
-  border-color: rgba(var(--rgb-secondary-brown), 0.45);
-}
-
-/* La cible tactile utile est le bouton, pas la pastille : 0.35rem de padding
-   autour d'une pastille de 2.2rem donne 2.9rem, confortable au doigt. */
-.cart-upsell__swatch {
-  display: block;
-  padding: 0.35rem;
-  border: 0.1rem solid transparent;
-  border-radius: 50%;
-  background: none;
-  line-height: 0;
-  cursor: pointer;
-  transition: border-color var(--duration-default) ease;
-}
-
-.cart-upsell__swatch:hover {
-  border-color: rgba(var(--rgb-secondary-brown), 0.35);
-}
-
-.cart-upsell__swatch.is-selected {
-  border-color: rgb(var(--rgb-secondary-brown));
-}
-
-.cart-upsell__swatch:focus-visible {
-  outline: 0.2rem solid rgb(var(--rgb-secondary-brown));
-  outline-offset: 0.1rem;
-}
-
-/* Combinaison qui n'existe pas ou qui est en rupture : atténuée, mais toujours
-   cliquable — c'est ainsi qu'on fait glisser l'autre option vers elle. */
-.cart-upsell__swatch.is-unavailable .swatch {
-  opacity: 0.35;
+  margin-top: 0.1rem;
+  gap: 0.35rem;
 }
 
 .cart-upsell__add {

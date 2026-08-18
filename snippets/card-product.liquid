@@ -34,7 +34,15 @@
     assign card_sizes = card_sizes | default: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
   -%}
 
-  <div class="product-card relative cursor-pointer h-[41.7rem] xl:h-[47rem] group">
+  {%- comment -%}
+    `data-card-price-short` : le prix de la vignette est rendu par `money_without_trailing_zeros`
+    quand le code devise est activé (snippets/price.liquid). Le script doit reprendre le même
+    format, sinon changer de coloris ferait passer « 99€ » à « 99,00€ ».
+  {%- endcomment -%}
+  <div
+    class="product-card relative cursor-pointer h-[41.7rem] xl:h-[47rem] group"
+    data-card-price-short="{{ settings.currency_code_enabled | default: false }}"
+  >
     <div
       class="card bg-white py-[2.3rem] px-[1.7rem]"
     >
@@ -198,6 +206,12 @@
                 <span>{{ card_product.title | escape }}</span>
               </div>
               {% if card_product.type == 'Solaire' %}
+                {%- comment -%}
+                  card-swatches.js met ce prix à jour au changement de coloris : les verres
+                  polarisants coûtent 20 € de plus, garder le prix de la variante rendue au
+                  départ serait faux. Il vise `.price` directement — pas d'enveloppe : un
+                  conteneur de plus changerait la répartition du flex de `.card__link`.
+                {%- endcomment -%}
                 {% render 'price',
                   product: card_product,
                   use_variant: true,
@@ -220,67 +234,19 @@
             </div>
 
             {%- comment -%}
-              Nuanciers des coloris de monture.
-
-              La boutique utilise les swatches natifs Shopify : la première option
-              (« Couleur de la monture ») est liée à des métaobjets, chaque valeur porte donc un
-              `swatch` exploitable. On réutilise le snippet 'swatch' du thème plutôt que de
-              redessiner les pastilles.
-
-              Chaque pastille pointe vers la variante correspondante. Quand le produit a une
-              deuxième option (couleur des verres, sur les solaires), on garde celle de la carte
-              courante pour ne pas renvoyer le visiteur vers un autre verre que celui affiché.
+              Choix du coloris, monture et verres, par le sélecteur partagé avec la relance
+              « deuxième paire » du panier (snippets/variant-swatches.liquid). Il remplace
+              l'ancien nuancier maison, qui ne savait que la monture et dont chaque pastille
+              était un lien : choisir un verre y était impossible, et chaque clic quittait la
+              page. Ici le clic choisit, et c'est la vignette entière qui mène ensuite à la
+              variante retenue — card-swatches.js suit l'annonce du sélecteur.
             {%- endcomment -%}
-            {%- assign color_option = card_product.options_with_values | first -%}
-            {%- if color_option.values.size > 1 -%}
-              {%- assign swatch_count = color_option.values | map: 'swatch' | compact | size -%}
-              {%- if swatch_count > 0 -%}
-                <ul class="card__swatches" aria-label="{{ montures_count }} coloris disponibles">
-                  {%- for value in color_option.values limit: 4 -%}
-                    {%- capture value_name %}{{ value.name | default: value }}{% endcapture -%}
-                    {%- comment -%}
-                      `value.variant` est la voie documentée : la variante associée à cette valeur
-                      d'option. On garde l'appariement manuel en repli, et parce que lui seul sait
-                      conserver la couleur de verre de la carte courante sur les solaires.
-                    {%- endcomment -%}
-                    {%- assign target_variant = null -%}
-                    {%- for v in card_product.variants -%}
-                      {%- if v.option1 == value_name -%}
-                        {%- unless target_variant -%}
-                          {%- assign target_variant = v -%}
-                        {%- endunless -%}
-                        {%- if card_variant.option2 != blank and v.option2 == card_variant.option2 -%}
-                          {%- assign target_variant = v -%}
-                          {%- break -%}
-                        {%- endif -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                    {%- unless target_variant -%}
-                      {%- assign target_variant = value.variant -%}
-                    {%- endunless -%}
-                    {%- assign swatch_media = target_variant.featured_media | default: target_variant.image -%}
-                    <li>
-                      <a
-                        href="{{ target_variant.url | default: card_product.url }}"
-                        class="card__swatch-link{% if value_name == card_variant.option1 %} is-current{% endif %}"
-                        title="{{ value_name }}"
-                        data-card-swatch
-                        {% if swatch_media %}
-                          data-swatch-image="{{ swatch_media | image_url: width: 800 }}"
-                        {% endif %}
-                      >
-                        <span class="visually-hidden">{{ card_product.title | escape }} — {{ value_name }}</span>
-                        {% render 'swatch', swatch: value.swatch %}
-                      </a>
-                    </li>
-                  {%- endfor -%}
-                  {%- if color_option.values.size > 4 -%}
-                    {%- assign remaining = color_option.values.size | minus: 4 -%}
-                    <li class="card__swatches-more" aria-hidden="true">+{{ remaining }}</li>
-                  {%- endif -%}
-                </ul>
-              {%- endif -%}
-            {%- endif -%}
+            {% render 'variant-swatches',
+              swatch_product: card_product,
+              swatch_variant: card_variant,
+              swatch_class: 'swatch-picker--card',
+              swatch_image_width: 800
+            %}
           </div>
         </div>
       </div>
