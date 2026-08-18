@@ -7,10 +7,18 @@
 
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart-upsell.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'cart-testimonials.js' | asset_url }}" defer="defer"></script>
+{%- comment -%}
+  Chargé ici, donc hors de #CartDrawer : le tiroir remplace tout son contenu à chaque mise à
+  jour du panier, ce qui n'exécuterait pas un <script> qui s'y trouverait. Posé au-dessus, il
+  est déjà là quand le bloc « deuxième paire » apparaît pour la première fois, et l'élément
+  personnalisé se ré-instancie tout seul à chaque nouveau rendu.
+{%- endcomment -%}
+<script src="{{ 'cart-upsell.js' | asset_url }}" defer="defer"></script>
 
 {%- comment -%}
   Safety net for the closed state (the authoritative rules live in base.css).
@@ -474,6 +482,13 @@
                 </cart-note>
               </details>
             {%- endif -%}
+
+            {%- comment -%}
+              Relance « deuxième paire » : au-dessus du total, c'est le dernier endroit où
+              l'offre de livraison peut encore changer la commande. Le bloc se rend lui-même
+              seulement quand le panier contient une monture et une seule.
+            {%- endcomment -%}
+            {% render 'cart-upsell', upsell_id: 'CartDrawer-Upsell' %}
 
             <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
               <div>

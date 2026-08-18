@@ -263,5 +263,57 @@
         "default": 5
       }
     ]
+  },
+  {
+    "name": "Panier - Deuxi\u00e8me paire",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Carrousel affich\u00e9 dans le panier, juste au-dessus du total estim\u00e9, quand le panier ne contient qu\u2019une seule monture. Il dispara\u00eet tout seul d\u00e8s que la deuxi\u00e8me paire est ajout\u00e9e."
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_upsell_enabled",
+        "label": "Proposer une deuxi\u00e8me paire dans le panier",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "cart_upsell_title",
+        "label": "Phrase d\u2019accroche",
+        "default": "Choisissez votre deuxi\u00e8me paire et offrez-vous la livraison."
+      },
+      {
+        "type": "collection",
+        "id": "cart_upsell_collection",
+        "label": "Collection propos\u00e9e",
+        "info": "Par d\u00e9faut, la collection \u00ab\u00a0solaires\u00a0\u00bb."
+      },
+      {
+        "type": "range",
+        "id": "cart_upsell_count",
+        "label": "Nombre de montures propos\u00e9es",
+        "min": 3,
+        "max": 12,
+        "step": 1,
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "cart_upsell_threshold",
+        "label": "Nombre de paires pour la livraison offerte",
+        "info": "Le carrousel s\u2019affiche tant que le panier contient moins de paires que ce seuil.",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "default": 2
+      },
+      {
+        "type": "text",
+        "id": "cart_upsell_button_label",
+        "label": "Libell\u00e9 du bouton",
+        "default": "Ajouter au panier"
+      }
+    ]
   }
 ]
