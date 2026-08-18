@@ -8,7 +8,9 @@
    --------------------------------------------------------------------------- */
 .cart-upsell {
   display: block;
-  margin: 1.2rem 0 0.4rem;
+  /* 2rem au-dessus du trait : le même air que le bouton de paiement a au-dessus de lui
+     (.cart__ctas, mt-8), pour que le bouton respire autant des deux côtés. */
+  margin: 2rem 0 0.4rem;
   padding-top: 1.2rem;
   border-top: 0.1rem solid rgba(var(--rgb-secondary-brown), 0.15);
 }

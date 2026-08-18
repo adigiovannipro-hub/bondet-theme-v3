@@ -182,7 +182,15 @@
   }
 </style>
 
-<cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
+{%- comment -%}
+  `data-lenis-prevent`, ici et sur <cart-drawer-items> : le défilement tactile du thème est
+  virtualisé (Lenis, syncTouch) — tout touchmove nourrit le scroll de la page, même posé sur
+  un tiroir fixed. Seule la liste d'articles portait l'attribut : un doigt sur le pied du
+  tiroir (consentement, bouton, bandeau) faisait défiler la page derrière, et le tap suivant
+  servait à stopper l'inertie — d'où les boutons à « double clic ». Le pan natif est retenu
+  par touch-action / overscroll-behavior dans base.css.
+{%- endcomment -%}
+<cart-drawer data-lenis-prevent class="drawer{% if cart == empty %} is-empty{% endif %}">
   <div id="CartDrawer" class="cart-drawer">
     <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
     <div
@@ -233,6 +241,7 @@
         </div>
       {%- endif -%}
       <cart-drawer-items
+        data-lenis-prevent
         {% if cart == empty %}
           class=" is-empty"
         {% endif %}
