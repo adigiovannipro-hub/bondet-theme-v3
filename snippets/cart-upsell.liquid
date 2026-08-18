@@ -1,0 +1,269 @@
+{% comment %}
+  Renders the "second pair" upsell slider, shown in the cart above the totals.
+
+  Bondet offers free shipping from two pairs. A cart holding exactly one frame is therefore one
+  step away from it, and that is the only moment this block appears: it disappears on its own as
+  soon as the second pair is in, so it never nags a cart that already qualifies.
+
+  Everything needed to buy is inside the slide — frame colour, lens colour, price and the add
+  button — so the shopper never leaves the cart to pick a second pair.
+
+  Accepts:
+  - upsell_id: {String} prefix for the DOM ids, so the drawer and the cart page can both render
+    one without colliding. Default: 'CartUpsell'.
+
+  Usage:
+  {% render 'cart-upsell', upsell_id: 'CartDrawer-Upsell' %}
+{% endcomment %}
+
+{%- liquid
+  assign upsell_id = upsell_id | default: 'CartUpsell'
+  assign add_to_cart_label = 'products.product.add_to_cart' | t
+  assign threshold = settings.cart_upsell_threshold | default: 2
+  assign products_limit = settings.cart_upsell_count | default: 6
+
+  comment
+    Number of frames already in the cart. Only eyewear counts: an accessory line must not be
+    mistaken for the second pair that unlocks the shipping. When no line carries a recognised
+    type — a catalogue that never filled the field — the plain item count stands in, so the
+    block still works instead of silently never showing.
+  endcomment
+  assign frame_count = 0
+  assign typed_count = 0
+  for item in cart.items
+    assign item_type = item.product.type | downcase
+    if item_type contains 'solaire' or item_type contains 'optique'
+      assign frame_count = frame_count | plus: item.quantity
+      assign typed_count = typed_count | plus: 1
+    endif
+  endfor
+  if typed_count == 0
+    assign frame_count = cart.item_count
+  endif
+
+  assign upsell_collection = collections['solaires']
+  if settings.cart_upsell_collection != blank
+    assign upsell_collection = settings.cart_upsell_collection
+  endif
+
+  assign show_upsell = false
+  if settings.cart_upsell_enabled and cart != empty and upsell_collection != blank
+    if frame_count > 0 and frame_count < threshold
+      assign show_upsell = true
+    endif
+  endif
+-%}
+
+{%- if show_upsell -%}
+  {%- comment -%}
+    Products already in the cart are dropped from the list: a "second pair" suggestion that
+    proposes the pair you just chose reads as a bug.
+  {%- endcomment -%}
+  {%- assign cart_product_ids = '' -%}
+  {%- for item in cart.items -%}
+    {%- assign cart_product_ids = cart_product_ids | append: ',' | append: item.product.id | append: ',' -%}
+  {%- endfor -%}
+
+  {%- assign candidates = '' -%}
+  {%- assign candidate_count = 0 -%}
+  {%- for product in upsell_collection.products -%}
+    {%- if candidate_count >= products_limit -%}
+      {%- break -%}
+    {%- endif -%}
+    {%- comment -%}
+      Les cartes-cadeaux sont ecartees : la boutique en compte deux, typees « Solaire », donc
+      membres de la collection Solaires par la regle du groupe. Elles sont en brouillon
+      aujourd'hui — invisibles en boutique — mais proposer un bon d'achat comme « deuxieme
+      paire » pour declencher la livraison offerte n'aurait aucun sens le jour ou elles
+      seraient publiees.
+    {%- endcomment -%}
+    {%- assign needle = ',' | append: product.id | append: ',' -%}
+    {%- unless cart_product_ids contains needle or product.available == false or product.gift_card? -%}
+      {%- assign candidates = candidates | append: ',' | append: product.id | append: ',' -%}
+      {%- assign candidate_count = candidate_count | plus: 1 -%}
+    {%- endunless -%}
+  {%- endfor -%}
+
+  {%- if candidate_count > 0 -%}
+    <cart-upsell
+      class="cart-upsell"
+      id="{{ upsell_id }}"
+      data-cart-upsell
+      data-add-label="{{ settings.cart_upsell_button_label | default: add_to_cart_label | escape }}"
+      data-sold-out-label="{{ 'products.product.sold_out' | t | escape }}"
+      data-error-label="{{ 'sections.cart.cart_error' | t | escape }}"
+    >
+      <div class="cart-upsell__header">
+        <p class="cart-upsell__title">
+          {{- settings.cart_upsell_title | default: 'Choisissez votre deuxième paire et offrez-vous la livraison.' -}}
+        </p>
+      </div>
+
+      <div class="cart-upsell__viewport">
+        {%- comment -%}
+          `data-lenis-prevent` keeps the theme's smooth-scroll wrapper from swallowing the
+          horizontal gesture, exactly as the cart item list already does.
+        {%- endcomment -%}
+        <div
+          class="cart-upsell__track u-nsb"
+          data-upsell-track
+          data-lenis-prevent
+          role="list"
+        >
+          {%- for product in upsell_collection.products -%}
+            {%- assign needle = ',' | append: product.id | append: ',' -%}
+            {%- if candidates contains needle -%}
+              {%- liquid
+                assign current = product.selected_or_first_available_variant
+                assign current_image = current.featured_image | default: product.featured_image
+              -%}
+              <article class="cart-upsell__slide" role="listitem" data-upsell-slide data-upsell-current="{{ current.id }}">
+                {%- comment -%}
+                  The whole media is the link to the product page, for a shopper who wants the
+                  full description before committing. Everything else stays in the cart.
+                {%- endcomment -%}
+                <a
+                  class="cart-upsell__media"
+                  href="{{ current.url | default: product.url }}"
+                  data-upsell-link
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  {%- if current_image -%}
+                    <img
+                      src="{{ current_image | image_url: width: 500 }}"
+                      alt="{{ product.title | escape }}"
+                      width="500"
+                      height="500"
+                      loading="lazy"
+                      data-upsell-image
+                    >
+                  {%- endif -%}
+                </a>
+
+                <div class="cart-upsell__body">
+                  <div class="cart-upsell__head">
+                    <a class="cart-upsell__name" href="{{ current.url | default: product.url }}" data-upsell-link>
+                      {{- product.title | escape -}}
+                    </a>
+                    <span class="cart-upsell__price" data-upsell-price>
+                      {{- current.price | money -}}
+                    </span>
+                  </div>
+
+                  {%- for option in product.options_with_values limit: 2 -%}
+                    {%- liquid
+                      assign option_index = forloop.index
+                      assign label = option.name
+                      assign label = label | replace: 'Couleur de la ', '' | replace: 'Couleur des ', ''
+                      assign label = label | replace: 'Couleur du ', '' | replace: 'Couleur ', ''
+                      assign label = label | capitalize
+
+                      if option_index == 1
+                        assign selected_value = current.option1
+                      else
+                        assign selected_value = current.option2
+                      endif
+                    -%}
+                    <div class="cart-upsell__option">
+                      <span class="cart-upsell__option-label">{{ label }}</span>
+                      <ul
+                        class="cart-upsell__swatches"
+                        data-upsell-option="{{ option_index }}"
+                        aria-label="{{ option.name | escape }}"
+                      >
+                        {%- for value in option.values -%}
+                          {%- assign value_name = value.name | default: value -%}
+                          <li>
+                            {%- comment -%}
+                              Nom accessible porté par `aria-label`, et non par un
+                              `<span class="visually-hidden">` : celui-ci est en
+                              `position: absolute`, donc son bloc conteneur est
+                              `.cart-upsell__viewport` — en dehors de la piste qui défile. Il
+                              échappait au rognage et se posait à la coordonnée de sa
+                              diapositive, plusieurs centaines de pixels à droite : la page
+                              gagnait un défilement horizontal vers du vide, invisible mais bien
+                              là sous le doigt.
+                            {%- endcomment -%}
+                            <button
+                              type="button"
+                              class="cart-upsell__swatch{% if value_name == selected_value %} is-selected{% endif %}"
+                              data-upsell-value="{{ value_name | escape }}"
+                              data-upsell-option-index="{{ option_index }}"
+                              title="{{ value_name | escape }}"
+                              aria-label="{{ option.name | escape }} : {{ value_name | escape }}"
+                              aria-pressed="{% if value_name == selected_value %}true{% else %}false{% endif %}"
+                            >
+                              {%- if value.swatch -%}
+                                {% render 'swatch', swatch: value.swatch %}
+                              {%- else -%}
+                                <span class="swatch swatch--unavailable"></span>
+                              {%- endif -%}
+                            </button>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  {%- endfor -%}
+
+                </div>
+
+                <button
+                  type="button"
+                  class="cart-upsell__add"
+                  data-upsell-add
+                  {% unless current.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  <span data-upsell-add-label>
+                    {%- if current.available -%}
+                      {{ settings.cart_upsell_button_label | default: add_to_cart_label }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </span>
+                </button>
+
+                {%- comment -%}
+                  Variant table read by cart-upsell.js. In a JSON script tag rather than a data
+                  attribute: option values carry accents and spaces, and a 24-line table would be
+                  unreadable — and fragile — squeezed into an attribute.
+                {%- endcomment -%}
+                {%- capture variant_rows -%}
+                  {%- for variant in product.variants -%}
+                    {%- assign variant_image = variant.featured_image | default: product.featured_image -%}
+                    {%- unless forloop.first %},{% endunless -%}
+                    {"id":{{ variant.id | json }},"o1":{{ variant.option1 | json }},"o2":{{ variant.option2 | json }},"price":{{ variant.price | money | strip_html | json }},"compare":{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},"available":{{ variant.available | json }},"url":{{ variant.url | json }},"image":{% if variant_image %}{{ variant_image | image_url: width: 500 | json }}{% else %}null{% endif %}}
+                  {%- endfor -%}
+                {%- endcapture -%}
+                <script type="application/json" data-upsell-variants>[{{ variant_rows }}]</script>
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <button
+          type="button"
+          class="cart-upsell__nav cart-upsell__nav--prev"
+          data-upsell-prev
+          aria-label="{{ 'general.slider.previous_slide' | t }}"
+          hidden
+        >
+          <span class="cart-upsell__nav-icon" aria-hidden="true"></span>
+        </button>
+        <button
+          type="button"
+          class="cart-upsell__nav cart-upsell__nav--next"
+          data-upsell-next
+          aria-label="{{ 'general.slider.next_slide' | t }}"
+          hidden
+        >
+          <span class="cart-upsell__nav-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <p class="cart-upsell__error" role="alert" data-upsell-error hidden></p>
+    </cart-upsell>
+  {%- endif -%}
+{%- endif -%}
