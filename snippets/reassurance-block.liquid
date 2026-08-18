@@ -7,6 +7,9 @@
 
   Accepts:
   - reassurance_class: {String} extra classes for the wrapper (optional)
+  - reassurance_rotating: {Boolean} n'afficher qu'un argument à la fois, en bandeau défilant.
+    Empilés, les quatre prennent près de 18rem — de quoi repousser le bouton de paiement hors
+    de l'écran dans le tiroir panier. (optionnel)
 
   Usage:
   {% render 'reassurance-block' %}
@@ -24,14 +27,26 @@
 -%}
 
 {%- if has_columns -%}
-  <ul class="reassurance-block {{ reassurance_class }}" role="list">
+  {%- assign shown = 0 -%}
+  {%- if reassurance_rotating -%}
+    <rotating-strip class="reassurance-block reassurance-block--rotating {{ reassurance_class }}" data-rotate-speed="3.5">
+  {%- else -%}
+    <ul class="reassurance-block {{ reassurance_class }}" role="list">
+  {%- endif -%}
     {%- for i in (1..4) -%}
       {%- assign image_key = 'cart_column_' | append: i | append: '_image' -%}
       {%- assign title_key = 'cart_column_' | append: i | append: '_title' -%}
       {%- assign col_image = settings[image_key] -%}
       {%- assign col_title = settings[title_key] -%}
       {%- if col_image != blank or col_title != blank -%}
-        <li class="reassurance-block__item">
+        {%- assign shown = shown | plus: 1 -%}
+        {%- comment -%}
+          Le premier est marqué actif dès le rendu : le bandeau reste lisible même si le script
+          ne tourne pas, il ne défile simplement pas.
+        {%- endcomment -%}
+        <li class="reassurance-block__item{% if reassurance_rotating and shown == 1 %} is-active{% endif %}"
+          {% if reassurance_rotating %}data-rotate-item{% endif %}
+        >
           {%- comment -%}
             alt is empty on purpose: the icon repeats the label right next to it, so naming it
             would make screen readers read every item twice.
@@ -52,5 +67,9 @@
         </li>
       {%- endif -%}
     {%- endfor -%}
-  </ul>
+  {%- if reassurance_rotating -%}
+    </rotating-strip>
+  {%- else -%}
+    </ul>
+  {%- endif -%}
 {%- endif -%}
