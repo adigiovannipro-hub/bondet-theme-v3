@@ -3799,7 +3799,11 @@ cart-drawer:not(.active) .drawer__inner {
 }
 
 @media screen and (min-width: 1024px) {
-  .reassurance-block {
+  /* La variante en bandeau défilant est exclue : ses arguments se superposent tous dans la
+     première cellule (grid-area 1/1), si bien qu'en grille à quatre colonnes l'argument
+     visible se retrouvait dans le premier quart — collé à gauche dans le tiroir desktop.
+     Sur une colonne unique, il reste centré, comme sur mobile. */
+  .reassurance-block:not(.reassurance-block--rotating) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.6rem;
   }
@@ -3899,6 +3903,31 @@ cart-drawer cart-drawer-items {
    --------------------------------------------------------------------------- */
 cart-drawer cart-drawer-items {
   position: relative;
+}
+
+/* ---------------------------------------------------------------------------
+   Tiroir ouvert : le doigt ne doit jamais faire défiler la page derrière.
+
+   Le défilement tactile du thème est virtualisé (Lenis, syncTouch) : les
+   attributs data-lenis-prevent posés sur le tiroir (cart-drawer.liquid) l'en
+   dispensent. Restait le pan natif : parti d'une zone non défilante du tiroir
+   (en-tête, pied, bouton), il chaînait au document. `touch-action: none` sur le
+   tiroir actif coupe ce chaînage, `pan-y` rouvre le seul geste légitime sur la
+   zone qui défile, et `overscroll-behavior` retient le geste à ses bornes. Les
+   rangées de pastilles gardent leur glissement horizontal : leur liste est leur
+   propre scroller, l'évaluation de touch-action s'arrête à elle.
+
+   Symptôme corrigé : la page arrière défilait sous le tiroir, puis le tap
+   suivant servait à stopper l'inertie — les boutons semblaient exiger deux
+   clics.
+   --------------------------------------------------------------------------- */
+cart-drawer.active {
+  touch-action: none;
+}
+
+cart-drawer cart-drawer-items {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 /* ---------------------------------------------------------------------------

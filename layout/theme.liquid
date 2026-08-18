@@ -381,6 +381,14 @@
             var swatch = resolveSwatch(event);
             press = swatch ? { swatch: swatch, x: event.clientX, y: event.clientY } : null;
             debugEvent('pointerdown', event, swatch);
+            {%- comment -%}
+              Doigt posé : la photo visée part en préchargement pendant les ~100 ms qui
+              séparent le contact du clic. variant-swatches.js préchauffe toute la rangée.
+            {%- endcomment -%}
+            if (swatch) {
+              var down = swatch.closest('variant-swatches');
+              if (down && typeof down.warm === 'function') down.warm();
+            }
           },
           true
         );
@@ -445,6 +453,7 @@
           if (!swatch) return;
 
           var host = swatch.closest('variant-swatches');
+          if (host && typeof host.warm === 'function') host.warm();
           if (host && typeof host.peek === 'function' && typeof host.setup === 'function' && host.setup()) {
             host.peek(swatch);
             return;

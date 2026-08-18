@@ -94,6 +94,28 @@ class VariantSwatches extends HTMLElement {
     var index = parseInt(swatch.dataset.swatchOptionIndex, 10) - 1;
     this.selected = this.resolve(index, swatch.dataset.swatchValue).selection;
     this.refresh(true);
+    this.warm();
+  }
+
+  // Préchauffe les photos que la sélection courante rend atteignables en un clic — une par
+  // pastille, via le même `resolve` que le clic, donc exactement celles qu'un clic montrerait.
+  // Sans cela, chaque clic paie le réseau au moment où l'œil attend déjà la photo ; au doigt,
+  // sans survol préalable, le délai se voit à chaque fois. Appelée au premier geste sur le
+  // sélecteur (pointerdown/pointerover, depuis le point d'entrée inline) puis après chaque
+  // sélection, pour que la rangée suivante soit déjà en cache. Mémoïsée par état : re-cliquer
+  // sans changer de sélection ne relance rien.
+  warm() {
+    if (!this.setup()) return;
+
+    var state = this.selected.join('\u0001');
+    if (this.warmedFor === state) return;
+    this.warmedFor = state;
+
+    this.querySelectorAll('.swatch-picker__swatch').forEach(function (button) {
+      var index = parseInt(button.dataset.swatchOptionIndex, 10) - 1;
+      var variant = this.resolve(index, button.dataset.swatchValue).variant;
+      if (variant && variant.image) new Image().src = variant.image;
+    }, this);
   }
 
   peek(swatch) {
