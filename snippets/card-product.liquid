@@ -163,8 +163,14 @@
               id="title-{{ section_id }}-{{ card_product.id }}"
             {% endif %}
           >
+            {%- comment -%}
+              Repli sur l'adresse du produit : plusieurs sections rendent cette vignette sans
+              `card_variant` (collection en avant, collage, recherche). L'attribut restait alors
+              vide, et comme le composant de carte fait `window.location.href = link.href`, un
+              href vide se resout sur la page courante — cliquer la vignette la rechargeait.
+            {%- endcomment -%}
             <a
-              href="{{ card_variant.url }}"
+              href="{{ card_variant.url | default: card_product.url }}"
               id="CardLink-{{ section_id }}-{{ card_product.id }}"
               class="card__link flex flex-wrap justify-between"
               aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"

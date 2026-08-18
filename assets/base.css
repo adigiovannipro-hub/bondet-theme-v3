@@ -3852,6 +3852,46 @@ cart-drawer:not(.active) .drawer__inner {
   color: rgba(var(--rgb-secondary-brown), 0.65);
 }
 
+/* Pastille survolée (ou sous le doigt) : même anneau que la couleur courante, en plus discret,
+   pour montrer ce que la vignette est en train d'afficher sans effacer le repère de la carte. */
+.card__swatch-link.is-preview {
+  border-color: rgba(var(--rgb-secondary-brown), 0.55);
+}
+
+/* Prévisualisation de coloris, peinte par-dessus le carrousel de la vignette.
+   ---------------------------------------------------------------------------
+   Elle ne remplace pas la `src` d'une des vues : `.card__inner` avance le carrousel à la vue 1
+   dès l'entrée de la souris sur la carte, si bien que la vue dont on changeait l'image n'était
+   plus celle affichée — le changement de couleur avait lieu, invisible. Une couche au-dessus
+   s'affranchit de l'état du carrousel, quel qu'il soit.
+
+   z-index 1 : au-dessus des `.slide` (empilées par ordre du DOM, sans z-index), en dessous des
+   pastilles de défilement qui sont à 2.
+   --------------------------------------------------------------------------- */
+.card__swatch-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--duration-medium, 0.3s) var(--ease-smooth, ease);
+}
+
+.card__swatch-preview.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__swatch-preview {
+    transition: none;
+  }
+}
+
 @media screen and (min-width: 1200px) {
   .card__swatches .swatch {
     width: 1.8rem;
