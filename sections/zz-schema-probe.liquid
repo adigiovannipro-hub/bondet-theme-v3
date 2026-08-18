@@ -1,4 +1,8 @@
-<div></div>
-{% schema %}
-{"name":"Sonde","settings":[{"type":"select","id":"reassurance_mode","label":"Presentation des messages","default":"rotate","options":[{"value":"rotate","label":"Rotation"},{"value":"scroll","label":"Defilement continu"}]},{"type":"range","id":"reassurance_scroll_speed","min":20,"max":120,"step":5,"label":"Vitesse du defilement (pixels par seconde)","default":60,"info":"Utilisee en defilement continu uniquement."}]}
-{% endschema %}
+{%- comment -%}
+  Fichier inerte, laisse par un diagnostic : il a servi a faire valider par Shopify un reglage
+  de schema que la synchronisation refusait en silence (unit limite a 3 caracteres).
+
+  Il n'a plus de schema, n'est reference par aucun modele ni groupe de sections, et ne rend
+  rien. Il peut etre supprime depuis l'editeur de code de l'admin : Boutique en ligne >
+  Themes > bondet-theme-v3/main > Modifier le code > sections/zz-schema-probe.liquid.
+{%- endcomment -%}
