@@ -87,6 +87,8 @@
         "enable_language_selector": true,
         "partners_link": "shopify://pages/trouver-un-opticien",
         "enable_customer_avatar": true,
+        "reassurance_mode": "scroll",
+        "reassurance_scroll_speed": 60,
         "reassurance_speed": 4
       }
     }
