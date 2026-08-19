@@ -94,17 +94,55 @@
   // s'effacer dès que le visiteur fait défiler les vues — sinon le carrousel coulisse dessous,
   // points compris, image immobile : la vignette semble morte. Pour que ce retrait ne fasse
   // pas resurgir l'ancien coloris, la vue 1 est alignée sur le choix au moment où il est fait.
-  function setSlides(card, variant) {
+  // Vues supplémentaires réellement propres au coloris de monture.
+  //
+  // Les galeries de variantes melent deux natures de photos : des vues 3/4 propres a une
+  // monture (« solaire-joy-ivoire-quart.jpg ») et des photos d'ambiance generiques, partagees
+  // par toutes les montures — sur lesquelles le mannequin porte forcement UNE couleur. Prendre
+  // la galerie de la variante telle quelle affichait donc une monture noire alors qu'on venait
+  // de choisir l'ivoire. Et le vendeur n'attache la vue 3/4 qu'a UNE combinaison par monture :
+  // les autres verres de la meme monture n'ont que l'ambiance.
+  //
+  // Une photo utilisee par plusieurs montures ne peut pas representer une monture en
+  // particulier. On ne garde donc que celles qu'aucune autre monture n'emploie, et on les
+  // applique a toutes les variantes de cette monture. Quand il n'en reste aucune, la photo du
+  // coloris comble : mieux vaut deux fois la bonne monture qu'une fois la mauvaise.
+  function ownViews(picker, variant) {
+    if (!picker || !picker.variants || !picker.variants.length) return [];
+
+    if (!picker.ownViews) picker.ownViews = {};
+    if (picker.ownViews[variant.o1]) return picker.ownViews[variant.o1];
+
+    var montures = {};
+    picker.variants.forEach(function (row) {
+      (row.images || []).forEach(function (url) {
+        if (!montures[url]) montures[url] = {};
+        montures[url][row.o1] = true;
+      });
+    });
+
+    var views = [];
+    picker.variants.forEach(function (row) {
+      if (row.o1 !== variant.o1) return;
+      (row.images || []).forEach(function (url) {
+        if (Object.keys(montures[url]).length > 1) return;
+        if (views.indexOf(url) === -1) views.push(url);
+      });
+    });
+
+    picker.ownViews[variant.o1] = views;
+    return views;
+  }
+
+  function setSlides(card, variant, picker) {
     var slides = card.querySelectorAll('.card__media .slide');
+    var views = ownViews(picker, variant);
 
     slides.forEach(function (slide, index) {
       var image = slide.querySelector('img');
       if (!image) return;
 
-      // La première case est la photo de la variante ; les suivantes, sa galerie. À défaut de
-      // galerie pour ce coloris, on remet la photo du coloris plutôt que de laisser la vue
-      // d'un autre : mieux vaut deux fois la bonne monture qu'une fois la mauvaise.
-      var src = index === 0 ? variant.image : (variant.images || [])[index - 1];
+      var src = index === 0 ? variant.image : views[index - 1];
       if (!src) src = variant.image;
       if (!src || image.getAttribute('src') === src) return;
 
@@ -148,14 +186,14 @@
     }).observe(slider, { attributes: true, attributeFilter: ['style'], subtree: true });
   }
 
-  function apply(card, variant, commit) {
+  function apply(card, variant, commit, picker) {
     if (!card || !variant) return;
 
     paint(card, variant.image);
 
     if (!commit) return;
 
-    setSlides(card, variant);
+    setSlides(card, variant, picker);
     watchSlides(card);
 
     setPrice(card, variant);
@@ -206,6 +244,6 @@
     if (!event.detail.userInitiated) return;
 
     var card = event.target.closest('.product-card');
-    if (card) apply(card, event.detail.variant, true);
+    if (card) apply(card, event.detail.variant, true, event.detail.picker);
   });
 })();
