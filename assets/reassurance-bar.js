@@ -12,7 +12,26 @@
 // premier niveau lèverait alors « already been declared », et le bandeau resterait figé le
 // temps de l'édition. Une définition suffit : les éléments rendus ensuite sont promus seuls.
 (function () {
-  if (customElements.get('reassurance-bar')) return;
+  if (typeof customElements === 'undefined' || customElements.get('reassurance-bar')) return;
+
+  // MediaQueryList n'a recu addEventListener qu'avec Safari 14 (iOS 14). Avant, seul
+  // addListener existe. C'est loin d'etre theorique ici : le trafic venant d'Instagram et de
+  // Facebook passe par le navigateur integre a l'application, qui utilise le WebKit du systeme
+  // — donc celui d'iOS, tel qu'installe sur l'appareil. Appeler addEventListener sans verifier
+  // levait une TypeError des le chargement, sur toutes les pages, le bandeau vivant dans
+  // l'en-tete. Et une erreur non rattrapee dans connectedCallback interrompt l'element : le
+  // bandeau restait fige, sans defiler.
+  function listen(query, handler) {
+    if (!query) return;
+    if (query.addEventListener) query.addEventListener('change', handler);
+    else if (query.addListener) query.addListener(handler);
+  }
+
+  function unlisten(query, handler) {
+    if (!query) return;
+    if (query.removeEventListener) query.removeEventListener('change', handler);
+    else if (query.removeListener) query.removeListener(handler);
+  }
 
   class ReassuranceBar extends HTMLElement {
     connectedCallback() {
@@ -31,7 +50,7 @@
       this.sync = this.sync.bind(this);
       this.advance = this.advance.bind(this);
 
-      this.reduced.addEventListener('change', this.sync);
+      listen(this.reduced, this.sync);
       document.addEventListener('visibilitychange', this.sync);
       this.sync();
     }
@@ -41,13 +60,13 @@
       if (!this.reduced) return;
 
       if (this.layout) {
-        this.reduced.removeEventListener('change', this.layout);
+        unlisten(this.reduced, this.layout);
         window.removeEventListener('resize', this.layout);
         if (this.observer) this.observer.disconnect();
         return;
       }
 
-      this.reduced.removeEventListener('change', this.sync);
+      unlisten(this.reduced, this.sync);
       document.removeEventListener('visibilitychange', this.sync);
     }
 
@@ -67,7 +86,7 @@
       if (!this.viewport || !this.marquee || !this.group) return;
 
       this.layout = this.layout.bind(this);
-      this.reduced.addEventListener('change', this.layout);
+      listen(this.reduced, this.layout);
 
       // La largeur du groupe dépend de la police : mesurée trop tôt, elle est celle de la police
       // de repli, et la boucle sauterait une fois la vraie police posée.
