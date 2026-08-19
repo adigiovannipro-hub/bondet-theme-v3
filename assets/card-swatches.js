@@ -94,44 +94,38 @@
   // s'effacer dès que le visiteur fait défiler les vues — sinon le carrousel coulisse dessous,
   // points compris, image immobile : la vignette semble morte. Pour que ce retrait ne fasse
   // pas resurgir l'ancien coloris, la vue 1 est alignée sur le choix au moment où il est fait.
-  // Vues supplémentaires réellement propres au coloris de monture.
+  // Vues supplémentaires réellement propres à la variante choisie.
   //
-  // Les galeries de variantes melent deux natures de photos : des vues 3/4 propres a une
-  // monture (« solaire-joy-ivoire-quart.jpg ») et des photos d'ambiance generiques, partagees
-  // par toutes les montures — sur lesquelles le mannequin porte forcement UNE couleur. Prendre
-  // la galerie de la variante telle quelle affichait donc une monture noire alors qu'on venait
-  // de choisir l'ivoire. Et le vendeur n'attache la vue 3/4 qu'a UNE combinaison par monture :
-  // les autres verres de la meme monture n'ont que l'ambiance.
+  // Les galeries melent deux natures de photos. Des vues 3/4 attachees a UNE combinaison
+  // precise — « solaire-joy-ivoire-quart.jpg », posee sur « Ivoire / Brun polarisant » : elle
+  // montre cette monture AVEC ce verre. Et des photos d'ambiance generiques, partagees par
+  // quantite de variantes, ou le mannequin porte forcement un coloris donne.
   //
-  // Une photo utilisee par plusieurs montures ne peut pas representer une monture en
-  // particulier. On ne garde donc que celles qu'aucune autre monture n'emploie, et on les
-  // applique a toutes les variantes de cette monture. Quand il n'en reste aucune, la photo du
-  // coloris comble : mieux vaut deux fois la bonne monture qu'une fois la mauvaise.
+  // Une photo attachee a plusieurs variantes ne represente aucune d'elles en particulier : on
+  // l'ecarte. Une photo attachee a une seule variante montre exactement cette variante : on la
+  // garde, pour elle seule. L'appliquer a toutes les variantes de la meme monture — ce que
+  // faisait la version precedente — figeait le verre : changer de verre ne changeait plus
+  // rien sur cette vue.
+  //
+  // Sans photo propre, la photo de la variante comble : elle porte la bonne monture ET le bon
+  // verre, ce qui prime sur la richesse d'un second angle.
   function ownViews(picker, variant) {
     if (!picker || !picker.variants || !picker.variants.length) return [];
 
-    if (!picker.ownViews) picker.ownViews = {};
-    if (picker.ownViews[variant.o1]) return picker.ownViews[variant.o1];
-
-    var montures = {};
-    picker.variants.forEach(function (row) {
-      (row.images || []).forEach(function (url) {
-        if (!montures[url]) montures[url] = {};
-        montures[url][row.o1] = true;
+    if (!picker.sharedViews) {
+      var counts = {};
+      picker.variants.forEach(function (row) {
+        (row.images || []).forEach(function (url) {
+          counts[url] = (counts[url] || 0) + 1;
+        });
       });
-    });
+      picker.sharedViews = counts;
+    }
 
-    var views = [];
-    picker.variants.forEach(function (row) {
-      if (row.o1 !== variant.o1) return;
-      (row.images || []).forEach(function (url) {
-        if (Object.keys(montures[url]).length > 1) return;
-        if (views.indexOf(url) === -1) views.push(url);
-      });
+    var counted = picker.sharedViews;
+    return (variant.images || []).filter(function (url) {
+      return counted[url] === 1;
     });
-
-    picker.ownViews[variant.o1] = views;
-    return views;
   }
 
   function setSlides(card, variant, picker) {
