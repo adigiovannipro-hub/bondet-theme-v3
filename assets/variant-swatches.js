@@ -134,11 +134,19 @@ class VariantSwatches extends HTMLElement {
   peek(swatch) {
     var index = parseInt(swatch.dataset.swatchOptionIndex, 10) - 1;
 
-    // Le survol n'a pas le droit de glissement du clic : faire glisser l'autre option pour
-    // montrer une combinaison disponible revient, en survolant un verre, à afficher une AUTRE
-    // monture — ce qui se lit comme « la mauvaise variante ». On ne prévisualise que la
-    // combinaison exacte avec l'autre option retenue ; à défaut on ne montre rien, la
-    // pastille est déjà atténuée quand rien d'achetable ne l'accompagne.
+    // Deux règles, une par rangée. Survoler une MONTURE doit toujours la montrer — quitte à
+    // faire glisser le verre vers une combinaison qui existe : c'est elle qu'on vient voir,
+    // et resolve() garantit depuis le correctif précédent qu'elle ne peut pas être remplacée
+    // par une autre. Survoler un VERRE, en revanche, ne montre que la combinaison exacte avec
+    // la monture retenue : faire glisser la monture reviendrait à afficher « la mauvaise
+    // monture » — le défaut déjà corrigé une fois. À défaut, pas d'aperçu : la pastille est
+    // déjà atténuée quand rien d'achetable ne l'accompagne.
+    if (index === 0) {
+      var previewed = this.resolve(index, swatch.dataset.swatchValue).variant;
+      if (previewed) this.emit('variant:peek', previewed);
+      return;
+    }
+
     var selection = this.selected.slice();
     selection[index] = swatch.dataset.swatchValue;
 
