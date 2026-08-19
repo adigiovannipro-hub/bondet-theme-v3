@@ -85,14 +85,27 @@ class VariantSwatches extends HTMLElement {
       return { selection: selection, variant: available };
     }
 
-    // Rien de disponible avec cette valeur : on garde la combinaison telle quelle, l'hôte
-    // affichera « épuisé » plutôt que de basculer sur un coloris qu'on n'a pas demandé.
-    return { selection: selection, variant: exact || this.variants[0] };
+    // Rien de DISPONIBLE avec cette valeur : la combinaison exacte si elle existe (l'hôte
+    // affichera « épuisé »), sinon la première variante qui PORTE la valeur désignée, même
+    // épuisée. Jamais une variante d'une autre valeur : le repli sur variants[0] faisait
+    // apparaître une autre monture quand une pastille ne correspondait à aucune variante —
+    // le cas existe, une rangée peut montrer plus de montures que le produit n'a de coloris.
+    var carrier = this.variants.find(function (variant) {
+      return this.valueOf(variant, index) === value;
+    }, this);
+
+    return { selection: selection, variant: exact || carrier || null };
   }
 
   select(swatch) {
     var index = parseInt(swatch.dataset.swatchOptionIndex, 10) - 1;
-    this.selected = this.resolve(index, swatch.dataset.swatchValue).selection;
+    var resolved = this.resolve(index, swatch.dataset.swatchValue);
+
+    // Aucune variante ne porte cette valeur : choisir ne peut rien désigner. Sans ce garde,
+    // refresh() retomberait sur la première variante du produit — une autre monture.
+    if (!resolved.variant) return;
+
+    this.selected = resolved.selection;
     this.refresh(true);
     this.warm();
   }
@@ -120,7 +133,16 @@ class VariantSwatches extends HTMLElement {
 
   peek(swatch) {
     var index = parseInt(swatch.dataset.swatchOptionIndex, 10) - 1;
-    var variant = this.resolve(index, swatch.dataset.swatchValue).variant;
+
+    // Le survol n'a pas le droit de glissement du clic : faire glisser l'autre option pour
+    // montrer une combinaison disponible revient, en survolant un verre, à afficher une AUTRE
+    // monture — ce qui se lit comme « la mauvaise variante ». On ne prévisualise que la
+    // combinaison exacte avec l'autre option retenue ; à défaut on ne montre rien, la
+    // pastille est déjà atténuée quand rien d'achetable ne l'accompagne.
+    var selection = this.selected.slice();
+    selection[index] = swatch.dataset.swatchValue;
+
+    var variant = this.match(selection);
     if (variant) this.emit('variant:peek', variant);
   }
 
