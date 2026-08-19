@@ -3585,7 +3585,7 @@ cart-drawer:not(.active) .drawer__inner {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  font: 400 1rem / 1.2 var(--font-primary);
+  font: 400 0.9rem / 1.2 var(--font-primary);
   letter-spacing: 0.04em;
   text-align: center;
   align-self: center;
@@ -3605,8 +3605,8 @@ cart-drawer:not(.active) .drawer__inner {
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .reassurance-bar__icon .image,
@@ -3630,8 +3630,8 @@ cart-drawer:not(.active) .drawer__inner {
 
 @media screen and (max-width: 767px) {
   .reassurance-bar__icon {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: 1.15rem;
+    height: 1.15rem;
   }
 }
 
