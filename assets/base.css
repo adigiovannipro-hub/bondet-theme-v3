@@ -4410,3 +4410,64 @@ cart-drawer cart-drawer-items {
     border-top: 0;
   }
 }
+
+
+/* ---------------------------------------------------------------------------
+   Bandeau de consentement aux cookies.
+
+   Il n'appartient pas au theme : Shopify l'injecte a l'execution (parametres
+   « Confidentialite des clients »). Aucun Liquid a modifier donc, mais il se
+   rend dans le DOM ordinaire, avec des identifiants stables : on le met en
+   forme d'ici. Les selecteurs doublent volontairement l'identifiant
+   (#banner #element) pour l'emporter sur la feuille de Shopify, injectee apres
+   celle-ci et de meme specificite.
+
+   Il occupait environ 70 % de la hauteur d'un telephone. Le titre et le texte
+   sont resserres, et le dialogue est plafonne a 40vh : au-dela, c'est le TEXTE
+   qui defile, jamais les boutons, qui restent visibles en toutes circonstances.
+   La taille des boutons est inchangee — un consentement doit rester facile a
+   viser au pouce.
+
+   « Accepter » passe en fond sombre, comme le bouton de paiement. « Refuser »
+   garde exactement la meme taille, la meme place et un contour bien visible :
+   refuser doit rester aussi simple qu'accepter, c'est la regle.
+   --------------------------------------------------------------------------- */
+#shopify-pc__banner #shopify-pc__banner__dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 40vh;
+  padding: 1.6rem;
+}
+
+#shopify-pc__banner #shopify-pc__banner__heading {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+#shopify-pc__banner #shopify-pc__banner__body {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Les boutons ne se compriment jamais : c'est le texte qui cede la place. */
+#shopify-pc__banner .shopify-pc__banner__btns {
+  flex: 0 0 auto;
+}
+
+#shopify-pc__banner #shopify-pc__banner__btn-accept {
+  background-color: rgb(var(--rgb-secondary-brown));
+  border-color: rgb(var(--rgb-secondary-brown));
+  color: #fff;
+}
+
+#shopify-pc__banner #shopify-pc__banner__btn-decline {
+  border-color: rgb(var(--rgb-secondary-brown));
+  color: rgb(var(--rgb-secondary-brown));
+}
