@@ -4461,6 +4461,41 @@ cart-drawer cart-drawer-items {
   flex: 0 0 auto;
 }
 
+/* ---------------------------------------------------------------------------
+   Repli qui ne suppose RIEN de la structure interne.
+
+   Premiere tentative : les regles ci-dessus visaient __dialog, __heading et
+   __body. Sur la boutique, la couleur des boutons a pris — donc les
+   identifiants de boutons sont bons — mais pas les dimensions : les
+   identifiants internes ne sont pas ceux attendus. Shopify ne publie pas ce
+   markup et il n'est pas observable depuis l'environnement de developpement.
+
+   On repart donc de ce qui ne peut pas changer : le conteneur du bandeau, ses
+   enfants directs, et les elements HTML eux-memes. Un selecteur descendant a
+   base d'element (#id + balise) l'emporte sur une regle a identifiant simple,
+   quel que soit l'ordre des feuilles — sans recourir a !important.
+
+   L'enfant direct porte le plafond ET le defilement : quelle que soit la
+   profondeur du reste, le bandeau ne peut plus depasser 40vh, et tout son
+   contenu — texte comme boutons — reste atteignable.
+   --------------------------------------------------------------------------- */
+#shopify-pc__banner > div {
+  max-height: 40vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#shopify-pc__banner h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+#shopify-pc__banner p {
+  font-size: 1.2rem;
+  line-height: 1.45;
+}
+
 #shopify-pc__banner #shopify-pc__banner__btn-accept {
   background-color: rgb(var(--rgb-secondary-brown));
   border-color: rgb(var(--rgb-secondary-brown));
