@@ -26,6 +26,19 @@
     "cart_column_3_title": "Fabrication française",
     "cart_column_4_image": "shopify://shop_images/bio-energy.svg",
     "cart_column_4_title": "matériaux bio-sourcés",
+    "cart_testimonials_enabled": true,
+    "cart_testimonial_1_text": "Elles sont incroyables !!!",
+    "cart_testimonial_1_author": "Aurelie C.",
+    "cart_testimonial_1_rating": 5,
+    "cart_testimonial_2_text": "Un très bon rapport qualité prix !",
+    "cart_testimonial_2_author": "Helma B.",
+    "cart_testimonial_2_rating": 5,
+    "cart_testimonial_3_text": "Très belles, légères, expédition rapide",
+    "cart_testimonial_3_author": "sandrine D.",
+    "cart_testimonial_3_rating": 5,
+    "cart_testimonial_4_text": "Trop belles, très confortables !",
+    "cart_testimonial_4_author": "Eloïse C.",
+    "cart_testimonial_4_rating": 5,
     "logo_width": 90,
     "color_schemes": {
       "scheme-1": {
@@ -217,30 +230,17 @@
         "disabled": false,
         "settings": {}
       },
-      "13768625480086291342": {
-        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
-        "disabled": false,
-        "settings": {}
-      },
       "13070091535480640111": {
         "type": "shopify://apps/attrac/blocks/app-embed/b783956d-47a9-4434-91ad-4ec960bd74b0",
         "disabled": true,
         "settings": {}
+      },
+      "13768625480086291342": {
+        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
+        "disabled": true,
+        "settings": {}
       }
-    },
-    "cart_testimonials_enabled": true,
-    "cart_testimonial_1_text": "Elles sont incroyables !!!",
-    "cart_testimonial_1_author": "Aurelie C.",
-    "cart_testimonial_1_rating": 5,
-    "cart_testimonial_2_text": "Un très bon rapport qualité prix !",
-    "cart_testimonial_2_author": "Helma B.",
-    "cart_testimonial_2_rating": 5,
-    "cart_testimonial_3_text": "Très belles, légères, expédition rapide",
-    "cart_testimonial_3_author": "sandrine D.",
-    "cart_testimonial_3_rating": 5,
-    "cart_testimonial_4_text": "Trop belles, très confortables !",
-    "cart_testimonial_4_author": "Eloïse C.",
-    "cart_testimonial_4_rating": 5
+    }
   },
   "presets": {
     "Default": {
